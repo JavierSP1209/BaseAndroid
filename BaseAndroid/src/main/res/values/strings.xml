@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BaseAndroid</string>
+	<string name="hello_world">The Base CM Android Project!</string>
+	<string name="action_settings">Options</string>
+</resources>

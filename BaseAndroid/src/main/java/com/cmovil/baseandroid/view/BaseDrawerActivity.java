@@ -21,7 +21,6 @@ import com.cmovil.baseandroid.R;
 public class BaseDrawerActivity extends BaseActionBarActivity {
 
     protected DrawerLayout mDrawerLayout;
-    private FrameLayout mDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
 
@@ -33,7 +32,6 @@ public class BaseDrawerActivity extends BaseActionBarActivity {
         mDrawerTitle = getTitle();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawer = (FrameLayout) findViewById(R.id.left_drawer);
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
@@ -101,9 +99,5 @@ public class BaseDrawerActivity extends BaseActionBarActivity {
         FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
         t.replace(R.id.left_drawer, drawer);
         t.commit();
-    }
-
-    public FrameLayout getmDrawer() {
-        return mDrawer;
     }
 }

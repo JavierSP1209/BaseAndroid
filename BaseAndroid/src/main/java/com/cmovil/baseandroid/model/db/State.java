@@ -17,15 +17,12 @@ import com.cmovil.baseandroid.util.CustomCatalogComparator;
  * @version 1.0
  * @since 29/07/13
  */
-public class State implements BaseModel {
+public class State extends BaseModel {
 	/**
 	 * Comparator for state objects, using its description as comparable attribute
 	 */
 	public static final CustomCatalogComparator<State> COMPARATOR = new CustomCatalogComparator<State>();
-	/**
-	 * Table row id
-	 */
-	private Integer id;
+
 	/**
 	 * State id on the server
 	 */

@@ -42,7 +42,7 @@ public class SampleController extends BaseDBController<State> {
 	 * 	The Context within which to work, used to create the DB
 	 */
 	public SampleController(Context context) {
-		super(context, new SampleDAO(context));
+		super(new SampleDAO(context));
 	}
 
 	/**

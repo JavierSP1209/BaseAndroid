@@ -3,6 +3,7 @@ package com.cmovil.baseandroid.view;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -15,21 +16,21 @@ import android.widget.FrameLayout;
 import com.cmovil.baseandroid.R;
 
 /**
- * Main class to handle Support Library Navigation Drawer in all application views
- * Created by Ing. Arturo Ayala on 19/09/13.
+ * Main class to handle Support Library ActionBar in all application views
+ *
+ * @author "Ing. Arturo Ayala"
+ * @version 1.0
+ * @since 19/09/13
  */
 public class BaseDrawerActivity extends BaseActionBarActivity {
 
     protected DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private CharSequence mDrawerTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_activity);
-
-        mDrawerTitle = getTitle();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -40,13 +41,13 @@ public class BaseDrawerActivity extends BaseActionBarActivity {
                 R.string.drawer_open,  /* "open drawer" description for accessibility */
                 R.string.drawer_close  /* "close drawer" description for accessibility */) {
             public void onDrawerClosed(View view) {
-                getBaseActionBar().setTitle(getmTitle());
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                getBaseActionBar().setTitle(getTitle());
+	            ActivityCompat.invalidateOptionsMenu(BaseDrawerActivity.this); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
-                getBaseActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                getBaseActionBar().setTitle(R.string.app_name);
+	            ActivityCompat.invalidateOptionsMenu(BaseDrawerActivity.this); // creates call to onPrepareOptionsMenu()
             }
         };
 
@@ -55,6 +56,12 @@ public class BaseDrawerActivity extends BaseActionBarActivity {
         getBaseActionBar().setDisplayHomeAsUpEnabled(true);
         getBaseActionBar().setHomeButtonEnabled(true);
     }
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mDrawerLayout.closeDrawer(GravityCompat.START);
+	}
 
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -100,4 +107,19 @@ public class BaseDrawerActivity extends BaseActionBarActivity {
         t.replace(R.id.left_drawer, drawer);
         t.commit();
     }
+
+	/**
+	 * Check if the navigation its open
+	 * @return TRUE if the navigation drawer its open, FALSE otherwise
+	 */
+	public Boolean isDrawerOpen(){
+		return mDrawerLayout.isDrawerOpen(GravityCompat.START);
+	}
+
+	/**
+	 * Close the current drawer
+	 */
+	protected void closeDrawer(){
+		mDrawerLayout.closeDrawer(GravityCompat.START);
+	}
 }

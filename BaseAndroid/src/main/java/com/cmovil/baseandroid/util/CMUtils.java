@@ -10,8 +10,10 @@ package com.cmovil.baseandroid.util;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.SpannableStringBuilder;
@@ -19,19 +21,40 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.cmovil.baseandroid.R;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.text.Normalizer;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Class that contains common functions across the application as well as static values that will be used by other
@@ -42,11 +65,15 @@ import java.util.Locale;
  * @since 20/03/2013
  */
 public class CMUtils {
-
 	public static final String FONT_REFLEX_BLACK = "fonts/ReflexBlack.ttf";
 	public static final String FONT_VERDANA = "fonts/Verdana.ttf";
 	public static final String FONT_ARIAL_BLACK = "fonts/ArialBlack.ttf";
+	public static final String FONT_GOTHIC = "fonts/gothic_0.ttf";
 	public static final SecureRandom SECURE_RANDOM = new SecureRandom();
+	public static final String IMG = "IMG_";
+	public static final String JPG = ".jpg";
+	public static final String DATE_FORMAT = "yyyyMMdd_HHmmss";
+	public static final String DIRECTORY_NAME = "buenfin";
 	/**
 	 * Unique ID of the Android device
 	 */
@@ -59,14 +86,10 @@ public class CMUtils {
 	/**
 	 * Sets a determined font on a text view element
 	 *
-	 * @param context
-	 * 	Context in which the TextView can be found
-	 * @param font
-	 * 	Font to be set in the text view see available fonts as static attributes of this class
-	 * @param style
-	 * 	{@see Typeface}
-	 * @param textViews
-	 * 	TextViews to which the font will be applied
+	 * @param context   Context in which the TextView can be found
+	 * @param font      Font to be set in the text view see available fonts as static attributes of this class
+	 * @param style     {@see Typeface}
+	 * @param textViews TextViews to which the font will be applied
 	 */
 	public static void setTypeface(Context context, String font, int style, TextView... textViews) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
@@ -78,12 +101,9 @@ public class CMUtils {
 	/**
 	 * Sets a determined font on a text view element
 	 *
-	 * @param context
-	 * 	Context in which the TextView can be found
-	 * @param font
-	 * 	Font to be set in the text view see available fonts as static attributes of this class
-	 * @param textViews
-	 * 	TextViews to which the font will be applied
+	 * @param context   Context in which the TextView can be found
+	 * @param font      Font to be set in the text view see available fonts as static attributes of this class
+	 * @param textViews TextViews to which the font will be applied
 	 */
 	public static void setTypeface(Context context, String font, TextView... textViews) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
@@ -95,12 +115,9 @@ public class CMUtils {
 	/**
 	 * Sets a determined font on a button element view
 	 *
-	 * @param context
-	 * 	Context in which the TextView can be found
-	 * @param font
-	 * 	Font to be set in the text view see available fonts as static attributes of this class
-	 * @param buttons
-	 * 	Buttons to which the font will be applied
+	 * @param context Context in which the TextView can be found
+	 * @param font    Font to be set in the text view see available fonts as static attributes of this class
+	 * @param buttons Buttons to which the font will be applied
 	 */
 	public static void setTypeface(Context context, String font, Button... buttons) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
@@ -112,14 +129,10 @@ public class CMUtils {
 	/**
 	 * Sets a determined font on a text view element
 	 *
-	 * @param context
-	 * 	Context in which the TextView can be found
-	 * @param font
-	 * 	Font to be set in the text view see available fonts as static attributes of this class
-	 * @param style
-	 * 	{@see Typeface}
-	 * @param buttons
-	 * 	Buttons to which the font will be applied
+	 * @param context Context in which the TextView can be found
+	 * @param font    Font to be set in the text view see available fonts as static attributes of this class
+	 * @param style   {@see Typeface}
+	 * @param buttons Buttons to which the font will be applied
 	 */
 	public static void setTypeface(Context context, String font, int style, Button... buttons) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
@@ -154,8 +167,7 @@ public class CMUtils {
 	/**
 	 * Converts an hexadecimal string to a byte array
 	 *
-	 * @param s
-	 * 	Hexadecimal string
+	 * @param s Hexadecimal string
 	 * @return A byte array with the parsed hexadecimal values
 	 */
 	public static byte[] hexStringToByteArray(String s) {
@@ -170,14 +182,10 @@ public class CMUtils {
 	/**
 	 * Sets a determined font on a text view element
 	 *
-	 * @param context
-	 * 	Context in which the TextView can be found
-	 * @param font
-	 * 	Font to be set in the text view see available fonts as static attributes of this class
-	 * @param style
-	 * 	{@see Typeface}
-	 * @param group
-	 * 	Root layout in which TextView and Buttons will be searched to apply the font
+	 * @param context Context in which the TextView can be found
+	 * @param font    Font to be set in the text view see available fonts as static attributes of this class
+	 * @param style   {@see Typeface}
+	 * @param group   Root layout in which TextView and Buttons will be searched to apply the font
 	 */
 	public static void setTypeface(Context context, String font, int style, ViewGroup group) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
@@ -193,12 +201,9 @@ public class CMUtils {
 	/**
 	 * Sets a determined font on a text view element
 	 *
-	 * @param context
-	 * 	Context in which the TextView can be found
-	 * @param font
-	 * 	Font to be set in the text view see available fonts as static attributes of this class
-	 * @param group
-	 * 	Root layout in which TextView and Buttons will be searched to apply the font
+	 * @param context Context in which the TextView can be found
+	 * @param font    Font to be set in the text view see available fonts as static attributes of this class
+	 * @param group   Root layout in which TextView and Buttons will be searched to apply the font
 	 */
 	public static void setTypeface(Context context, String font, ViewGroup group) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
@@ -214,12 +219,9 @@ public class CMUtils {
 	/**
 	 * Set an error message to a text view
 	 *
-	 * @param color
-	 * 	Set the color foreground for the span
-	 * @param message
-	 * 	Message to be shown
-	 * @param txtView
-	 * 	Text View to which the message will be added
+	 * @param color   Set the color foreground for the span
+	 * @param message Message to be shown
+	 * @param txtView Text View to which the message will be added
 	 */
 	public static void setError(int color, String message, TextView txtView) {
 		ForegroundColorSpan fgcspan = new ForegroundColorSpan(color);
@@ -231,10 +233,8 @@ public class CMUtils {
 	/**
 	 * Set an error message to a text view
 	 *
-	 * @param message
-	 * 	Message string to be shown
-	 * @param txtView
-	 * 	Text View to which the message will be added
+	 * @param message Message string to be shown
+	 * @param txtView Text View to which the message will be added
 	 */
 	public static void setError(String message, TextView txtView) {
 
@@ -271,19 +271,32 @@ public class CMUtils {
 		}
 
 	  /*
-	   * Settings.Secure.ANDROID_ID returns the unique DeviceID
+       * Settings.Secure.ANDROID_ID returns the unique DeviceID
 	   * Works for Android 2.2 and above
 	   */
-		ANDROID_ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		ANDROID_ID = getUniqueDeviceId(context);
+	}
+
+	/**
+	 * Gets an unique device Id depending on the sdk version
+	 *
+	 * @param context
+	 * @return
+	 */
+	public static String getUniqueDeviceId(Context context) {
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+			return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		} else {
+			final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+			return tm.getDeviceId();
+		}
 	}
 
 	/**
 	 * Disable all the childs of the selected root view
 	 *
-	 * @param rootView
-	 * 	View to iterate in order to disable all its childs
-	 * @param alpha
-	 * 	Alpha to set to disabled elements
+	 * @param rootView View to iterate in order to disable all its childs
+	 * @param alpha    Alpha to set to disabled elements
 	 */
 	public static void disableView(ViewGroup rootView, float alpha) {
 		int count = rootView.getChildCount();
@@ -302,8 +315,7 @@ public class CMUtils {
 	/**
 	 * Remove the time of a date value
 	 *
-	 * @param date
-	 * 	Date to remove the time part
+	 * @param date Date to remove the time part
 	 * @return A date with its time set to 00:00:00
 	 */
 	public static Date removeTime(Date date) {
@@ -319,8 +331,7 @@ public class CMUtils {
 	/**
 	 * Change the default locale of the application for this activity
 	 *
-	 * @param locale
-	 * 	To set in the configuration
+	 * @param locale To set in the configuration
 	 */
 	public static void setDefaultLocale(Context context, String locale) {
 		Locale locJa = new Locale(locale);
@@ -332,5 +343,171 @@ public class CMUtils {
 		if (context != null) {
 			context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
 		}
+	}
+
+	/**
+	 * Method to know if an Id indicates an empty object
+	 *
+	 * @param id The searched id
+	 * @return True if it exists. Otherwise, False.
+	 */
+	public static boolean existsInDB(int id) {
+		return id > KeyDictionary.EMPTY_OBJECT_ID;
+	}
+
+	public static List<BasicNameValuePair> jsonStringToUrlEncodedEntity(String json) {
+		JsonParser parser = new JsonParser();
+		JsonElement jsonElem = parser.parse(json);
+		JsonObject jsonObject = jsonElem.getAsJsonObject();
+		List<BasicNameValuePair> entityParameters = new LinkedList<BasicNameValuePair>();
+		Set<Map.Entry<String, JsonElement>> jsonSet = jsonObject.entrySet();
+
+		for (Map.Entry<String, JsonElement> entry : jsonSet) {
+			entityParameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue().getAsString()));
+
+		}
+		return entityParameters;
+	}
+
+
+	/**
+	 * This method fetches data from a given url
+	 *
+	 * @param strUrl Url from which the data will be fetched
+	 * @return A String representing the resource obtained in the connection
+	 * @throws IOException If something went wrong with the connection
+	 */
+	public static String getDataFromUrl(String strUrl) throws IOException {
+		InputStream iStream;
+		HttpURLConnection urlConnection;
+		URL url = new URL(strUrl);
+
+		// Creating an http connection to communicate with url
+		urlConnection = (HttpURLConnection) url.openConnection();
+
+		// Connecting to url
+		urlConnection.connect();
+
+		// Reading data from url
+		iStream = urlConnection.getInputStream();
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+
+		StringBuilder sb = new StringBuilder();
+
+		String line;
+		while ((line = br.readLine()) != null) {
+			sb.append(line);
+		}
+		br.close();
+		iStream.close();
+		urlConnection.disconnect();
+		return sb.toString();
+	}
+
+	/**
+	 * Change opacity of a given view, with the alpha level given as parameter.
+	 * This method considers the environment version.
+	 *
+	 * @param view       View that will change its opacity
+	 * @param alphaLevel Alpha level representing the opacity, where 0.0 is completely transparent, and 1.0 is completely opaque
+	 */
+	public static void setAlphaForAllVersions(View view, float alphaLevel) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			view.setAlpha(alphaLevel);
+		} else {
+			AlphaAnimation alpha = new AlphaAnimation(alphaLevel, alphaLevel);
+			alpha.setDuration(0); // Make animation instant
+			alpha.setFillAfter(true); // Tell it to persist after the animation ends
+			view.startAnimation(alpha);
+		}
+	}
+
+
+	public static File getOutputMediaFile(Context context) {
+		// To be safe, you should check that the SDCard is mounted
+		// using Environment.getExternalStorageState() before doing this.
+		//  String appName = context.getResources().getString(R.string.app_name);
+		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), DIRECTORY_NAME);
+
+		// Create the storage directory if it does not exist
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
+				Log.d(KeyDictionary.TAG, "failed to create directory");
+				return null;
+			}
+		}
+
+		// Create a media file name
+		String timeStamp = new SimpleDateFormat(DATE_FORMAT).format(new Date());
+
+		File mediaFile = new File(mediaStorageDir.getPath() + File.separator + IMG + timeStamp + JPG);
+
+		return mediaFile;
+	}
+
+	/**
+	 * Decodes a bitmap to its corresponding representation in bytes, in the format sent as parameter
+	 *
+	 * @param bitmap Bitmap to decode
+	 * @param format Format with which this image is going to be decoded
+	 * @return A byte array containing the bytes of the decoded bitmap
+	 */
+	public static byte[] bitmapToByteArray(Bitmap bitmap, Bitmap.CompressFormat format) {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		bitmap.compress(format, 100, stream);
+		return stream.toByteArray();
+	}
+
+	private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+
+	/**
+	 * Generate a value suitable for use in {@link #(int)}.
+	 * This value will not collide with ID values generated at build time by aapt for R.id.
+	 *
+	 * @return a generated ID value
+	 */
+	public static int generateViewId() {
+		for (; ; ) {
+			final int result = sNextGeneratedId.get();
+			// aapt-generated IDs have the high byte nonzero; clamp to the range under that.
+			int newValue = result + 1;
+			if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
+			if (sNextGeneratedId.compareAndSet(result, newValue)) {
+				return result;
+			}
+		}
+	}
+
+	/**
+	 * Method to remove accents from an uppercase string
+	 *
+	 * @param str String to remove accents from
+	 * @return The new string without accents
+	 */
+	public static String removeAccentsUppercase(String str) {
+		str = str.replaceAll("[ÁÀÄÂ]", "A");
+		str = str.replaceAll("[ÉÈËÊ]", "E");
+		str = str.replaceAll("[ÍÌÎÏ]", "I");
+		str = str.replaceAll("[ÓÒÖÔ]", "O");
+		str = str.replaceAll("[ÚÙÜÛ]", "U");
+		return str;
+	}
+
+	public static String cleanString(String value) {
+//Remove spaces and upper case input
+		String res = value.trim();
+
+
+// The char 180 (´) is not replaced by the regex, so first replace it by '-'
+		res = res.replace((char) 180, '-');
+
+//Normalize the string will separate all of the accent marks from the characters.
+		res = Normalizer.normalize(res, Normalizer.Form.NFD);
+//Using a regular expression remove every non alphanumeric character (don't include lower Case characters
+// because the first line change them to upper case)
+		res = res.replace(" ", "%20");
+		res = res.replaceAll("([^a-zA-Z0-9%])", "");
+		return res;
 	}
 }

@@ -86,10 +86,14 @@ public class CMUtils {
 	/**
 	 * Sets a determined font on a text view element
 	 *
-	 * @param context   Context in which the TextView can be found
-	 * @param font      Font to be set in the text view see available fonts as static attributes of this class
-	 * @param style     {@see Typeface}
-	 * @param textViews TextViews to which the font will be applied
+	 * @param context
+	 * 	Context in which the TextView can be found
+	 * @param font
+	 * 	Font to be set in the text view see available fonts as static attributes of this class
+	 * @param style
+	 * 	{@see Typeface}
+	 * @param textViews
+	 * 	TextViews to which the font will be applied
 	 */
 	public static void setTypeface(Context context, String font, int style, TextView... textViews) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
@@ -101,9 +105,12 @@ public class CMUtils {
 	/**
 	 * Sets a determined font on a text view element
 	 *
-	 * @param context   Context in which the TextView can be found
-	 * @param font      Font to be set in the text view see available fonts as static attributes of this class
-	 * @param textViews TextViews to which the font will be applied
+	 * @param context
+	 * 	Context in which the TextView can be found
+	 * @param font
+	 * 	Font to be set in the text view see available fonts as static attributes of this class
+	 * @param textViews
+	 * 	TextViews to which the font will be applied
 	 */
 	public static void setTypeface(Context context, String font, TextView... textViews) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
@@ -115,9 +122,12 @@ public class CMUtils {
 	/**
 	 * Sets a determined font on a button element view
 	 *
-	 * @param context Context in which the TextView can be found
-	 * @param font    Font to be set in the text view see available fonts as static attributes of this class
-	 * @param buttons Buttons to which the font will be applied
+	 * @param context
+	 * 	Context in which the TextView can be found
+	 * @param font
+	 * 	Font to be set in the text view see available fonts as static attributes of this class
+	 * @param buttons
+	 * 	Buttons to which the font will be applied
 	 */
 	public static void setTypeface(Context context, String font, Button... buttons) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
@@ -129,10 +139,14 @@ public class CMUtils {
 	/**
 	 * Sets a determined font on a text view element
 	 *
-	 * @param context Context in which the TextView can be found
-	 * @param font    Font to be set in the text view see available fonts as static attributes of this class
-	 * @param style   {@see Typeface}
-	 * @param buttons Buttons to which the font will be applied
+	 * @param context
+	 * 	Context in which the TextView can be found
+	 * @param font
+	 * 	Font to be set in the text view see available fonts as static attributes of this class
+	 * @param style
+	 * 	{@see Typeface}
+	 * @param buttons
+	 * 	Buttons to which the font will be applied
 	 */
 	public static void setTypeface(Context context, String font, int style, Button... buttons) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
@@ -167,7 +181,8 @@ public class CMUtils {
 	/**
 	 * Converts an hexadecimal string to a byte array
 	 *
-	 * @param s Hexadecimal string
+	 * @param s
+	 * 	Hexadecimal string
 	 * @return A byte array with the parsed hexadecimal values
 	 */
 	public static byte[] hexStringToByteArray(String s) {
@@ -182,10 +197,14 @@ public class CMUtils {
 	/**
 	 * Sets a determined font on a text view element
 	 *
-	 * @param context Context in which the TextView can be found
-	 * @param font    Font to be set in the text view see available fonts as static attributes of this class
-	 * @param style   {@see Typeface}
-	 * @param group   Root layout in which TextView and Buttons will be searched to apply the font
+	 * @param context
+	 * 	Context in which the TextView can be found
+	 * @param font
+	 * 	Font to be set in the text view see available fonts as static attributes of this class
+	 * @param style
+	 * 	{@see Typeface}
+	 * @param group
+	 * 	Root layout in which TextView and Buttons will be searched to apply the font
 	 */
 	public static void setTypeface(Context context, String font, int style, ViewGroup group) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
@@ -201,9 +220,12 @@ public class CMUtils {
 	/**
 	 * Sets a determined font on a text view element
 	 *
-	 * @param context Context in which the TextView can be found
-	 * @param font    Font to be set in the text view see available fonts as static attributes of this class
-	 * @param group   Root layout in which TextView and Buttons will be searched to apply the font
+	 * @param context
+	 * 	Context in which the TextView can be found
+	 * @param font
+	 * 	Font to be set in the text view see available fonts as static attributes of this class
+	 * @param group
+	 * 	Root layout in which TextView and Buttons will be searched to apply the font
 	 */
 	public static void setTypeface(Context context, String font, ViewGroup group) {
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
@@ -219,9 +241,12 @@ public class CMUtils {
 	/**
 	 * Set an error message to a text view
 	 *
-	 * @param color   Set the color foreground for the span
-	 * @param message Message to be shown
-	 * @param txtView Text View to which the message will be added
+	 * @param color
+	 * 	Set the color foreground for the span
+	 * @param message
+	 * 	Message to be shown
+	 * @param txtView
+	 * 	Text View to which the message will be added
 	 */
 	public static void setError(int color, String message, TextView txtView) {
 		ForegroundColorSpan fgcspan = new ForegroundColorSpan(color);
@@ -233,8 +258,10 @@ public class CMUtils {
 	/**
 	 * Set an error message to a text view
 	 *
-	 * @param message Message string to be shown
-	 * @param txtView Text View to which the message will be added
+	 * @param message
+	 * 	Message string to be shown
+	 * @param txtView
+	 * 	Text View to which the message will be added
 	 */
 	public static void setError(String message, TextView txtView) {
 
@@ -271,7 +298,7 @@ public class CMUtils {
 		}
 
 	  /*
-       * Settings.Secure.ANDROID_ID returns the unique DeviceID
+	   * Settings.Secure.ANDROID_ID returns the unique DeviceID
 	   * Works for Android 2.2 and above
 	   */
 		ANDROID_ID = getUniqueDeviceId(context);
@@ -295,8 +322,10 @@ public class CMUtils {
 	/**
 	 * Disable all the childs of the selected root view
 	 *
-	 * @param rootView View to iterate in order to disable all its childs
-	 * @param alpha    Alpha to set to disabled elements
+	 * @param rootView
+	 * 	View to iterate in order to disable all its childs
+	 * @param alpha
+	 * 	Alpha to set to disabled elements
 	 */
 	public static void disableView(ViewGroup rootView, float alpha) {
 		int count = rootView.getChildCount();
@@ -315,7 +344,8 @@ public class CMUtils {
 	/**
 	 * Remove the time of a date value
 	 *
-	 * @param date Date to remove the time part
+	 * @param date
+	 * 	Date to remove the time part
 	 * @return A date with its time set to 00:00:00
 	 */
 	public static Date removeTime(Date date) {
@@ -331,7 +361,8 @@ public class CMUtils {
 	/**
 	 * Change the default locale of the application for this activity
 	 *
-	 * @param locale To set in the configuration
+	 * @param locale
+	 * 	To set in the configuration
 	 */
 	public static void setDefaultLocale(Context context, String locale) {
 		Locale locJa = new Locale(locale);
@@ -348,7 +379,8 @@ public class CMUtils {
 	/**
 	 * Method to know if an Id indicates an empty object
 	 *
-	 * @param id The searched id
+	 * @param id
+	 * 	The searched id
 	 * @return True if it exists. Otherwise, False.
 	 */
 	public static boolean existsInDB(int id) {
@@ -373,9 +405,12 @@ public class CMUtils {
 	/**
 	 * This method fetches data from a given url
 	 *
-	 * @param strUrl Url from which the data will be fetched
+	 * @param strUrl
+	 * 	Url from which the data will be fetched
 	 * @return A String representing the resource obtained in the connection
-	 * @throws IOException If something went wrong with the connection
+	 *
+	 * @throws IOException
+	 * 	If something went wrong with the connection
 	 */
 	public static String getDataFromUrl(String strUrl) throws IOException {
 		InputStream iStream;
@@ -409,8 +444,10 @@ public class CMUtils {
 	 * Change opacity of a given view, with the alpha level given as parameter.
 	 * This method considers the environment version.
 	 *
-	 * @param view       View that will change its opacity
-	 * @param alphaLevel Alpha level representing the opacity, where 0.0 is completely transparent, and 1.0 is completely opaque
+	 * @param view
+	 * 	View that will change its opacity
+	 * @param alphaLevel
+	 * 	Alpha level representing the opacity, where 0.0 is completely transparent, and 1.0 is completely opaque
 	 */
 	public static void setAlphaForAllVersions(View view, float alphaLevel) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -449,8 +486,10 @@ public class CMUtils {
 	/**
 	 * Decodes a bitmap to its corresponding representation in bytes, in the format sent as parameter
 	 *
-	 * @param bitmap Bitmap to decode
-	 * @param format Format with which this image is going to be decoded
+	 * @param bitmap
+	 * 	Bitmap to decode
+	 * @param format
+	 * 	Format with which this image is going to be decoded
 	 * @return A byte array containing the bytes of the decoded bitmap
 	 */
 	public static byte[] bitmapToByteArray(Bitmap bitmap, Bitmap.CompressFormat format) {
@@ -482,7 +521,8 @@ public class CMUtils {
 	/**
 	 * Method to remove accents from an uppercase string
 	 *
-	 * @param str String to remove accents from
+	 * @param str
+	 * 	String to remove accents from
 	 * @return The new string without accents
 	 */
 	public static String removeAccentsUppercase(String str) {
@@ -509,5 +549,17 @@ public class CMUtils {
 		res = res.replace(" ", "%20");
 		res = res.replaceAll("([^a-zA-Z0-9%])", "");
 		return res;
+	}
+
+	/**
+	 * Check if the device screen is large
+	 *
+	 * @param context
+	 * 	Context of the application
+	 * @return TRUE if the screen is large
+	 */
+	public static boolean isLargeScreen(Context context) {
+		int screenSize = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+		return screenSize >= Configuration.SCREENLAYOUT_SIZE_LARGE;
 	}
 }

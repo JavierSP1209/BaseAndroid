@@ -38,14 +38,14 @@ public class BaseDrawerActivity extends BaseActionBarActivity
 
 	@Override
 	public void setContentView(int layoutResID) {
-		super.setContentView(R.layout.drawer_activity);
+		super.setContentView(R.layout.base_activity);
 
 		mNavigationDrawerFragment =
 			(NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.left_drawer);
 		mTitle = getTitle();
 
 		// Set up the drawer.
-		mNavigationDrawerFragment.setUp(R.id.left_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
+		mNavigationDrawerFragment.setUp(R.id.left_drawer,   (DrawerLayout) findViewById(R.id.drawer_layout));
 
 		FrameLayout mainFrame = (FrameLayout) findViewById(R.id.main_frame);
 		View v = getLayoutInflater().inflate(layoutResID, null);
@@ -82,8 +82,16 @@ public class BaseDrawerActivity extends BaseActionBarActivity
 			default:
 				mTitle = getString(R.string.app_name);
 		}
+
+		//If drawer is locked, update action bar title
+		if(mNavigationDrawerFragment!=null && mNavigationDrawerFragment.isLockDrawer()){
+			getSupportActionBar().setTitle(mTitle);
+		}
 	}
 
+	/**
+	 * Restores default action bar state like navigation mode and title
+	 */
 	public void restoreActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -102,6 +110,12 @@ public class BaseDrawerActivity extends BaseActionBarActivity
 			restoreActionBar();
 			return true;
 		}
+
+		//If drawer is locked, update action bar title
+		if(mNavigationDrawerFragment.isLockDrawer()){
+			getSupportActionBar().setTitle(mTitle);
+		}
+
 		return super.onCreateOptionsMenu(menu);
 	}
 

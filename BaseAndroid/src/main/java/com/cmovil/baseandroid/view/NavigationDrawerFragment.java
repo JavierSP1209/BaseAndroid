@@ -3,6 +3,8 @@ package com.cmovil.baseandroid.view;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -22,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.cmovil.baseandroid.R;
+import com.cmovil.baseandroid.util.CMUtils;
 
 /**
  * Base navigation drawer fragments using android
@@ -37,6 +40,11 @@ public class NavigationDrawerFragment extends Fragment {
 	private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
 
 	/**
+	 * Remember the configuration of the drawer.
+	 */
+	private static final String STATE_DRAWER = "state_drawer";
+
+	/**
 	 * Per the design guidelines, you should show the drawer on launch until the user manually
 	 * expands it. This shared preference tracks this.
 	 */
@@ -46,6 +54,19 @@ public class NavigationDrawerFragment extends Fragment {
 	 * A pointer to the current callbacks instance (the Activity).
 	 */
 	private NavigationDrawerCallbacks mCallbacks;
+
+	/**
+	 * If the screen is at least large in order to modify drawer layout
+	 */
+	private boolean isLargeScreen;
+
+	/**
+	 * If the screen orientation is landscape
+	 */
+	private boolean isLandscape;
+
+	private boolean lockDrawer;
+	private boolean lastDrawerState;
 
 	/**
 	 * Helper component that ties the action bar to the navigation drawer.
@@ -72,10 +93,19 @@ public class NavigationDrawerFragment extends Fragment {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
 
+		//Initialize values
+		isLargeScreen = false;
+		isLandscape = false;
+		lockDrawer = false;
+		lastDrawerState = false;
+
 		if (savedInstanceState != null) {
 			mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
 			mFromSavedInstanceState = true;
+			lastDrawerState = savedInstanceState.getBoolean(STATE_DRAWER, false);
 		}
+
+
 
 		// Select either the default item (0) or the last selected item.
 		selectItem(mCurrentSelectedPosition);
@@ -108,10 +138,20 @@ public class NavigationDrawerFragment extends Fragment {
 
 	/**
 	 * Gets it the drawer fragment is shown
+	 *
 	 * @return TRUE if drawer is opened, FALSE other wise
 	 */
 	public boolean isDrawerOpen() {
-		return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+		return (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView));
+	}
+
+
+	/**
+	 * Gets if the drawer is locked, so the user could not open or close it
+	 * @return TRUE if the drawer is locked
+	 */
+	public boolean isLockDrawer() {
+		return lockDrawer;
 	}
 
 	/**
@@ -192,7 +232,7 @@ public class NavigationDrawerFragment extends Fragment {
 		if (mDrawerListView != null) {
 			mDrawerListView.setItemChecked(position, true);
 		}
-		if (mDrawerLayout != null) {
+		if (mDrawerLayout != null && !lockDrawer) {
 			mDrawerLayout.closeDrawer(mFragmentContainerView);
 		}
 		if (mCallbacks != null) {
@@ -220,6 +260,7 @@ public class NavigationDrawerFragment extends Fragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
+		outState.putBoolean(STATE_DRAWER, lockDrawer);
 	}
 
 	@Override
@@ -230,10 +271,30 @@ public class NavigationDrawerFragment extends Fragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		isLargeScreen = CMUtils.isLargeScreen(getActivity());
+		isLandscape =
+			getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+
+		//If the screen is large and its on landscape lock drawer
+		if (isLargeScreen && isLandscape) {
+			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+			mDrawerLayout.setScrimColor(Color.TRANSPARENT);
+			getActionBar().setDisplayHomeAsUpEnabled(false);
+			getActionBar().setHomeButtonEnabled(false);
+			lockDrawer = true;
+		} else {
+			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+			if(lastDrawerState) mDrawerLayout.closeDrawer(mFragmentContainerView);
+		}
+	}
+
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// If the drawer is open, show the global app actions in the action bar. See also
 		// showGlobalContextActionBar, which controls the top-left area of the action bar.
-		if (mDrawerLayout != null && isDrawerOpen()) {
+		if (mDrawerLayout != null && isDrawerOpen() && !lockDrawer) {
 			inflater.inflate(R.menu.global, menu);
 			showGlobalContextActionBar();
 		}
@@ -242,7 +303,7 @@ public class NavigationDrawerFragment extends Fragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
+		if (!lockDrawer && mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
 
@@ -277,8 +338,8 @@ public class NavigationDrawerFragment extends Fragment {
 	/**
 	 * Close the current drawer
 	 */
-	protected void closeDrawer(){
-		mDrawerLayout.closeDrawer(GravityCompat.START);
+	protected void closeDrawer() {
+		if (!lockDrawer) mDrawerLayout.closeDrawer(GravityCompat.START);
 	}
 
 }

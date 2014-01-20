@@ -13,7 +13,7 @@ import com.cmovil.baseandroid.util.KeyDictionary;
 
 import java.util.List;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends BaseDrawerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class SplashActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.splash, menu);
-        return true;
+	    return super.onCreateOptionsMenu(menu);
     }
     
 }

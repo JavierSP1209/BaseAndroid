@@ -8,4 +8,23 @@
         <!-- API 11 theme customizations can go here. -->
     </style>
 
+    <style name="SplashTheme" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen"/>
+
+    <style name="ActionBarTheme" parent="@style/Theme.AppCompat.Light">
+        <!-- Support library compatibility -->
+        <item name="android:actionBarSize">@dimen/margin40</item>
+        <item name="android:actionBarStyle">@style/solid_ActionBar</item>
+    </style>
+
+    <style name="solid_ActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/blue</item>
+        <item name="android:titleTextStyle">@style/ActionBarTitleTheme</item>
+    </style>
+
+    <style name="ActionBarTitleTheme"
+        parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
 </resources>

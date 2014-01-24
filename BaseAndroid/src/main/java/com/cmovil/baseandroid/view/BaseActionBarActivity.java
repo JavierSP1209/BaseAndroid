@@ -1,5 +1,6 @@
 package com.cmovil.baseandroid.view;
 
+import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -45,6 +46,10 @@ public class BaseActionBarActivity extends ActionBarActivity {
         //    removePaddingFromBar();
     }
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	/**
+	 * Removes padding from home button
+	 */
     private void removePaddingFromBar(){
         // Remove home icon padding and margins
         ImageView view = (ImageView) findViewById(android.R.id.home);

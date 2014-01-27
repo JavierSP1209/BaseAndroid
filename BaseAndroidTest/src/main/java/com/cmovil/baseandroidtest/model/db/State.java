@@ -5,9 +5,10 @@
  * Description: 
  *  Model Object that represents the States table in DB model
  */
-package com.cmovil.baseandroid.model.db;
+package com.cmovil.baseandroidtest.model.db;
 
 
+import com.cmovil.baseandroid.model.db.BaseModel;
 import com.cmovil.baseandroid.util.CustomCatalogComparator;
 
 /**

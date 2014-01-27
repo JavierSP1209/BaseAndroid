@@ -14,7 +14,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.cmovil.baseandroid.dao.db.DatabaseDictionary;
 import com.cmovil.baseandroid.util.KeyDictionary;
 
 import java.util.ArrayList;
@@ -32,8 +31,8 @@ public abstract class BaseDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	protected final Context dbHelperContext;
 
-	public BaseDatabaseOpenHelper(Context context) {
-		super(context, DatabaseDictionary.DATABASE_NAME, null, DatabaseDictionary.DATABASE_VERSION);
+	public BaseDatabaseOpenHelper(Context context, String name, int version) {
+		super(context, name, null, version);
 		this.dbHelperContext = context;
 	}
 
@@ -88,7 +87,7 @@ public abstract class BaseDatabaseOpenHelper extends SQLiteOpenHelper {
 	 * @param db
 	 * 	The database.
 	 */
-	protected void upgrade(String tableName, String sqlCreate, String sqlBackUp, SQLiteDatabase db) {
+	public void upgrade(String tableName, String sqlCreate, String sqlBackUp, SQLiteDatabase db) {
 		Log.i(KeyDictionary.TAG, "Upgrading State");
 
 		//Update State table
@@ -113,51 +112,4 @@ public abstract class BaseDatabaseOpenHelper extends SQLiteOpenHelper {
 		db.setTransactionSuccessful();
 		db.endTransaction();
 	}
-
-	/**
-	 * Called when the database is created for the first time. This is where the creation of tables and the initial
-	 * population of the tables should happen.
-	 *
-	 * @param db
-	 * 	The database.
-	 */
-	@Override
-	public void onCreate(SQLiteDatabase db) {
-
-		//TODO: Add each table open helper create function
-		//Call create function for each table
-		(new SampleOpenHelper(dbHelperContext)).create(db);
-	}
-
-	/**
-	 * Called when the database needs to be upgraded. The implementation should use this method to drop tables,
-	 * add tables,
-	 * or do anything else it needs to upgrade to the new schema version. <p/> <p> The SQLite ALTER TABLE
-	 * documentation can
-	 * be found <a href="http://sqlite.org/lang_altertable.html">here</a> . If you add new columns you can use ALTER
-	 * TABLE
-	 * to insert them into a live table. If you rename or remove columns you can use ALTER TABLE to rename the old
-	 * table,
-	 * then create the new table and then populate the new table with the contents of the old table. </p><p> This
-	 * method
-	 * executes within a transaction.  If an exception is thrown, all changes will automatically be rolled back. </p>
-	 *
-	 * @param db
-	 * 	The database.
-	 * @param oldVersion
-	 * 	The old database version.
-	 * @param newVersion
-	 * 	The new database version.
-	 */
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.i(KeyDictionary.TAG, "Upgrading DB from version " + oldVersion + " to " + newVersion);
-
-		//TODO: Add each table open helper upgrade function
-		//Call each table upgrade function
-		(new SampleOpenHelper(dbHelperContext))
-			.upgrade(DatabaseDictionary.State.NAME, DatabaseDictionary.State.SQL_CREATE,
-				DatabaseDictionary.State.SQL_BACKUP, db);
-	}
-
 }

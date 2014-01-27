@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 
 import com.cmovil.baseandroid.dao.db.helper.BaseDatabaseOpenHelper;
+import com.cmovil.baseandroid.dao.db.helper.DatabaseDictionary;
 import com.cmovil.baseandroid.model.db.BaseModel;
 
 import java.util.Map;

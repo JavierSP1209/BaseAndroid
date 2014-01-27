@@ -1,10 +1,8 @@
-//apply plugin: 'android'
-apply plugin: 'android-library'
+apply plugin: 'android'
 
 android {
     compileSdkVersion 19
     buildToolsVersion "19.0.1"
-
 
     defaultConfig {
         minSdkVersion 8
@@ -12,13 +10,19 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    buildTypes {
+        release {aven
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
 }
 
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.android.support:support-v4:+'
-    compile 'com.android.support:appcompat-v7:sources'
-	compile 'com.android.support:gridlayout-v7:+'
-    compile 'com.android.support:support-v4:sources'
     compile 'com.google.code.gson:gson:2.+'
+    compile 'com.cmovil.baseandroid:BaseAndroid:1.5.0'
+    //compile files ('libs/BaseAndroid.aar')
+    //compile project (':BaseAndroid')
 }

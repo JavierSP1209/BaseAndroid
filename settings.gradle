@@ -1,1 +1,1 @@
-include ':BaseAndroid'
+include ':BaseAndroid', ':BaseAndroidTest'

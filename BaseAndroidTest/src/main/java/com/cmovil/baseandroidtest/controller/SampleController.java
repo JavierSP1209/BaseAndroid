@@ -7,18 +7,16 @@
  * Class that will be the connection between database and view classes, so it will include functions for inserting,
  * deleting, updating and getting rows in the data base, but will use DAO objects for getting and returning data
  */
-package com.cmovil.baseandroid.controller;
+package com.cmovil.baseandroidtest.controller;
 
 import android.content.Context;
 import android.database.Cursor;
 
+import com.cmovil.baseandroid.controller.BaseDBController;
 import com.cmovil.baseandroid.dao.db.DBException;
-import com.cmovil.baseandroid.dao.db.DatabaseDictionary;
-import com.cmovil.baseandroid.dao.db.SampleDAO;
-import com.cmovil.baseandroid.model.db.State;
-
-import java.util.LinkedList;
-import java.util.List;
+import com.cmovil.baseandroidtest.dao.db.helper.DatabaseDictionary;
+import com.cmovil.baseandroidtest.dao.db.SampleDAO;
+import com.cmovil.baseandroidtest.model.db.State;
 
 /**
  * Class that will be the connection between database and view classes, so it will include generic functions for
@@ -75,7 +73,7 @@ public class SampleController extends BaseDBController<State> {
 	 *
 	 * @param idServer
 	 * 	Server Id that will be searched in the database
-	 * @return A {@link com.cmovil.baseandroid.model.db.State} object with the values from the database or an empty
+	 * @return A {@link com.cmovil.baseandroidtest.model.db.State} object with the values from the database or an empty
 	 * object
 	 * if no results where found
 	 *
@@ -84,7 +82,7 @@ public class SampleController extends BaseDBController<State> {
 	 */
 	public State getByServerId(Integer idServer) throws DBException {
 
-		Cursor res = ((SampleDAO)baseDBDAO).getByServerId(idServer, COLUMNS);
+		Cursor res = ((SampleDAO)getBaseDBDAO()).getByServerId(idServer, COLUMNS);
 		//If the cursor has at least one element, create the corresponding State object, if not,
 		// return an empty object
 		if (res != null && res.moveToFirst()) {

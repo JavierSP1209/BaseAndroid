@@ -14,7 +14,6 @@ import android.util.Log;
 
 import com.cmovil.baseandroid.dao.db.BaseDBDAO;
 import com.cmovil.baseandroid.dao.db.DBException;
-import com.cmovil.baseandroid.dao.db.DatabaseDictionary;
 import com.cmovil.baseandroid.model.db.BaseModel;
 import com.cmovil.baseandroid.util.KeyDictionary;
 
@@ -34,6 +33,11 @@ import java.util.List;
 public abstract class BaseDBController<T extends BaseModel> {
 
 	BaseDBDAO<T> baseDBDAO;
+
+
+	protected BaseDBDAO<T> getBaseDBDAO() {
+		return baseDBDAO;
+	}
 
 	/**
 	 * Constructor
@@ -104,20 +108,14 @@ public abstract class BaseDBController<T extends BaseModel> {
 	 * 	Valid cursor for extract object information
 	 * @return A State object fill up with cursor information
 	 */
-	public abstract T fillUpObject(Cursor cursor);/* {
-		State state = new State();
-		state.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseDictionary.State._ID)));
-		state.setIdServer(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseDictionary.State.COLUMN_NAME_ID_SERVER)));
-		state.setName(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseDictionary.State.COLUMN_NAME_NAME)));
-		return state;
-	}*/
+	public abstract T fillUpObject(Cursor cursor);
 
 	/**
 	 * Gets the object with the selected id
 	 *
 	 * @param id
 	 * 	Id that will be searched in the database
-	 * @return A {@link com.cmovil.baseandroid.model.db.State} object with the values from the database or an empty
+	 * @return An object with the values from the database or an empty
 	 * object
 	 * if no results where found
 	 *
@@ -153,16 +151,16 @@ public abstract class BaseDBController<T extends BaseModel> {
 	}
 
 	/**
-	 * @return A list of all the states of the db
+	 * @return A list of all the objects of the desired table
 	 *
 	 * @throws com.cmovil.baseandroid.dao.db.DBException
 	 * 	if something goes wrong during SQL statements execution
 	 */
-	public List<T> getAll() throws DBException {
+	public List<T> getAll(String tableName) throws DBException {
 		List<T> res = new LinkedList<T>();
 
 
-		Cursor cursor = baseDBDAO.getAll(DatabaseDictionary.State.NAME, getColumns(), null);
+		Cursor cursor = baseDBDAO.getAll(tableName, getColumns(), null);
 		//If the cursor has at least one element, create the corresponding State object, if not,
 		// return an empty object
 		if (cursor != null && cursor.moveToFirst()) {

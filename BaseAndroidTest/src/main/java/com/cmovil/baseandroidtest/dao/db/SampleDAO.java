@@ -7,15 +7,18 @@
  * table in order to modify or retrieve information
  *
  */
-package com.cmovil.baseandroid.dao.db;
+package com.cmovil.baseandroidtest.dao.db;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 
-import com.cmovil.baseandroid.dao.db.helper.SampleOpenHelper;
-import com.cmovil.baseandroid.model.db.State;
+import com.cmovil.baseandroid.dao.db.BaseDBDAO;
+import com.cmovil.baseandroid.dao.db.DBException;
+import com.cmovil.baseandroidtest.dao.db.helper.DatabaseDictionary;
+import com.cmovil.baseandroidtest.dao.db.helper.SampleOpenHelper;
+import com.cmovil.baseandroidtest.model.db.State;
 
 /**
  * Data Access Object implementation for State table, will contain all the function that access to the data base table
@@ -62,7 +65,7 @@ public class SampleDAO extends BaseDBDAO<State> {
 	 * 	The columns to include, if null then all are included
 	 * @return Cursor positioned to matching word, or null if not found.
 	 *
-	 * @throws DBException
+	 * @throws com.cmovil.baseandroid.dao.db.DBException
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	public Cursor getByServerId(Integer idServer, String[] columns) throws DBException {

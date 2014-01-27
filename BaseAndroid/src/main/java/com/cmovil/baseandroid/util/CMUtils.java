@@ -70,10 +70,8 @@ public class CMUtils {
 	public static final String FONT_ARIAL_BLACK = "fonts/ArialBlack.ttf";
 	public static final String FONT_GOTHIC = "fonts/gothic_0.ttf";
 	public static final SecureRandom SECURE_RANDOM = new SecureRandom();
-	public static final String IMG = "IMG_";
-	public static final String JPG = ".jpg";
-	public static final String DATE_FORMAT = "yyyyMMdd_HHmmss";
-	public static final String DIRECTORY_NAME = "buenfin";
+
+
 	/**
 	 * Unique ID of the Android device
 	 */
@@ -461,11 +459,25 @@ public class CMUtils {
 	}
 
 
-	public static File getOutputMediaFile(Context context) {
+	/**
+	 * Returns the output file for images using a custom name
+	 *
+	 * @param directoryName
+	 * 	Name of the directory that will be created on the external storage
+	 * @param dateFormat
+	 * 	Format to be used for setting the time stamp for the file name
+	 * @param imageSuffix
+	 * 	Suffix to be used on the file name
+	 * @param imageFormat
+	 * 	Format of the file
+	 * @return A file with a custom name using a suffix and time stamp on the external storage
+	 */
+	public static File getOutputMediaFile(String directoryName, String dateFormat, String imageSuffix,
+	                                      String imageFormat) {
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
 		//  String appName = context.getResources().getString(R.string.app_name);
-		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), DIRECTORY_NAME);
+		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), directoryName);
 
 		// Create the storage directory if it does not exist
 		if (!mediaStorageDir.exists()) {
@@ -476,11 +488,9 @@ public class CMUtils {
 		}
 
 		// Create a media file name
-		String timeStamp = new SimpleDateFormat(DATE_FORMAT).format(new Date());
+		String timeStamp = new SimpleDateFormat(dateFormat).format(new Date());
 
-		File mediaFile = new File(mediaStorageDir.getPath() + File.separator + IMG + timeStamp + JPG);
-
-		return mediaFile;
+		return new File(mediaStorageDir.getPath() + File.separator + imageSuffix + timeStamp + imageFormat);
 	}
 
 	/**

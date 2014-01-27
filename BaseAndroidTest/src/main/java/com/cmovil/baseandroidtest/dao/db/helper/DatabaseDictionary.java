@@ -1,34 +1,47 @@
 /**
  * File: DatabaseDictionary
- * CreationDate: 28/05/13
+ * CreationDate: 27/01/14
  * Author: "M. en C. Javier Silva Perez (JSP)"
  * Description: 
- *  Class which contains static values for all the Data base base_dictionary needed across the application,
- *  this values could
- * include database name, tables base_dictionary, attributes base_dictionary, etc.
+ *  Class which contains static values for all the Data base static values needed across the application,
+ *  this values could include database name, tables base_dictionary, attributes base_dictionary, etc.
  */
-package com.cmovil.baseandroid.dao.db;
+package com.cmovil.baseandroidtest.dao.db.helper;
 
 import android.app.SearchManager;
-import android.provider.BaseColumns;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 /**
- * Class which contains static values for all the Data base base_dictionary needed across the application, this values
- * could include database name, tables base_dictionary, attributes base_dictionary, etc.
+ * Class which contains static values for all the Data base static values needed across the application,
+ * this values could include database name, tables base_dictionary, attributes base_dictionary, etc.
  *
  * @author "M. en C. Javier Silva Perez (JSP)"
- * @version 1.0
- * @since 28/05/13
+ * @version 1.5
+ * @since 27/01/14
  */
 public class DatabaseDictionary {
 
 	/**
+	 * SQLLite Text data type
+	 */
+	protected static final String TEXT_TYPE = " TEXT";
+	/**
+	 * SQLLite Integer data type
+	 */
+	protected static final String INTEGER_TYPE = " INTEGER";
+	protected static final String BLOB_TYPE = " BLOB";
+	/**
+	 * SQLLite Real data type
+	 */
+	protected static final String REAL_TYPE = " REAL";
+	protected static final String COMMA_SEP = ",";
+
+	/**
 	 * Database name
 	 */
-	public static final String DATABASE_NAME = "buenfin.db";
+	public static final String DATABASE_NAME = "buenfin.com.cmovil.baseandroidtest.dao.db";
 	/**
 	 * Database version
 	 */
@@ -36,32 +49,11 @@ public class DatabaseDictionary {
 	public static final DateFormat FORMATTER_VIEW = new SimpleDateFormat("dd/MM/yyyy");
 	public static final DateFormat FORMATTER_DB = new SimpleDateFormat("yyyy-MM-dd");
 	public static final DateFormat FORMATTER_SERVER = new SimpleDateFormat("yyyyMMdd");
-	/**
-	 * SQLLite Text data type
-	 */
-	private static final String TEXT_TYPE = " TEXT";
-	/**
-	 * SQLLite Integer data type
-	 */
-	private static final String INTEGER_TYPE = " INTEGER";
-	private static final String BLOB_TYPE = " BLOB";
-	/**
-	 * SQLLite Real data type
-	 */
-	private static final String REAL_TYPE = " REAL";
-	private static final String COMMA_SEP = ",";
 
 	/**
 	 * Prevents the DatabaseDictionary class from being instantiated.
 	 */
 	private DatabaseDictionary() {
-	}
-
-	/**
-	 * Base db structure which contains filter id value
-	 */
-	public interface DBBaseStructure extends BaseColumns{
-		public static final String FILTER_ID = _ID + " = ?";
 	}
 
 	/**
@@ -71,7 +63,8 @@ public class DatabaseDictionary {
 	 * @version 1.0
 	 * @since 29/07/13
 	 */
-	public static final class State implements DBBaseStructure {
+	public static final class State implements com.cmovil.baseandroid.dao.db.helper.DatabaseDictionary
+		                                           .DBBaseStructure {
 
 		/**
 		 * Table name
@@ -109,7 +102,8 @@ public class DatabaseDictionary {
 	 * @version 1.0
 	 * @since 29/07/13
 	 */
-	public static final class ExampleFullIndexedTable implements DBBaseStructure {
+	public static final class ExampleFullIndexedTable
+		implements com.cmovil.baseandroid.dao.db.helper.DatabaseDictionary.DBBaseStructure {
 
 		/**
 		 * Table name
@@ -124,7 +118,8 @@ public class DatabaseDictionary {
 			_ID + " INTEGER PRIMARY KEY AUTOINCREMENT" + COMMA_SEP +
 			COLUMN_NAME_EXAMPLE + TEXT_TYPE + COMMA_SEP +
 			COLUMN_NAME_ID_FOREIGN + INTEGER_TYPE + COMMA_SEP +
-			"FOREIGN KEY(" + COLUMN_NAME_ID_FOREIGN + ") REFERENCES " + "OTHER_TABLE_NAME" + "(_id) ON DELETE CASCADE" +
+			"FOREIGN KEY(" + COLUMN_NAME_ID_FOREIGN + ") REFERENCES " + "OTHER_TABLE_NAME" + "(_id) ON DELETE " +
+			"CASCADE" +
 			" ); ";
 
 		/**
@@ -151,7 +146,8 @@ public class DatabaseDictionary {
 	 * @version 1.0
 	 * @since 29/07/13
 	 */
-	public static abstract class ExampleFTS implements DBBaseStructure {
+	public static abstract class ExampleFTS
+		implements com.cmovil.baseandroid.dao.db.helper.DatabaseDictionary.DBBaseStructure {
 
 		/**
 		 * Table name

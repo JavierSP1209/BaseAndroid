@@ -6,10 +6,12 @@
  *  This class will only be used for create a dummy request object and parse a dummy response in order to test the
  * cryptographic operations and parsers for the base request and response models
  */
-package com.cmovil.baseandroid.dao.ws;
+package com.cmovil.baseandroidtest.dao.ws;
 
 import android.content.Context;
 
+import com.cmovil.baseandroid.dao.ws.ResponseErrorException;
+import com.cmovil.baseandroid.dao.ws.WSClient;
 import com.cmovil.baseandroid.model.ws.MessageErrorCode;
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
@@ -74,7 +76,7 @@ public abstract class SampleWS<T1, T2> extends WSClient<T1, T2> {
 	 *
 	 * @param serverResponse
 	 * 	Server JSON response string
-	 * @throws ResponseErrorException
+	 * @throws com.cmovil.baseandroid.dao.ws.ResponseErrorException
 	 * 	If an error is detected on the response
 	 */
 	protected void manageErrors(String serverResponse) throws ResponseErrorException {

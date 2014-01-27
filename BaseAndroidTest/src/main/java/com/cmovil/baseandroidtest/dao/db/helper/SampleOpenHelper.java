@@ -5,23 +5,13 @@
  * Description: 
  *
  */
-package com.cmovil.baseandroid.dao.db.helper;
+package com.cmovil.baseandroidtest.dao.db.helper;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
-import android.util.Log;
 
-import com.cmovil.baseandroid.R;
-import com.cmovil.baseandroid.dao.db.DatabaseDictionary;
-import com.cmovil.baseandroid.util.KeyDictionary;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.cmovil.baseandroidtest.dao.db.helper.DatabaseDictionary;
+import com.cmovil.baseandroid.dao.db.helper.BaseDatabaseOpenHelper;
 
 /**
  * State table data base open helper, this class will implements its own onCreate and onUpgrade functions depending on
@@ -31,7 +21,7 @@ import java.io.InputStreamReader;
  * @version 1.0
  * @since 31/07/13
  */
-public class SampleOpenHelper extends BaseDatabaseOpenHelper {
+public class SampleOpenHelper extends CustomDataBaseOpenHelper {
 
 	public SampleOpenHelper(Context context) {
 		super(context);

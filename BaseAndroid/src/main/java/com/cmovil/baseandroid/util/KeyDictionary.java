@@ -85,7 +85,7 @@ public class KeyDictionary {
 	/**
      * Private default constructor, for prevent this class from been instantiated
      */
-    private KeyDictionary() {
+    protected KeyDictionary() {
     }
 
     /**

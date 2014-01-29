@@ -4,24 +4,17 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.cmovil.baseandroid.R;
 import com.cmovil.baseandroid.util.CMUtils;
@@ -126,6 +119,7 @@ public class BaseNavigationDrawerFragment extends Fragment {
 
 	/**
 	 * Gets if the drawer is locked, so the user could not open or close it
+	 *
 	 * @return TRUE if the drawer is locked
 	 */
 	public boolean isLockDrawer() {
@@ -139,8 +133,13 @@ public class BaseNavigationDrawerFragment extends Fragment {
 	 * 	The android:id of this fragment in its activity's layout.
 	 * @param drawerLayout
 	 * 	The DrawerLayout containing this fragment's UI.
+	 * @param drawerPosition
+	 * 	Position of the drawer, {@link android.support.v4.view.GravityCompat#START},
+	 * 	{@link android.support.v4.view.GravityCompat#END}
+	 * @param drawerIcon
+	 * 	Id of the resource to use as drawer icon on the action bar
 	 */
-	public void setUp(int fragmentId, DrawerLayout drawerLayout, int drawerPosition) {
+	public void setUp(int fragmentId, DrawerLayout drawerLayout, int drawerPosition, int drawerIcon) {
 		mFragmentContainerView = getActivity().findViewById(fragmentId);
 		mDrawerLayout = drawerLayout;
 		this.drawerPosition = drawerPosition;
@@ -157,7 +156,7 @@ public class BaseNavigationDrawerFragment extends Fragment {
 		// between the navigation drawer and the action bar app icon.
 		mDrawerToggle = new ActionBarDrawerToggle(getActivity(),                    /* host Activity */
 			mDrawerLayout,                    /* DrawerLayout object */
-			R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
+			drawerIcon,             /* nav drawer image to replace 'Up' caret */
 			R.string.drawer_open,  /* "open drawer" description for accessibility */
 			R.string.drawer_close  /* "close drawer" description for accessibility */) {
 			@Override
@@ -204,6 +203,21 @@ public class BaseNavigationDrawerFragment extends Fragment {
 		});
 
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
+	}
+
+	/**
+	 * Users of this fragment must call this method to set up the navigation drawer interactions.
+	 *
+	 * @param fragmentId
+	 * 	The android:id of this fragment in its activity's layout.
+	 * @param drawerLayout
+	 * 	The DrawerLayout containing this fragment's UI.
+	 * @param drawerPosition
+	 * 	Position of the drawer, {@link android.support.v4.view.GravityCompat#START},
+	 * 	{@link android.support.v4.view.GravityCompat#END}
+	 */
+	public void setUp(int fragmentId, DrawerLayout drawerLayout, int drawerPosition) {
+		setUp(fragmentId, drawerLayout, drawerPosition, R.drawable.ic_drawer);
 	}
 
 	protected void selectItem(int position) {
@@ -263,7 +277,7 @@ public class BaseNavigationDrawerFragment extends Fragment {
 			lockDrawer = true;
 		} else {
 			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-			if(lastDrawerState) mDrawerLayout.closeDrawer(mFragmentContainerView);
+			if (lastDrawerState) mDrawerLayout.closeDrawer(mFragmentContainerView);
 		}
 	}
 

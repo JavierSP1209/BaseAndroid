@@ -30,6 +30,11 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	 */
 	protected CharSequence mTitle;
 
+	/**
+	 * Resource id to be used as drawer icon
+	 */
+	protected int drawerIcon;
+
 	@Override
 	public void setContentView(int layoutResID) {
 		super.setContentView(R.layout.base_activity);
@@ -39,17 +44,30 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 		mainFrame.addView(v);
 	}
 
-	public void setDrawerContent(){
+	/**
+	 * Sets up drawer content using a custom drawer icon
+	 *
+	 * @param drawerIcon
+	 * 	Resource id of the drawer icon to be used
+	 */
+	public void setDrawerContent(int drawerIcon) {
 
+		this.drawerIcon = drawerIcon;
 		FragmentManager fragmentManager = getSupportFragmentManager();
 
-		mNavigationDrawerFragment = (BaseNavigationDrawerFragment)fragmentManager.findFragmentById(R.id.left_drawer);
-		if(mNavigationDrawerFragment==null){
+		mNavigationDrawerFragment = (BaseNavigationDrawerFragment) fragmentManager.findFragmentById(R.id.left_drawer);
+		if (mNavigationDrawerFragment == null) {
 			mNavigationDrawerFragment = createNewNavigationDrawerFragment();
 		}
-		fragmentManager.beginTransaction().replace(R.id.left_drawer, mNavigationDrawerFragment)
-			.commit();
+		fragmentManager.beginTransaction().replace(R.id.left_drawer, mNavigationDrawerFragment).commit();
 		mTitle = getTitle();
+	}
+
+	/**
+	 * Sets up drawer content using a default drawer ico
+	 */
+	public void setDrawerContent() {
+		setDrawerContent(R.drawable.ic_drawer);
 	}
 
 	protected abstract BaseNavigationDrawerFragment createNewNavigationDrawerFragment();
@@ -58,8 +76,8 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	protected void onStart() {
 		super.onStart();
 		// Set up the drawer.
-		mNavigationDrawerFragment.setUp(R.id.left_drawer, (DrawerLayout) findViewById(R.id.drawer_layout),
-			GravityCompat.START);
+		mNavigationDrawerFragment
+			.setUp(R.id.left_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), GravityCompat.START, drawerIcon);
 	}
 
 	/**
@@ -67,7 +85,7 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	 */
 	public void onSectionAttached(int sectionNumber) {
 		//If drawer is locked, update action bar title
-		if(mNavigationDrawerFragment!=null && mNavigationDrawerFragment.isLockDrawer()){
+		if (mNavigationDrawerFragment != null && mNavigationDrawerFragment.isLockDrawer()) {
 			getSupportActionBar().setTitle(mTitle);
 		}
 	}
@@ -95,7 +113,7 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 		}
 
 		//If drawer is locked, update action bar title
-		if(mNavigationDrawerFragment.isLockDrawer()){
+		if (mNavigationDrawerFragment.isLockDrawer()) {
 			getSupportActionBar().setTitle(mTitle);
 		}
 

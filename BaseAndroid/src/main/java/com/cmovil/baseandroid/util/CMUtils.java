@@ -333,7 +333,7 @@ public class CMUtils {
 			v = rootView.getChildAt(i);
 			if (v != null) {
 				if (v instanceof ViewGroup) disableView((ViewGroup) v, alpha);
-				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) v.setAlpha(alpha);
+				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) setAlphaForAllVersions(v,alpha);
 				v.setEnabled(false);
 			}
 		}

@@ -62,7 +62,7 @@ public class SampleController extends BaseDBController<State> {
 	 */
 	public State fillUpObject(Cursor cursor) {
 		State state = new State();
-		state.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseDictionary.State._ID)));
+		state.setDbId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseDictionary.State._ID)));
 		state.setIdServer(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseDictionary.State.COLUMN_NAME_ID_SERVER)));
 		state.setName(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseDictionary.State.COLUMN_NAME_NAME)));
 		return state;

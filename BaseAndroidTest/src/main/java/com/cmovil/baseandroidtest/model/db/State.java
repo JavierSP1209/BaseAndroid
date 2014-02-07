@@ -37,7 +37,7 @@ public class State extends BaseModel {
 	 * Default constructor, initialize ids with -1 and name as an empty string
 	 */
 	public State() {
-		this.id = -1;
+		this.dbId = -1;
 		this.idServer = -1;
 		this.name = "";
 	}
@@ -53,7 +53,7 @@ public class State extends BaseModel {
 	 * 	State name
 	 */
 	public State(Integer id, Integer idServer, String name) {
-		this.id = id;
+		this.dbId = id;
 		this.idServer = idServer;
 		this.name = name;
 	}
@@ -66,14 +66,6 @@ public class State extends BaseModel {
 	@Override
 	public String getShownDescription() {
 		return name;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public Integer getIdServer() {
@@ -95,7 +87,7 @@ public class State extends BaseModel {
 	@Override
 	public String toString() {
 		return "State{" +
-			"id=" + id +
+			"id=" + dbId +
 			", idServer=" + idServer +
 			", name='" + name + '\'' +
 			'}';

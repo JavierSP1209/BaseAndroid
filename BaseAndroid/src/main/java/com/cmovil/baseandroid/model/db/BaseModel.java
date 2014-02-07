@@ -18,22 +18,22 @@ import com.cmovil.baseandroid.util.KeyDictionary;
  */
 public abstract class BaseModel {
 
-	protected Integer id;
+	protected Integer dbId;
 
 	/**
 	 * Initialize attributes with default values
 	 */
 	public BaseModel() {
-		id = KeyDictionary.EMPTY_OBJECT_ID;
+		dbId = KeyDictionary.EMPTY_OBJECT_ID;
 	}
 
 	/**
 	 * Base constructor with id
 	 *
-	 * @param id Model row id
+	 * @param dbId Model row id
 	 */
-	protected BaseModel(Integer id) {
-		this.id = id;
+	protected BaseModel(Integer dbId) {
+		this.dbId = dbId;
 	}
 
 	/**
@@ -43,12 +43,12 @@ public abstract class BaseModel {
 	 */
 	public abstract String getShownDescription();
 
-	public Integer getId() {
-		return id;
+	public Integer getDbId() {
+		return dbId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setDbId(Integer dbId) {
+		this.dbId = dbId;
 	}
 
 }

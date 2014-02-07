@@ -198,7 +198,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 			if (db == null) return 0;
 			// Which row to update, based on the ID
 			String selection = DatabaseDictionary.DBBaseStructure.FILTER_ID;
-			String[] selectionArgs = {String.valueOf(objectToUpdate.getId())};
+			String[] selectionArgs = {String.valueOf(objectToUpdate.getDbId())};
 
 			Integer res = db.update(tableName, fillMapValues(objectToUpdate), selection, selectionArgs);
 			db.close();

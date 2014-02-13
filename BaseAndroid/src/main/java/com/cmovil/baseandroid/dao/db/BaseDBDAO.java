@@ -45,7 +45,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * 	Object to be get the table values
 	 * @return A ContentValues object filled up with the corresponding Patient values
 	 */
-	protected abstract ContentValues fillMapValues(T insertObject);
+	protected abstract ContentValues fillMapValues(T insertObject) throws DBException;
 
 	/**
 	 * Close the data base

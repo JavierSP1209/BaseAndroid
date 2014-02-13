@@ -16,6 +16,7 @@ import android.database.SQLException;
 
 import com.cmovil.baseandroid.dao.db.BaseDBDAO;
 import com.cmovil.baseandroid.dao.db.DBException;
+import com.cmovil.baseandroidtest.dao.db.helper.CustomDataBaseOpenHelper;
 import com.cmovil.baseandroidtest.dao.db.helper.DatabaseDictionary;
 import com.cmovil.baseandroidtest.dao.db.helper.SampleOpenHelper;
 import com.cmovil.baseandroidtest.model.db.State;
@@ -37,7 +38,7 @@ public class SampleDAO extends BaseDBDAO<State> {
 	 * 	The Context within which to work, used to create the DB
 	 */
 	public SampleDAO(Context context) {
-		super(DatabaseDictionary.State.NAME, new SampleOpenHelper(context));
+		super(DatabaseDictionary.State.NAME, new CustomDataBaseOpenHelper(context));
 	}
 
 	/**

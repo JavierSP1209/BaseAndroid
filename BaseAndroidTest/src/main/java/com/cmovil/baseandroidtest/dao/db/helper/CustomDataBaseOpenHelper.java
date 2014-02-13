@@ -11,7 +11,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.cmovil.baseandroidtest.dao.db.helper.DatabaseDictionary;
 import com.cmovil.baseandroid.dao.db.helper.BaseDatabaseOpenHelper;
 import com.cmovil.baseandroid.util.KeyDictionary;
 
@@ -20,7 +19,7 @@ import com.cmovil.baseandroid.util.KeyDictionary;
  * @version 1.0
  * @since 27/01/14
  */
-public abstract class CustomDataBaseOpenHelper extends BaseDatabaseOpenHelper {
+public class CustomDataBaseOpenHelper extends BaseDatabaseOpenHelper {
 
 	public CustomDataBaseOpenHelper(Context context) {
 		super(context, DatabaseDictionary.DATABASE_NAME, DatabaseDictionary.DATABASE_VERSION);
@@ -31,14 +30,14 @@ public abstract class CustomDataBaseOpenHelper extends BaseDatabaseOpenHelper {
 	 * population of the tables should happen.
 	 *
 	 * @param db
-	 * 	The database.
+	 * 	The database
 	 */
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 
 		//TODO: Add each table open helper create function
 		//Call create function for each table
-		(new SampleOpenHelper(dbHelperContext)).create(db);
+		create(db, DatabaseDictionary.State.SQL_CREATE);
 	}
 
 	/**
@@ -67,8 +66,22 @@ public abstract class CustomDataBaseOpenHelper extends BaseDatabaseOpenHelper {
 
 		//TODO: Add each table open helper upgrade function
 		//Call each table upgrade function
-		(new SampleOpenHelper(dbHelperContext))
-			.upgrade(DatabaseDictionary.State.NAME, DatabaseDictionary.State.SQL_CREATE,
-				DatabaseDictionary.State.SQL_BACKUP, db);
+		upgrade(DatabaseDictionary.State.NAME, DatabaseDictionary.State.SQL_CREATE,
+			DatabaseDictionary.State.SQL_BACKUP,
+			db);
+	}
+
+	/**
+	 * Called when the database is created for the first time. This is where the creation of tables and the initial
+	 * population of the tables should happen.
+	 *
+	 * @param db
+	 * 	The database.
+	 * @param createSQL
+	 * 	SQL create statement that will be executed
+	 */
+	@Override
+	public void create(SQLiteDatabase db, String createSQL) {
+		db.execSQL(createSQL);
 	}
 }

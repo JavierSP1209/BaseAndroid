@@ -68,8 +68,10 @@ public abstract class BaseDatabaseOpenHelper extends SQLiteOpenHelper {
 	 *
 	 * @param db
 	 * 	The database.
+	 * @param createSQL
+	 * 	SQL create statement that will be executed
 	 */
-	public abstract void create(SQLiteDatabase db);
+	public abstract void create(SQLiteDatabase db, String createSQL);
 
 	/**
 	 * Called when the database needs to be upgraded. The implementation should use this method to drop tables,

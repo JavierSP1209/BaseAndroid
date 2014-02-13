@@ -10,9 +10,6 @@ package com.cmovil.baseandroidtest.dao.db.helper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.cmovil.baseandroidtest.dao.db.helper.DatabaseDictionary;
-import com.cmovil.baseandroid.dao.db.helper.BaseDatabaseOpenHelper;
-
 /**
  * State table data base open helper, this class will implements its own onCreate and onUpgrade functions depending on
  * the table needs
@@ -28,19 +25,19 @@ public class SampleOpenHelper extends CustomDataBaseOpenHelper {
 	}
 
 
-
-
 	/**
 	 * Called when the database is created for the first time. This is where the creation of tables and the initial
 	 * population of the tables should happen.
 	 *
 	 * @param db
 	 * 	The database.
+	 * @param createSQL
+	 * 	SQL create statement that will be executed
 	 */
 	@Override
-	public void create(SQLiteDatabase db) {
+	public void create(SQLiteDatabase db, String createSQL) {
 		//Create tables
-		db.execSQL(DatabaseDictionary.State.SQL_CREATE);
+		db.execSQL(createSQL);
 		//TODO: EXECUTE CREATE INDEX IF NECESSARY
 
 	}

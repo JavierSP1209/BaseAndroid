@@ -33,7 +33,7 @@ public class MessageErrorCode {
 	 * Base constructor initialize code and description with default values
 	 */
 	public MessageErrorCode() {
-		code = -1;
+		code = 0;
 		description = "";
 	}
 

@@ -107,8 +107,10 @@ public abstract class BaseDBController<T extends BaseModel> {
 	 * @param cursor
 	 * 	Valid cursor for extract object information
 	 * @return A State object fill up with cursor information
+	 *  @throws DBException
+	 * 	if something goes wrong during SQL statements execution
 	 */
-	public abstract T fillUpObject(Cursor cursor);
+	public abstract T fillUpObject(Cursor cursor) throws DBException;
 
 	/**
 	 * Gets the object with the selected id

@@ -94,10 +94,10 @@ public class BaseNavigationDrawerFragment extends Fragment {
 			mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
 			mFromSavedInstanceState = true;
 			lastDrawerState = savedInstanceState.getBoolean(STATE_DRAWER, false);
-		}
 
-		// Select either the default item (0) or the last selected item.
-		selectItem(mCurrentSelectedPosition);
+			// Select either the default item (0) or the last selected item.
+			selectItem(mCurrentSelectedPosition);
+		}
 	}
 
 	@Override

@@ -35,6 +35,11 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	 */
 	protected int drawerIcon;
 
+	/**
+	 * String resource id that will be shown when the drawer its open
+	 */
+	private int appName;
+
 	@Override
 	public void setContentView(int layoutResID) {
 		super.setContentView(R.layout.base_activity);
@@ -49,10 +54,13 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	 *
 	 * @param drawerIcon
 	 * 	Resource id of the drawer icon to be used
+	 * 	@param appName
+	 * 	Resource id of the string to be shown when the drawer its open
 	 */
-	public void setDrawerContent(int drawerIcon) {
+	public void setDrawerContent(int drawerIcon, int appName) {
 
 		this.drawerIcon = drawerIcon;
+		this.appName = appName;
 		FragmentManager fragmentManager = getSupportFragmentManager();
 
 		mNavigationDrawerFragment = (BaseNavigationDrawerFragment) fragmentManager.findFragmentById(R.id.left_drawer);
@@ -65,9 +73,11 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 
 	/**
 	 * Sets up drawer content using a default drawer ico
+	 * @param appName
+	 * 	Resource id of the string to be shown when the drawer its open
 	 */
-	public void setDrawerContent() {
-		setDrawerContent(R.drawable.ic_drawer);
+	public void setDrawerContent(int appName) {
+		setDrawerContent(R.drawable.ic_drawer, appName);
 	}
 
 	protected abstract BaseNavigationDrawerFragment createNewNavigationDrawerFragment();
@@ -77,7 +87,7 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 		super.onStart();
 		// Set up the drawer.
 		mNavigationDrawerFragment
-			.setUp(R.id.left_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), GravityCompat.START, drawerIcon);
+			.setUp(R.id.left_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), GravityCompat.START, drawerIcon,appName);
 	}
 
 	/**

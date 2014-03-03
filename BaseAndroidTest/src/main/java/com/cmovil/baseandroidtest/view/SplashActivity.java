@@ -74,7 +74,7 @@ public class SplashActivity extends BaseDrawerActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_activity);
-		setDrawerContent();
+		setDrawerContent(R.string.app_name);
 
 		ImageView imgTest = (ImageView) findViewById(R.id.imgTest);
 		String imageURL = "http://internetclaro.domainscm.com/resources/download.png";

@@ -75,6 +75,11 @@ public class BaseNavigationDrawerFragment extends Fragment {
 	private boolean mFromSavedInstanceState;
 	private boolean mUserLearnedDrawer;
 
+	/**
+	 * String resource id that will be shown when the drawer its open
+	 */
+	private int appName;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -138,11 +143,14 @@ public class BaseNavigationDrawerFragment extends Fragment {
 	 * 	{@link android.support.v4.view.GravityCompat#END}
 	 * @param drawerIcon
 	 * 	Id of the resource to use as drawer icon on the action bar
+	 * @param appName
+	 * 	Resource id of the string to be shown when the drawer its open
 	 */
-	public void setUp(int fragmentId, DrawerLayout drawerLayout, int drawerPosition, int drawerIcon) {
+	public void setUp(int fragmentId, DrawerLayout drawerLayout, int drawerPosition, int drawerIcon, int appName) {
 		mFragmentContainerView = getActivity().findViewById(fragmentId);
 		mDrawerLayout = drawerLayout;
 		this.drawerPosition = drawerPosition;
+		this.appName = appName;
 
 		// set a custom shadow that overlays the main content when the drawer opens
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, drawerPosition);
@@ -215,9 +223,11 @@ public class BaseNavigationDrawerFragment extends Fragment {
 	 * @param drawerPosition
 	 * 	Position of the drawer, {@link android.support.v4.view.GravityCompat#START},
 	 * 	{@link android.support.v4.view.GravityCompat#END}
+	 * @param appName
+	 * 	Resource id of the string to be shown when the drawer its open
 	 */
-	public void setUp(int fragmentId, DrawerLayout drawerLayout, int drawerPosition) {
-		setUp(fragmentId, drawerLayout, drawerPosition, R.drawable.ic_drawer);
+	public void setUp(int fragmentId, DrawerLayout drawerLayout, int drawerPosition, int appName) {
+		setUp(fragmentId, drawerLayout, drawerPosition, R.drawable.ic_drawer, appName);
 	}
 
 	protected void selectItem(int position) {
@@ -309,7 +319,7 @@ public class BaseNavigationDrawerFragment extends Fragment {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(true);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setTitle(R.string.app_name);
+		actionBar.setTitle(this.appName);
 	}
 
 	protected ActionBar getActionBar() {

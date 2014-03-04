@@ -9,6 +9,8 @@ package com.cmovil.baseandroidtest.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -43,6 +45,17 @@ public class NavigationDrawerFragment extends BaseNavigationDrawerFragment {
 				getString(R.string.title_section3),}));
 		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 		return mDrawerListView;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// If the drawer is open, show the global app actions in the action bar. See also
+		// showGlobalContextActionBar, which controls the top-left area of the action bar.
+		if (isDrawerOpen() && !isLockDrawer()) {
+			inflater.inflate(com.cmovil.baseandroid.R.menu.global, menu);
+			showGlobalContextActionBar();
+		}
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	@Override

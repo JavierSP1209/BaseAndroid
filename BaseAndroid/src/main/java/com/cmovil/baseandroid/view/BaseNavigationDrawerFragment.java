@@ -11,8 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -113,14 +111,13 @@ public class BaseNavigationDrawerFragment extends Fragment {
 	}
 
 	/**
-	 * Gets it the drawer fragment is shown
+	 * Gets if the drawer fragment is shown
 	 *
 	 * @return TRUE if drawer is opened, FALSE other wise
 	 */
 	public boolean isDrawerOpen() {
 		return (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView));
 	}
-
 
 	/**
 	 * Gets if the drawer is locked, so the user could not open or close it
@@ -292,17 +289,6 @@ public class BaseNavigationDrawerFragment extends Fragment {
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// If the drawer is open, show the global app actions in the action bar. See also
-		// showGlobalContextActionBar, which controls the top-left area of the action bar.
-		if (mDrawerLayout != null && isDrawerOpen() && !lockDrawer) {
-			inflater.inflate(R.menu.global, menu);
-			showGlobalContextActionBar();
-		}
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (!lockDrawer && mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
@@ -315,7 +301,7 @@ public class BaseNavigationDrawerFragment extends Fragment {
 	 * Per the navigation drawer design guidelines, updates the action bar to show the global app
 	 * 'context', rather than just what's in the current screen.
 	 */
-	private void showGlobalContextActionBar() {
+	protected void showGlobalContextActionBar() {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(true);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);

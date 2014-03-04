@@ -52,12 +52,12 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	/**
 	 * Sets up drawer content using a custom drawer icon
 	 *
-	 * @param drawerIcon
-	 * 	Resource id of the drawer icon to be used
 	 * @param appName
 	 * 	Resource id of the string to be shown when the drawer its open
+	 * @param drawerIcon
+	 * 	Resource id of the drawer icon to be used
 	 */
-	public void setDrawerContent(int drawerIcon, int appName) {
+	public void setDrawerContent(int appName, int drawerIcon) {
 
 		this.drawerIcon = drawerIcon;
 		this.appName = appName;
@@ -78,7 +78,7 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	 * 	Resource id of the string to be shown when the drawer its open
 	 */
 	public void setDrawerContent(int appName) {
-		setDrawerContent(R.drawable.ic_drawer, appName);
+		setDrawerContent(appName, R.drawable.ic_drawer);
 	}
 
 	protected abstract BaseNavigationDrawerFragment createNewNavigationDrawerFragment();

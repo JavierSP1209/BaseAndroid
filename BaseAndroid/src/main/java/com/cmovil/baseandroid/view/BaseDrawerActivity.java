@@ -54,7 +54,7 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	 *
 	 * @param drawerIcon
 	 * 	Resource id of the drawer icon to be used
-	 * 	@param appName
+	 * @param appName
 	 * 	Resource id of the string to be shown when the drawer its open
 	 */
 	public void setDrawerContent(int drawerIcon, int appName) {
@@ -73,6 +73,7 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 
 	/**
 	 * Sets up drawer content using a default drawer ico
+	 *
 	 * @param appName
 	 * 	Resource id of the string to be shown when the drawer its open
 	 */
@@ -87,7 +88,8 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 		super.onStart();
 		// Set up the drawer.
 		mNavigationDrawerFragment
-			.setUp(R.id.left_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), GravityCompat.START, drawerIcon,appName);
+			.setUp(R.id.left_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), GravityCompat.START, drawerIcon,
+				appName);
 	}
 
 	/**
@@ -128,5 +130,22 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 		}
 
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	/**
+	 * Disable or enables toggle menu indicator
+	 *
+	 * @param enabled
+	 * 	TRUE if the menu indicator should be shown, FALSE if default up caret must be shown
+	 */
+	public void setDrawerIndicatorEnabled(boolean enabled) {
+		if (mNavigationDrawerFragment != null) mNavigationDrawerFragment.setDrawerIndicatorEnabled(enabled);
+	}
+
+	/**
+	 * Close the current drawer
+	 */
+	protected void closeDrawer() {
+		if (mNavigationDrawerFragment != null) mNavigationDrawerFragment.closeDrawer();
 	}
 }

@@ -343,4 +343,14 @@ public class BaseNavigationDrawerFragment extends Fragment {
 		if (!lockDrawer) mDrawerLayout.closeDrawer(drawerPosition);
 	}
 
+	/**
+	 * Disable or enables toggle menu indicator
+	 *
+	 * @param enabled
+	 * 	TRUE if the menu indicator should be shown, FALSE if default up caret must be shown
+	 */
+	public void setDrawerIndicatorEnabled(boolean enabled) {
+		if (mDrawerToggle != null) mDrawerToggle.setDrawerIndicatorEnabled(enabled);
+	}
+
 }

@@ -9,6 +9,8 @@ package com.cmovil.baseandroid.model.db;
 
 import com.cmovil.baseandroid.util.KeyDictionary;
 
+import java.io.Serializable;
+
 /**
  * Public abstract class that should be implemented by all the models of the application
  *
@@ -16,7 +18,7 @@ import com.cmovil.baseandroid.util.KeyDictionary;
  * @version 1.0
  * @since 19/08/13
  */
-public abstract class BaseModel {
+public abstract class BaseModel implements Serializable{
 
 	protected Integer dbId;
 

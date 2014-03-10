@@ -4,14 +4,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.8.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
 
 allprojects {
     repositories {
         mavenCentral()
-        //mavenLocal()
         maven {   url "${System.env.HOME}/.m2/repository" }
     }
 }

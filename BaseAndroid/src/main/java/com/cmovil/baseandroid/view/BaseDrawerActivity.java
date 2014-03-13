@@ -95,7 +95,7 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	/**
 	 * Updates section title
 	 */
-	public void onSectionAttached(int sectionNumber) {
+	public void updateSectionTitle(int sectionNumber) {
 		//If drawer is locked, update action bar title
 		if (mNavigationDrawerFragment != null && mNavigationDrawerFragment.isLockDrawer()) {
 			getSupportActionBar().setTitle(mTitle);

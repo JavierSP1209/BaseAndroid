@@ -29,9 +29,7 @@ public class BaseActionBarActivity extends ActionBarActivity {
 	    supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         baseActionBar = getSupportActionBar();
 
-	    baseActionBar.setTitle(R.string.app_name);
-
-		// Set custom layout to action bar
+	    // Set custom layout to action bar
 	    if (null != baseActionBar) {
 		    baseActionBar.setDisplayShowTitleEnabled(true);
 		    baseActionBar.setDisplayHomeAsUpEnabled(false);

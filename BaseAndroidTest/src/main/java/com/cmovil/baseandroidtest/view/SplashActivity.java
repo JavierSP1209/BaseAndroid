@@ -40,7 +40,7 @@ public class SplashActivity extends BaseDrawerActivity {
 		return new NavigationDrawerFragment();
 	}
 
-	public void onSectionAttached(int sectionNumber) {
+	public void updateSectionTitle(int sectionNumber) {
 		switch (sectionNumber) {
 			case 0:
 				mTitle = getString(R.string.title_section1);
@@ -54,7 +54,7 @@ public class SplashActivity extends BaseDrawerActivity {
 			default:
 				mTitle = getString(R.string.app_name);
 		}
-		super.onSectionAttached(sectionNumber);
+		super.updateSectionTitle(sectionNumber);
 	}
 
 
@@ -135,7 +135,7 @@ public class SplashActivity extends BaseDrawerActivity {
 		@Override
 		public void onAttach(Activity activity) {
 			super.onAttach(activity);
-			((SplashActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
+			((SplashActivity) activity).updateSectionTitle(getArguments().getInt(ARG_SECTION_NUMBER));
 		}
 	}
 }

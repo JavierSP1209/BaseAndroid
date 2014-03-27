@@ -44,7 +44,7 @@ public class ImageLoader<T> {
 	 * Saves the keys that are been downloaded, in order to prevent duplicated downloads
 	 */
 	private List<String> downloading = new LinkedList<String>();
-	private Map<String, PendingImageView> pending = new HashMap<String, PendingImageView>();
+	private Map<String, List<PendingImageView>> pending = new HashMap<String, List<PendingImageView>>();
 	private Context context;
 
 	public ImageLoader(Context context) {
@@ -127,19 +127,21 @@ public class ImageLoader<T> {
 			if (!downloading.contains(key)) {
 				//Add it to download map
 				downloading.add(key);
+				pending.put(key, new LinkedList<PendingImageView>());
 				if (imageResource instanceof Integer) {
 					decodeResource(key, (Integer) imageResource, imgReference, progressBar, requestedWidth,
 						requestedHeight, onImageDecodedListener);
 				} else if (imageResource instanceof String) {
 					DownloadImageAsyncTask loadFirm = new DownloadImageAsyncTask(
 						new CustomDownloadAsyncTaskEventListenerImp(progressBar, imageView, requestedWidth,
-							requestedHeight, key, onImageDecodedListener), f.getAbsolutePath());
+							requestedHeight, key, onImageDecodedListener), f.getAbsolutePath()
+					);
 					loadFirm.execute((String) imageResource);
 				} else if (imageResource instanceof Bitmap) {
 					processBitmap(key, imgReference, progressBar, onImageDecodedListener, (Bitmap) imageResource);
 				}
 			} else {
-				pending.put(key, new PendingImageView(imgReference, progressBar, onImageDecodedListener));
+				pending.get(key).add(new PendingImageView(imgReference, progressBar, onImageDecodedListener));
 			}
 		}
 	}
@@ -182,7 +184,8 @@ public class ImageLoader<T> {
 					public void onPreExecute() {
 
 					}
-				});
+				}
+			);
 
 		bitmapDecoderTask.execute(resourceId);
 	}
@@ -214,7 +217,8 @@ public class ImageLoader<T> {
 		BitmapDecoderTask<File> bitmapDecoderTask =
 			new BitmapDecoderTask<File>(context, requestedWidth, requestedHeight,
 				new BitmapDecodedEventListenerImp(progressBar, imgViewReference, requestedWidth, requestedHeight, key,
-					onImageDecodedListener));
+					onImageDecodedListener)
+			);
 
 		bitmapDecoderTask.execute(f);
 	}
@@ -247,7 +251,8 @@ public class ImageLoader<T> {
 		BitmapDecoderTask<InputStream> bitmapDecoderTask =
 			new BitmapDecoderTask<InputStream>(context, requestedWidth, requestedHeight,
 				new BitmapDecodedEventListenerImp(progressBar, imgViewReference, requestedWidth, requestedHeight, key,
-					onImageDecodedListener));
+					onImageDecodedListener)
+			);
 
 		bitmapDecoderTask.execute(is);
 	}
@@ -281,25 +286,27 @@ public class ImageLoader<T> {
 				memoryCache.put(key, result);
 				downloading.remove(key);
 
-				PendingImageView pendingImageView = pending.get(key);
-				//Check if there's pending image views to load for that key
-				if (pendingImageView != null) {
-					//Get the image view reference
-					WeakReference<ImageView> pendingImageViewReference = pendingImageView.getImageView();
-					if (pendingImageViewReference != null) {
-						final ImageView imgViewP = pendingImageViewReference.get();
-						//Update image view
-						if (imgViewP != null) {
-							imgViewP.setImageBitmap(result);
-							imgViewP.setVisibility(View.VISIBLE);
+				List<PendingImageView> pendingImageViews = pending.get(key);
+				for(PendingImageView pendingImageView: pendingImageViews) {
+					//Check if there's pending image views to load for that key
+					if (pendingImageView != null) {
+						//Get the image view reference
+						WeakReference<ImageView> pendingImageViewReference = pendingImageView.getImageView();
+						if (pendingImageViewReference != null) {
+							final ImageView imgViewP = pendingImageViewReference.get();
+							//Update image view
+							if (imgViewP != null) {
+								imgViewP.setImageBitmap(result);
+								imgViewP.setVisibility(View.VISIBLE);
+							}
 						}
-					}
-					View pendingProgressBar = pendingImageView.progressBar;
-					if (pendingProgressBar != null) pendingProgressBar.setVisibility(View.GONE);
+						View pendingProgressBar = pendingImageView.progressBar;
+						if (pendingProgressBar != null) pendingProgressBar.setVisibility(View.GONE);
 
-					OnImageDecodedListener onImageDecodedListenerPending = pendingImageView.onImageDecodedListener;
-					if (onImageDecodedListenerPending != null) onImageDecodedListenerPending
-						.processImageResult(key, pendingImageViewReference, pendingProgressBar, result);
+						OnImageDecodedListener onImageDecodedListenerPending = pendingImageView.onImageDecodedListener;
+						if (onImageDecodedListenerPending != null) onImageDecodedListenerPending
+							.processImageResult(key, pendingImageViewReference, pendingProgressBar, result);
+					}
 				}
 				pending.remove(key);
 			}

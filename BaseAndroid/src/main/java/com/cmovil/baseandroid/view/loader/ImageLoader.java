@@ -2,9 +2,12 @@ package com.cmovil.baseandroid.view.loader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 
+import com.cmovil.baseandroid.util.KeyDictionary;
 import com.cmovil.baseandroid.view.util.BitmapDecoderTask;
 import com.cmovil.baseandroid.view.util.CustomAsyncTaskEventListener;
 import com.cmovil.baseandroid.view.util.DownloadImageAsyncTask;
@@ -84,12 +87,84 @@ public class ImageLoader<T> {
 			imageView.setVisibility(View.VISIBLE);
 			if (progressBar != null) progressBar.setVisibility(View.GONE);
 			if (onImageDecodedListener != null) onImageDecodedListener
-				.processImageResult(key, new WeakReference<ImageView>(imageView), progressBar, bitmap);
+				.processImageResult(key, new WeakReference<ImageView>(imageView), progressBar, bitmap, -1);
 		} else {
 			//If the bitmap is not on the cache, add it to the queue for download and decode
 			queuePhoto(key, imageResource, imageView, progressBar, requestedWidth, requestedHeight,
-				onImageDecodedListener);
+				onImageDecodedListener, null, 0);
 		}
+	}
+
+	/**
+	 * Displays an image from an URL to an ImageView, the downloaded images are cached in order to prevent unnecessary
+	 * downloads
+	 *
+	 * @param key
+	 * 	Key to identify the images to download, this should be unique per download image
+	 * @param imageResource
+	 * 	Image resource to decode
+	 * @param imageView
+	 * 	ImageView where the image will be loaded
+	 * @param progressBar
+	 * 	View that shows a progress bar while the image its been downloaded and decoded
+	 * @param requestedWidth
+	 * 	If necessary, the desired width of the bitmap to be decoded, IMPORTANT for reduce memory consumption
+	 * @param requestedHeight
+	 * 	If necessary, the desired width of the bitmap to be decoded, IMPORTANT for reduce memory consumption
+	 * @param onImageDecodedListener
+	 * 	Gets called after the image its downloaded and decoded, so the implementing method could personalize its
+	 * 	layout behavior depending on the result
+	 * @param absListView
+	 * 	List view that its used for display the images of this image loader, this will be used for checking if the
+	 * 	decoded image is on the screen at the end of the process, and if its not do not set the resulting bitmap into
+	 * 	the image view
+	 * @param position
+	 * 	Position of the item that contains the image view on the list, this will used for check if the image view its
+	 * 	shown on the list view if not do not set the bitmap to the image view
+	 */
+	public void displayImage(String key, T imageResource, ImageView imageView, View progressBar, int requestedWidth,
+	                         int requestedHeight, OnImageDecodedListener onImageDecodedListener,
+	                         AbsListView absListView, Integer position) {
+		imageViews.put(imageView, key);
+		//Get the bitmap from cache
+		Bitmap bitmap = memoryCache.get(key);
+		if (bitmap != null) {
+			//If the image view its visible on the list, set the image view and update progress bar status
+			//if (imageViewVisible(absListView, position)) {
+			//If its not null, set it to the image view
+			imageView.setImageBitmap(bitmap);
+			//Change visibility values to image view and progress bar
+			imageView.setVisibility(View.VISIBLE);
+			if (progressBar != null) progressBar.setVisibility(View.GONE);
+			//}
+			if (onImageDecodedListener != null) onImageDecodedListener
+				.processImageResult(key, new WeakReference<ImageView>(imageView), progressBar, bitmap, position);
+		} else {
+			//If the bitmap is not on the cache, add it to the queue for download and decode
+			queuePhoto(key, imageResource, imageView, progressBar, requestedWidth, requestedHeight,
+				onImageDecodedListener, absListView, position);
+		}
+	}
+
+	/**
+	 * Check if the selected position its visible on the list view
+	 *
+	 * @param absListView
+	 * 	List view that its used for display the images of this image loader, this will be used for checking if the
+	 * 	decoded image is on the screen at the end of the process, and if its not do not set the resulting bitmap into
+	 * 	the image view
+	 * @param position
+	 * 	Position of the item that contains the image view on the list, this will used for check if the image view its
+	 * 	shown on the list view if not do not set the bitmap to the image view
+	 * @return TRUE if the position its visible on the list view, FALSE otherwise
+	 */
+	public static Boolean imageViewVisible(AbsListView absListView, Integer position) {
+		if (absListView == null) {
+			return Boolean.TRUE;
+		}
+		int firstVisible = absListView.getFirstVisiblePosition();
+		int lastVisible = absListView.getLastVisiblePosition();
+		return firstVisible <= position && lastVisible >= position;
 	}
 
 	/**
@@ -110,9 +185,18 @@ public class ImageLoader<T> {
 	 * @param onImageDecodedListener
 	 * 	Gets called after the image its downloaded and decoded, so the implementing method could personalize its
 	 * 	layout behavior depending on the result
+	 * @param absListView
+	 * 	List view that its used for display the images of this image loader, this will be used for checking if the
+	 * 	decoded image is on the screen at the end of the process, and if its not do not set the resulting bitmap into
+	 * 	the image view
+	 * @param position
+	 * 	Position of the item that contains the image view on the list, this will used for check if the image view its
+	 * 	shown on the list view if not do not set the bitmap to the image view
 	 */
 	private void queuePhoto(String key, T imageResource, ImageView imageView, View progressBar, int requestedWidth,
-	                        int requestedHeight, OnImageDecodedListener onImageDecodedListener) {
+	                        int requestedHeight, OnImageDecodedListener onImageDecodedListener,
+	                        AbsListView absListView,
+	                        Integer position) {
 		//Check if the image view has already been displayed
 		if (imageViewReused(imageView, key)) return;
 
@@ -121,7 +205,8 @@ public class ImageLoader<T> {
 		File f = fileCache.getFile(key);
 		if (f.exists()) {
 			//Tries to load the bitmap from cache, if the bit map is not present download it
-			decodeFile(key, imgReference, progressBar, requestedWidth, requestedHeight, f, onImageDecodedListener);
+			decodeFile(key, imgReference, progressBar, requestedWidth, requestedHeight, f, onImageDecodedListener,
+				absListView, position);
 		} else {
 			//If the bitmap has never been cached, download it
 			if (!downloading.contains(key)) {
@@ -130,15 +215,16 @@ public class ImageLoader<T> {
 				pending.put(key, new LinkedList<PendingImageView>());
 				if (imageResource instanceof Integer) {
 					decodeResource(key, (Integer) imageResource, imgReference, progressBar, requestedWidth,
-						requestedHeight, onImageDecodedListener);
+						requestedHeight, onImageDecodedListener, absListView, position);
 				} else if (imageResource instanceof String) {
 					DownloadImageAsyncTask loadFirm = new DownloadImageAsyncTask(
 						new CustomDownloadAsyncTaskEventListenerImp(progressBar, imageView, requestedWidth,
-							requestedHeight, key, onImageDecodedListener), f.getAbsolutePath()
+							requestedHeight, key, onImageDecodedListener, absListView, position), f.getAbsolutePath()
 					);
 					loadFirm.execute((String) imageResource);
 				} else if (imageResource instanceof Bitmap) {
-					processBitmap(key, imgReference, progressBar, onImageDecodedListener, (Bitmap) imageResource);
+					processBitmap(key, imgReference, progressBar, onImageDecodedListener, (Bitmap) imageResource,
+						absListView, position);
 				}
 			} else {
 				pending.get(key).add(new PendingImageView(imgReference, progressBar, onImageDecodedListener));
@@ -165,10 +251,18 @@ public class ImageLoader<T> {
 	 * @param onImageDecodedListener
 	 * 	Gets called after the image its downloaded and decoded, so the implementing method could personalize its
 	 * 	layout behavior depending on the result
+	 * @param absListView
+	 * 	List view that its used for display the images of this image loader, this will be used for checking if the
+	 * 	decoded image is on the screen at the end of the process, and if its not do not set the resulting bitmap into
+	 * 	the image view
+	 * @param position
+	 * 	Position of the item that contains the image view on the list, this will used for check if the image view its
+	 * 	shown on the list view if not do not set the bitmap to the image view
 	 */
 	private void decodeResource(final String key, int resourceId, final WeakReference<ImageView> imgViewReference,
 	                            final View progressBar, int requestedWidth, int requestedHeight,
-	                            final OnImageDecodedListener onImageDecodedListener) {
+	                            final OnImageDecodedListener onImageDecodedListener, final AbsListView absListView,
+	                            final Integer position) {
 		// Decode de image using the original size
 		BitmapDecoderTask<Integer> bitmapDecoderTask =
 			new BitmapDecoderTask<Integer>(context, requestedWidth, requestedHeight,
@@ -177,7 +271,8 @@ public class ImageLoader<T> {
 					@Override
 					public void onPostExecute(Bitmap result) {
 						// Once complete, see if ImageView is still around and set bitmap.
-						processBitmap(key, imgViewReference, progressBar, onImageDecodedListener, result);
+						processBitmap(key, imgViewReference, progressBar, onImageDecodedListener, result, absListView,
+							position);
 					}
 
 					@Override
@@ -209,15 +304,23 @@ public class ImageLoader<T> {
 	 * @param onImageDecodedListener
 	 * 	Gets called after the image its downloaded and decoded, so the implementing method could personalize its
 	 * 	layout behavior depending on the result
+	 * @param absListView
+	 * 	List view that its used for display the images of this image loader, this will be used for checking if the
+	 * 	decoded image is on the screen at the end of the process, and if its not do not set the resulting bitmap into
+	 * 	the image view
+	 * @param position
+	 * 	Position of the item that contains the image view on the list, this will used for check if the image view its
+	 * 	shown on the list view if not do not set the bitmap to the image view
 	 */
 	private void decodeFile(final String key, final WeakReference<ImageView> imgViewReference, final View progressBar,
 	                        int requestedWidth, int requestedHeight, File f,
-	                        final OnImageDecodedListener onImageDecodedListener) {
+	                        final OnImageDecodedListener onImageDecodedListener, final AbsListView absListView,
+	                        final Integer position) {
 		// Decode de image using the original size
 		BitmapDecoderTask<File> bitmapDecoderTask =
 			new BitmapDecoderTask<File>(context, requestedWidth, requestedHeight,
 				new BitmapDecodedEventListenerImp(progressBar, imgViewReference, requestedWidth, requestedHeight, key,
-					onImageDecodedListener)
+					onImageDecodedListener, absListView, position)
 			);
 
 		bitmapDecoderTask.execute(f);
@@ -242,16 +345,24 @@ public class ImageLoader<T> {
 	 * @param onImageDecodedListener
 	 * 	Gets called after the image its downloaded and decoded, so the implementing method could personalize its
 	 * 	layout behavior depending on the result
+	 * @param absListView
+	 * 	List view that its used for display the images of this image loader, this will be used for checking if the
+	 * 	decoded image is on the screen at the end of the process, and if its not do not set the resulting bitmap into
+	 * 	the image view
+	 * @param position
+	 * 	Position of the item that contains the image view on the list, this will used for check if the image view its
+	 * 	shown on the list view if not do not set the bitmap to the image view
 	 */
 	private void decodeStream(final String key, final WeakReference<ImageView> imgViewReference,
 	                          final View progressBar,
 	                          int requestedWidth, int requestedHeight, InputStream is,
-	                          final OnImageDecodedListener onImageDecodedListener) {
+	                          final OnImageDecodedListener onImageDecodedListener, AbsListView absListView,
+	                          Integer position) {
 		// Decode de image using the original size
 		BitmapDecoderTask<InputStream> bitmapDecoderTask =
 			new BitmapDecoderTask<InputStream>(context, requestedWidth, requestedHeight,
 				new BitmapDecodedEventListenerImp(progressBar, imgViewReference, requestedWidth, requestedHeight, key,
-					onImageDecodedListener)
+					onImageDecodedListener, absListView, position)
 			);
 
 		bitmapDecoderTask.execute(is);
@@ -271,47 +382,62 @@ public class ImageLoader<T> {
 	 * 	layout behavior depending on the result
 	 * @param result
 	 * 	The decoded bitmap
+	 * @param absListView
+	 * 	List view that its used for display the images of this image loader, this will be used for checking if the
+	 * 	decoded image is on the screen at the end of the process, and if its not do not set the resulting bitmap into
+	 * 	the image view
+	 * @param position
+	 * 	Position of the item that contains the image view on the list, this will used for check if the image view its
+	 * 	shown on the list view if not do not set the bitmap to the image view
 	 */
 	private void processBitmap(String key, WeakReference<ImageView> imgViewReference, View progressBar,
-	                           OnImageDecodedListener onImageDecodedListener, Bitmap result) {
+	                           OnImageDecodedListener onImageDecodedListener, Bitmap result, AbsListView absListView,
+	                           Integer position) {
 		// Once complete, see if ImageView is still around
 		// and set bitmap.
 		if (imgViewReference != null) {
 			final ImageView imgView = imgViewReference.get();
 			if (imgView != null) {
 
-				//Set resulting bitmap to image view
-				imgView.setImageBitmap(result);
-				imgView.setVisibility(View.VISIBLE);
+				//If the image view its visible on the list, set the image view and update progress bar status
+				if (imageViewVisible(absListView, position)) {
+					//Set resulting bitmap to image view
+					imgView.setImageBitmap(result);
+					imgView.setVisibility(View.VISIBLE);
+				}
 				memoryCache.put(key, result);
 				downloading.remove(key);
 
 				List<PendingImageView> pendingImageViews = pending.get(key);
-				for(PendingImageView pendingImageView: pendingImageViews) {
-					//Check if there's pending image views to load for that key
-					if (pendingImageView != null) {
-						//Get the image view reference
-						WeakReference<ImageView> pendingImageViewReference = pendingImageView.getImageView();
-						if (pendingImageViewReference != null) {
-							final ImageView imgViewP = pendingImageViewReference.get();
-							//Update image view
-							if (imgViewP != null) {
-								imgViewP.setImageBitmap(result);
-								imgViewP.setVisibility(View.VISIBLE);
+				if (pendingImageViews != null) {
+					for (PendingImageView pendingImageView : pendingImageViews) {
+						//Check if there's pending image views to load for that key
+						if (pendingImageView != null) {
+							//Get the image view reference
+							WeakReference<ImageView> pendingImageViewReference = pendingImageView.getImageView();
+							if (pendingImageViewReference != null) {
+								final ImageView imgViewP = pendingImageViewReference.get();
+								//Update image view
+								if (imgViewP != null && imageViewVisible(absListView, position)) {
+									imgViewP.setImageBitmap(result);
+									imgViewP.setVisibility(View.VISIBLE);
+								}
 							}
-						}
-						View pendingProgressBar = pendingImageView.progressBar;
-						if (pendingProgressBar != null) pendingProgressBar.setVisibility(View.GONE);
+							View pendingProgressBar = pendingImageView.progressBar;
+							if (pendingProgressBar != null) pendingProgressBar.setVisibility(View.GONE);
 
-						OnImageDecodedListener onImageDecodedListenerPending = pendingImageView.onImageDecodedListener;
-						if (onImageDecodedListenerPending != null) onImageDecodedListenerPending
-							.processImageResult(key, pendingImageViewReference, pendingProgressBar, result);
+							OnImageDecodedListener onImageDecodedListenerPending =
+								pendingImageView.onImageDecodedListener;
+							if (onImageDecodedListenerPending != null) onImageDecodedListenerPending
+								.processImageResult(key, pendingImageViewReference, pendingProgressBar, result,
+									position);
+						}
 					}
 				}
 				pending.remove(key);
 			}
 			if (onImageDecodedListener != null)
-				onImageDecodedListener.processImageResult(key, imgViewReference, progressBar, result);
+				onImageDecodedListener.processImageResult(key, imgViewReference, progressBar, result, position);
 		}
 		if (progressBar != null) progressBar.setVisibility(View.GONE);
 	}
@@ -358,10 +484,13 @@ public class ImageLoader<T> {
 		 * 	View that shows a progress bar while the image its been downloaded and decoded
 		 * @param resultingBitmap
 		 * 	Bitmap that results from the image decoded
+		 * @param position
+		 * 	Position of the item that contains the image view on the list, this will used for check if the image view
+		 * 	its shown on the list view if not do not set the bitmap to the image view, this should only be considered
+		 * 	when the image loader involves list view items
 		 */
 		public void processImageResult(String key, final WeakReference<ImageView> imgViewReference, View progressBar,
-		                               Bitmap resultingBitmap);
-
+		                               Bitmap resultingBitmap, Integer position);
 	}
 
 	/**
@@ -411,11 +540,14 @@ public class ImageLoader<T> {
 		private Integer requestedHeight;
 		private String key;
 		private OnImageDecodedListener onImageDecodedListener;
+		private AbsListView absListView;
+		private Integer position;
 
 
 		public CustomDownloadAsyncTaskEventListenerImp(View progressBar, ImageView imgOriginal, int requestedWidth,
 		                                               int requestedHeight, String key,
-		                                               OnImageDecodedListener onImageDecodedListener) {
+		                                               OnImageDecodedListener onImageDecodedListener,
+		                                               AbsListView absListView, Integer position) {
 			this.progressBar = progressBar;
 			this.requestedHeight = requestedHeight;
 			this.requestedWidth = requestedWidth;
@@ -424,6 +556,8 @@ public class ImageLoader<T> {
 			imgOriginalReference = new WeakReference<ImageView>(imgOriginal);
 			this.key = key;
 			this.onImageDecodedListener = onImageDecodedListener;
+			this.absListView = absListView;
+			this.position = position;
 		}
 
 		@Override
@@ -435,7 +569,7 @@ public class ImageLoader<T> {
 		@Override
 		public void onPostExecute(InputStream result) {
 			decodeStream(key, imgOriginalReference, progressBar, requestedWidth, requestedHeight, result,
-				onImageDecodedListener);
+				onImageDecodedListener, absListView, position);
 		}
 	}
 
@@ -456,11 +590,14 @@ public class ImageLoader<T> {
 		private Integer requestedWidth;
 		private Integer requestedHeight;
 		private OnImageDecodedListener onImageDecodedListener;
+		private AbsListView absListView;
+		private Integer position;
 
 
 		public BitmapDecodedEventListenerImp(View progressBar, WeakReference<ImageView> imgOriginalReference,
 		                                     int requestedWidth, int requestedHeight, String key,
-		                                     OnImageDecodedListener onImageDecodedListener) {
+		                                     OnImageDecodedListener onImageDecodedListener, AbsListView absListView,
+		                                     Integer position) {
 			this.progressBar = progressBar;
 			this.requestedHeight = requestedHeight;
 			this.requestedWidth = requestedWidth;
@@ -469,6 +606,8 @@ public class ImageLoader<T> {
 			this.imgOriginalReference = imgOriginalReference;
 			this.key = key;
 			this.onImageDecodedListener = onImageDecodedListener;
+			this.absListView = absListView;
+			this.position = position;
 		}
 
 		@Override
@@ -482,14 +621,15 @@ public class ImageLoader<T> {
 					if (f.exists()) {
 						//Tries to load the bitmap from cache, if the bit map is not present download it
 						decodeFile(key, imgOriginalReference, progressBar, requestedWidth, requestedHeight, f,
-							onImageDecodedListener);
+							onImageDecodedListener, absListView, position);
 						return;
 					}
 				}
 			}
 
 			// Once complete, see if ImageView is still around and set bitmap.
-			processBitmap(key, imgOriginalReference, progressBar, onImageDecodedListener, result);
+			processBitmap(key, imgOriginalReference, progressBar, onImageDecodedListener, result, absListView,
+				position);
 		}
 
 		@Override

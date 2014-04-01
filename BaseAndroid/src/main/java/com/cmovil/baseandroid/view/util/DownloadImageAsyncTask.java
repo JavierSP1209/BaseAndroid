@@ -130,7 +130,6 @@ public class DownloadImageAsyncTask extends AsyncTask<String, Void, InputStream>
 	@Override
 	protected void onPostExecute(InputStream result) {
 		if (customAsyncTaskEventListener != null) {
-			Log.d(KeyDictionary.TAG, "DownloadFinish!: "+result);
 			customAsyncTaskEventListener.onPostExecute(result);
 		}
 	}

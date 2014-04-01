@@ -119,7 +119,6 @@ public class BitmapDecoderTask<T> extends AsyncTask<T, Void, Bitmap> {
 					if (reqWidth <= 0) reqWidth = Integer.MAX_VALUE;
 					if (reqHeight <= 0) reqHeight = Integer.MAX_VALUE;
 
-					Log.d(KeyDictionary.TAG, "Decoding: W: "+reqWidth+" - H: "+reqHeight);
 					if (params[0] instanceof InputStream) {
 						bis = (InputStream) params[0];
 						return BitmapUtils.decodeSampledBitmapFromStream((InputStream) params[0], reqWidth, reqHeight);
@@ -198,7 +197,6 @@ public class BitmapDecoderTask<T> extends AsyncTask<T, Void, Bitmap> {
 	@Override
 	protected void onPostExecute(Bitmap result) {
 		if (customAsyncTaskEventListener != null) {
-			Log.d(KeyDictionary.TAG, "Decoded: "+result);
 			customAsyncTaskEventListener.onPostExecute(result);
 		}
 	}

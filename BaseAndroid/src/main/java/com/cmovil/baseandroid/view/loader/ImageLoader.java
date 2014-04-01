@@ -2,12 +2,10 @@ package com.cmovil.baseandroid.view.loader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 
-import com.cmovil.baseandroid.util.KeyDictionary;
 import com.cmovil.baseandroid.view.util.BitmapDecoderTask;
 import com.cmovil.baseandroid.view.util.CustomAsyncTaskEventListener;
 import com.cmovil.baseandroid.view.util.DownloadImageAsyncTask;
@@ -47,6 +45,11 @@ public class ImageLoader<T> {
 	 * Saves the keys that are been downloaded, in order to prevent duplicated downloads
 	 */
 	private List<String> downloading = new LinkedList<String>();
+
+	/**
+	 * Saves the keys that have been download and fail, so it will not try it again
+	 */
+	private List<String> fails = new LinkedList<String>();
 	private Map<String, List<PendingImageView>> pending = new HashMap<String, List<PendingImageView>>();
 	private Context context;
 
@@ -77,22 +80,8 @@ public class ImageLoader<T> {
 	 */
 	public void displayImage(String key, T imageResource, ImageView imageView, View progressBar, int requestedWidth,
 	                         int requestedHeight, OnImageDecodedListener onImageDecodedListener) {
-		imageViews.put(imageView, key);
-		//Get the bitmap from cache
-		Bitmap bitmap = memoryCache.get(key);
-		if (bitmap != null) {
-			//If its not null, set it to the image view
-			imageView.setImageBitmap(bitmap);
-			//Change visibility values to image view and progress bar
-			imageView.setVisibility(View.VISIBLE);
-			if (progressBar != null) progressBar.setVisibility(View.GONE);
-			if (onImageDecodedListener != null) onImageDecodedListener
-				.processImageResult(key, new WeakReference<ImageView>(imageView), progressBar, bitmap, -1);
-		} else {
-			//If the bitmap is not on the cache, add it to the queue for download and decode
-			queuePhoto(key, imageResource, imageView, progressBar, requestedWidth, requestedHeight,
-				onImageDecodedListener, null, 0);
-		}
+		displayImage(key, imageResource, imageView, progressBar, requestedWidth, requestedHeight,
+			onImageDecodedListener, null, -1);
 	}
 
 	/**
@@ -129,20 +118,57 @@ public class ImageLoader<T> {
 		//Get the bitmap from cache
 		Bitmap bitmap = memoryCache.get(key);
 		if (bitmap != null) {
-			//If the image view its visible on the list, set the image view and update progress bar status
-			//if (imageViewVisible(absListView, position)) {
 			//If its not null, set it to the image view
 			imageView.setImageBitmap(bitmap);
 			//Change visibility values to image view and progress bar
 			imageView.setVisibility(View.VISIBLE);
 			if (progressBar != null) progressBar.setVisibility(View.GONE);
-			//}
-			if (onImageDecodedListener != null) onImageDecodedListener
-				.processImageResult(key, new WeakReference<ImageView>(imageView), progressBar, bitmap, position);
+			callOnImageDecodedListener(key, new WeakReference<ImageView>(imageView), progressBar, bitmap, position,
+				onImageDecodedListener);
 		} else {
+			//Check if the image has been downloaded and fail, in that case return null
+			if (fails.contains(key)) {
+				if (progressBar != null) progressBar.setVisibility(View.GONE);
+				callOnImageDecodedListener(key, new WeakReference<ImageView>(imageView), progressBar, null, position,
+					onImageDecodedListener);
+				return;
+			}
 			//If the bitmap is not on the cache, add it to the queue for download and decode
 			queuePhoto(key, imageResource, imageView, progressBar, requestedWidth, requestedHeight,
 				onImageDecodedListener, absListView, position);
+		}
+	}
+
+	/**
+	 * Cleans up the fails list, so all the images that has fail on decoding process could be tried again
+	 */
+	public void cleanFails() {
+		this.fails = new LinkedList<String>();
+	}
+
+	/**
+	 * Calls on image decoded listener if its not null
+	 *
+	 * @param key
+	 * 	Key to identify the images to download, this should be unique per download image
+	 * @param imageViewWeakReference
+	 * 	Weak reference object for the image view to show, so the gb could collect it
+	 * @param progressBar
+	 * 	View that shows a progress bar while the image its been downloaded and decoded
+	 * @param bitmap
+	 * 	Decoded bitmap
+	 * @param onImageDecodedListener
+	 * 	Gets called after the image its downloaded and decoded, so the implementing method could personalize its
+	 * 	layout behavior depending on the result
+	 * @param position
+	 * 	Position of the item that contains the image view on the list, this will used for check if the image view its
+	 * 	shown on the list view if not do not set the bitmap to the image view
+	 */
+	private void callOnImageDecodedListener(String key, WeakReference<ImageView> imageViewWeakReference,
+	                                        View progressBar, Bitmap bitmap, Integer position,
+	                                        OnImageDecodedListener onImageDecodedListener) {
+		if (onImageDecodedListener != null) {
+			onImageDecodedListener.processImageResult(key, imageViewWeakReference, progressBar, bitmap, position);
 		}
 	}
 
@@ -407,6 +433,10 @@ public class ImageLoader<T> {
 				}
 				memoryCache.put(key, result);
 				downloading.remove(key);
+				//If the resulting bitmap is null, add it to fails list
+				if (result == null) {
+					fails.add(key);
+				}
 
 				List<PendingImageView> pendingImageViews = pending.get(key);
 				if (pendingImageViews != null) {
@@ -428,16 +458,14 @@ public class ImageLoader<T> {
 
 							OnImageDecodedListener onImageDecodedListenerPending =
 								pendingImageView.onImageDecodedListener;
-							if (onImageDecodedListenerPending != null) onImageDecodedListenerPending
-								.processImageResult(key, pendingImageViewReference, pendingProgressBar, result,
-									position);
+							callOnImageDecodedListener(key, pendingImageViewReference, pendingProgressBar, result,
+								position, onImageDecodedListenerPending);
 						}
 					}
 				}
 				pending.remove(key);
 			}
-			if (onImageDecodedListener != null)
-				onImageDecodedListener.processImageResult(key, imgViewReference, progressBar, result, position);
+			callOnImageDecodedListener(key, imgViewReference, progressBar, result, position, onImageDecodedListener);
 		}
 		if (progressBar != null) progressBar.setVisibility(View.GONE);
 	}

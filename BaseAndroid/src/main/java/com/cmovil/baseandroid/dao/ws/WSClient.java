@@ -55,7 +55,7 @@ public abstract class WSClient<T1, T2> {
 	private static final Integer TIME_OUT = 100000;
 	private String service;
 
-	protected static Gson gsonBuilder;
+	protected Gson gsonBuilder;
 	private FieldNamingStrategy fieldNamingStrategy;
 	private Context context;
 

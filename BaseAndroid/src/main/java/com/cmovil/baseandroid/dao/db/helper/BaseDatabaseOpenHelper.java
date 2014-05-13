@@ -49,9 +49,14 @@ public abstract class BaseDatabaseOpenHelper extends SQLiteOpenHelper {
 		List<String> ar = null;
 		Cursor c = null;
 		try {
-			c = db.rawQuery("select * from " + tableName + " limit 1", null);
-			if (c != null) {
-				ar = new ArrayList<String>(Arrays.asList(c.getColumnNames()));
+			c = db.rawQuery("pragma table_info(" + tableName + ")", null);
+
+			ar = new ArrayList<String>();
+			if (c != null && c.moveToFirst()) {
+				do {
+					ar.add(c.getString(c.getColumnIndexOrThrow("name")));
+				} while (c.moveToNext());
+				c.close();
 			}
 		} catch (Exception e) {
 			Log.v(tableName, e.getMessage(), e);
@@ -88,15 +93,51 @@ public abstract class BaseDatabaseOpenHelper extends SQLiteOpenHelper {
 	 *
 	 * @param db
 	 * 	The database.
+	 * @param tableName
+	 * 	Table name to be used
+	 * @param sqlCreate
+	 * 	Create SQL statement
+	 * @param sqlBackUp
+	 * 	Backup sQL statement
 	 */
 	public void upgrade(String tableName, String sqlCreate, String sqlBackUp, SQLiteDatabase db) {
-		Log.i(KeyDictionary.TAG, "Upgrading State");
+		upgrade(tableName, sqlCreate, sqlBackUp, db, Boolean.FALSE);
+	}
+
+	/**
+	 * Called when the database needs to be upgraded. The implementation should use this method to drop tables,
+	 * add tables,
+	 * or do anything else it needs to upgrade to the new schema version. <p/> <p> The SQLite ALTER TABLE
+	 * documentation can
+	 * be found <a href="http://sqlite.org/lang_altertable.html">here</a> . If you add new columns you can use ALTER
+	 * TABLE
+	 * to insert them into a live table. If you rename or remove columns you can use ALTER TABLE to rename the old
+	 * table,
+	 * then create the new table and then populate the new table with the contents of the old table. </p><p> This
+	 * method
+	 * executes within a transaction.  If an exception is thrown, all changes will automatically be rolled back. </p>
+	 *
+	 * @param db
+	 * 	The database.
+	 * @param tableName
+	 * 	Table name to be used
+	 * @param sqlCreate
+	 * 	Create SQL statement
+	 * @param sqlBackUp
+	 * 	Backup sQL statement
+	 * @param isFTS
+	 * 	TRUE if the table is FTS, FALSE otherwise
+	 */
+	public void upgrade(String tableName, String sqlCreate, String sqlBackUp, SQLiteDatabase db, Boolean isFTS) {
+		Log.i(KeyDictionary.TAG, "Upgrading");
 
 		//Update State table
 		db.beginTransaction();
 		// run a table creation with if not exists (we are doing an upgrade, so the table might not exists yet,
 		// it will fail alter and drop)
-		db.execSQL(sqlCreate);
+		if (!isFTS) {
+			db.execSQL(sqlCreate);
+		}
 		//Get a list the existing columns
 		List<String> columns = getColumns(db, tableName);
 		//Backup table

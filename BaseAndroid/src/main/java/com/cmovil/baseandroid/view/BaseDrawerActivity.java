@@ -148,4 +148,14 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	protected void closeDrawer() {
 		if (mNavigationDrawerFragment != null) mNavigationDrawerFragment.closeDrawer();
 	}
+
+	/**
+	 * Locks the drawer in order to prevent open it or close it
+	 *
+	 * @param lockDrawer
+	 * 	TRUE if it should be locked, FALSE otherwise
+	 */
+	protected void lockDrawer(Boolean lockDrawer) {
+		if (mNavigationDrawerFragment != null) mNavigationDrawerFragment.setLockDrawer(lockDrawer);
+	}
 }

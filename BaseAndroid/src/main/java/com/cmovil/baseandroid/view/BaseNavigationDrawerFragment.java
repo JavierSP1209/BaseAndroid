@@ -78,6 +78,10 @@ public class BaseNavigationDrawerFragment extends Fragment {
 	 */
 	private int appName;
 
+	public void setLockDrawer(boolean lockDrawer) {
+		this.lockDrawer = lockDrawer;
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

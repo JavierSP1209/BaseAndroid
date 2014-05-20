@@ -177,7 +177,7 @@ public class BitmapDecoderTask<T> extends AsyncTask<T, Void, Bitmap> {
 		} catch (IOException ex) {
 			//If the image stream its to large and it could not be reset, it could not be decoded so return null
 			// and set the error cause
-			Log.e(KeyDictionary.TAG, ex + ": Stream too large to decode it, try using a cached file instead", ex);
+			Log.e(KeyDictionary.TAG, ex + ": Stream too large to decode it, try using a cached file instead");
 			if (customAsyncTaskEventListener != null) {
 				StreamTooLargeException aux = new StreamTooLargeException(
 					ex + ": Stream too large to decode it, try using a cached file instead");

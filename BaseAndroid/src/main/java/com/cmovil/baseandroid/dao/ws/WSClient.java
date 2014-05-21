@@ -198,12 +198,6 @@ public abstract class WSClient<T1, T2> {
 	public List<T2> invokePOST(String methodName, String jsonRequest)
 		throws InvalidResponseException, IOException, ResponseErrorException {
 
-		if (fieldNamingStrategy != null) {
-			gsonBuilder = new GsonBuilder().setFieldNamingStrategy(fieldNamingStrategy).create();
-		} else {
-			gsonBuilder = new GsonBuilder().create();
-		}
-
 		String jsonServerResponse = makeWSPostRequest(methodName, jsonRequest);
 		//Receiving and parsing the response
 		if (jsonServerResponse != null) {

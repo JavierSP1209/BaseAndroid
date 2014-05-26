@@ -15,7 +15,9 @@ import java.util.Map;
 /**
  * Base data base helper contains all the base functions for common data base operations like, insert, delete, update
  * getAll and getById
- * @param <T> Catalog class that will be used for perform the data base operations
+ *
+ * @param <T>
+ * 	Catalog class that will be used for perform the data base operations
  * @author "M. en C. Javier Silva Perez (JSP)"
  * @version 1.0
  * @since 29/08/2013
@@ -95,7 +97,47 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * @return A Cursor over all rows matching the query
 	 */
 	protected Cursor query(String tableName, String selection, String[] selectionArgs, String[] columns,
-	                     Map<String, String> projectionMap) {
+	                       Map<String, String> projectionMap) {
+		return query(tableName, selection, selectionArgs, columns, projectionMap, null,null,null,null);
+	}
+
+	/**
+	 * Performs a database query.
+	 *
+	 * @param tableName
+	 * 	Sets the list of tables to query. Multiple tables can be specified to perform a join. For example: setTables
+	 * 	("foo,
+	 * 	bar") setTables("foo LEFT OUTER JOIN bar ON (foo.id = bar.foo_id)")
+	 * @param selection
+	 * 	The selection clause
+	 * @param selectionArgs
+	 * 	Selection arguments for "?" components in the selection
+	 * @param columns
+	 * 	The columns to return
+	 * @param projectionMap
+	 * 	The projection map maps from column names that the caller passes into query to database column names. This is
+	 * 	useful for renaming columns as well as disambiguating column names when doing joins. For example you could map
+	 * 	"name" to "people.name". If a projection map is set it must contain all column names the user may request,
+	 * 	even if
+	 * 	the key and value are the same.
+	 * @param groupBy
+	 * 	A filter declaring how to group rows, formatted as an SQL GROUP BY clause (excluding the GROUP BY itself).
+	 * 	Passing null will cause the rows to not be grouped.
+	 * @param having
+	 * 	A filter declare which row groups to include in the cursor, if row grouping is being used, formatted as an SQL
+	 * 	HAVING clause (excluding the HAVING itself). Passing null will cause all row groups to be included, and is
+	 * 	required when row grouping is not being used.
+	 * @param sortOrder
+	 * 	How to order the rows, formatted as an SQL ORDER BY clause (excluding the ORDER BY itself). Passing null will
+	 * 	use the default sort order, which may be unordered.
+	 * @param limit
+	 * 	Limits the number of rows returned by the query, formatted as LIMIT clause. Passing null denotes no LIMIT
+	 * 	clause.
+	 * @return A Cursor over all rows matching the query
+	 */
+	protected Cursor query(String tableName, String selection, String[] selectionArgs, String[] columns,
+	                       Map<String, String> projectionMap, String groupBy, String having, String sortOrder,
+	                       String limit) {
 		/*
 		 * The SQLiteBuilder provides a map for all possible columns requested
 		 * to actual columns in the database, creating a simple column alias
@@ -108,7 +150,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 
 		SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
 
-		Cursor cursor = builder.query(db, columns, selection, selectionArgs, null, null, null);
+		Cursor cursor = builder.query(db, columns, selection, selectionArgs, groupBy, having, sortOrder, limit);
 
 		if (cursor == null) {
 			db.close();

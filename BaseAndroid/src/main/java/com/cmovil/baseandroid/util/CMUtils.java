@@ -65,12 +65,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 20/03/2013
  */
 public class CMUtils {
-	public static final String FONT_REFLEX_BLACK = "fonts/ReflexBlack.ttf";
-	public static final String FONT_VERDANA = "fonts/Verdana.ttf";
-	public static final String FONT_ARIAL_BLACK = "fonts/ArialBlack.ttf";
-	public static final String FONT_GOTHIC = "fonts/gothic_0.ttf";
-	public static final SecureRandom SECURE_RANDOM = new SecureRandom();
-
 
 	/**
 	 * Unique ID of the Android device
@@ -94,7 +88,7 @@ public class CMUtils {
 	 * 	TextViews to which the font will be applied
 	 */
 	public static void setTypeface(Context context, String font, int style, TextView... textViews) {
-		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
+		Typeface tf = Typefaces.get(context, font);
 		for (TextView txt : textViews) {
 			txt.setTypeface(tf, style);
 		}
@@ -111,7 +105,7 @@ public class CMUtils {
 	 * 	TextViews to which the font will be applied
 	 */
 	public static void setTypeface(Context context, String font, TextView... textViews) {
-		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
+		Typeface tf = Typefaces.get(context, font);
 		for (TextView txt : textViews) {
 			txt.setTypeface(tf);
 		}
@@ -128,7 +122,7 @@ public class CMUtils {
 	 * 	Buttons to which the font will be applied
 	 */
 	public static void setTypeface(Context context, String font, Button... buttons) {
-		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
+		Typeface tf = Typefaces.get(context, font);
 		for (Button txt : buttons) {
 			txt.setTypeface(tf);
 		}
@@ -147,7 +141,7 @@ public class CMUtils {
 	 * 	Buttons to which the font will be applied
 	 */
 	public static void setTypeface(Context context, String font, int style, Button... buttons) {
-		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
+		Typeface tf = Typefaces.get(context, font);
 		for (Button txt : buttons) {
 			txt.setTypeface(tf, style);
 		}
@@ -205,7 +199,7 @@ public class CMUtils {
 	 * 	Root layout in which TextView and Buttons will be searched to apply the font
 	 */
 	public static void setTypeface(Context context, String font, int style, ViewGroup group) {
-		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
+		Typeface tf = Typefaces.get(context, font);
 		int count = group.getChildCount();
 		View v;
 		for (int i = 0; i < count; i++) {
@@ -226,7 +220,7 @@ public class CMUtils {
 	 * 	Root layout in which TextView and Buttons will be searched to apply the font
 	 */
 	public static void setTypeface(Context context, String font, ViewGroup group) {
-		Typeface tf = Typeface.createFromAsset(context.getAssets(), font);
+		Typeface tf = Typefaces.get(context, font);
 		int count = group.getChildCount();
 		View v;
 		for (int i = 0; i < count; i++) {
@@ -333,7 +327,7 @@ public class CMUtils {
 			v = rootView.getChildAt(i);
 			if (v != null) {
 				if (v instanceof ViewGroup) disableView((ViewGroup) v, alpha);
-				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) setAlphaForAllVersions(v,alpha);
+				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) setAlphaForAllVersions(v, alpha);
 				v.setEnabled(false);
 			}
 		}
@@ -545,17 +539,17 @@ public class CMUtils {
 	}
 
 	public static String cleanString(String value) {
-//Remove spaces and upper case input
+		//Remove spaces and upper case input
 		String res = value.trim();
 
 
-// The char 180 (´) is not replaced by the regex, so first replace it by '-'
+		// The char 180 (´) is not replaced by the regex, so first replace it by '-'
 		res = res.replace((char) 180, '-');
 
-//Normalize the string will separate all of the accent marks from the characters.
+		//Normalize the string will separate all of the accent marks from the characters.
 		res = Normalizer.normalize(res, Normalizer.Form.NFD);
-//Using a regular expression remove every non alphanumeric character (don't include lower Case characters
-// because the first line change them to upper case)
+		//Using a regular expression remove every non alphanumeric character (don't include lower Case characters
+		// because the first line change them to upper case)
 		res = res.replace(" ", "%20");
 		res = res.replaceAll("([^a-zA-Z0-9%])", "");
 		return res;

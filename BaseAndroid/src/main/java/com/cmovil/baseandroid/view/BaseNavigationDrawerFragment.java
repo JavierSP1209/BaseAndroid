@@ -176,6 +176,7 @@ public class BaseNavigationDrawerFragment extends Fragment {
 				}
 
 				getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+				mCallbacks.onDrawerClosed(drawerView);
 			}
 
 			@Override
@@ -194,6 +195,19 @@ public class BaseNavigationDrawerFragment extends Fragment {
 				}
 
 				getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+				mCallbacks.onDrawerOpened(drawerView);
+			}
+
+			@Override
+			public void onDrawerSlide(View drawerView, float slideOffset) {
+				super.onDrawerSlide(drawerView, slideOffset);
+				mCallbacks.onDrawerSlide(drawerView, slideOffset);
+			}
+
+			@Override
+			public void onDrawerStateChanged(int newState) {
+				super.onDrawerStateChanged(newState);
+				mCallbacks.onDrawerStateChanged(newState);
 			}
 		};
 
@@ -324,6 +338,14 @@ public class BaseNavigationDrawerFragment extends Fragment {
 		 * Called when an item in the navigation drawer is selected.
 		 */
 		void onNavigationDrawerItemSelected(int position);
+
+		void onDrawerClosed(View drawerView);
+
+		void onDrawerOpened(View drawerView);
+
+		void onDrawerSlide(View drawerView, float slideOffset);
+
+		void onDrawerStateChanged(int newState);
 	}
 
 	/**

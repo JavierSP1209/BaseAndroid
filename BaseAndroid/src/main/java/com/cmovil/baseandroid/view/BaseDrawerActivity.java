@@ -158,4 +158,25 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	protected void lockDrawer(Boolean lockDrawer) {
 		if (mNavigationDrawerFragment != null) mNavigationDrawerFragment.setLockDrawer(lockDrawer);
 	}
+
+	@Override
+	public void onDrawerClosed(View drawerView) {
+
+	}
+
+	@Override
+	public void onDrawerOpened(View drawerView) {
+
+	}
+
+	@Override
+	public void onDrawerSlide(View drawerView, float slideOffset) {
+
+	}
+
+	@Override
+	public void onDrawerStateChanged(int newState) {
+
+	}
+
 }

@@ -344,6 +344,7 @@ public class CMUtils {
 		GregorianCalendar gc = new GregorianCalendar();
 		gc.setTime(date);
 		gc.clear(Calendar.HOUR_OF_DAY);
+		gc.set(Calendar.HOUR_OF_DAY, 0);
 		gc.clear(Calendar.MINUTE);
 		gc.clear(Calendar.SECOND);
 		gc.clear(Calendar.MILLISECOND);

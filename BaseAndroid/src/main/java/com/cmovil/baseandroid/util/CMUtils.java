@@ -8,6 +8,7 @@
  */
 package com.cmovil.baseandroid.util;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -43,7 +44,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -312,23 +312,25 @@ public class CMUtils {
 	}
 
 	/**
-	 * Disable all the childs of the selected root view
+	 * Disable or enable all the children of the selected root view
 	 *
 	 * @param rootView
-	 * 	View to iterate in order to disable all its childs
+	 * 	View to iterate in order to disable all its children
 	 * @param alpha
 	 * 	Alpha to set to disabled elements
+	 * @param enabled
+	 * 	view enabled status
 	 */
-	public static void disableView(ViewGroup rootView, float alpha) {
+	public static void toggleViewEnabled(ViewGroup rootView, float alpha, Boolean enabled) {
 		int count = rootView.getChildCount();
 		View v;
 		//Go over the child list of the view and disable all
 		for (int i = 0; i < count; i++) {
 			v = rootView.getChildAt(i);
 			if (v != null) {
-				if (v instanceof ViewGroup) disableView((ViewGroup) v, alpha);
-				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) setAlphaForAllVersions(v, alpha);
-				v.setEnabled(false);
+				if (v instanceof ViewGroup) toggleViewEnabled((ViewGroup) v, alpha, enabled);
+				setAlphaForAllVersions(v, alpha);
+				v.setEnabled(enabled);
 			}
 		}
 	}
@@ -539,6 +541,7 @@ public class CMUtils {
 		return str;
 	}
 
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	public static String cleanString(String value) {
 		//Remove spaces and upper case input
 		String res = value.trim();

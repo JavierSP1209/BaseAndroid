@@ -17,4 +17,10 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+
+	<style name="TextAppearance.Test.FloatingHing" parent="android:TextAppearance.Small">
+		<item name="android:textColor">#ff42a623</item>
+		<item name="android:textSize">11sp</item>
+		<item name="android:textStyle">bold</item>
+	</style>
 </resources>

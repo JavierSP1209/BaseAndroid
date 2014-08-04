@@ -33,9 +33,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -43,12 +41,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cmovil.baseandroid.R;
-import com.cmovil.baseandroid.util.KeyDictionary;
 
 /**
  * Layout which uses an {@link android.widget.EditText} to show a floating label when the hint is hidden due to user
@@ -77,16 +73,16 @@ public class FloatingHintControl extends LinearLayout {
 
 	public FloatingHintControl(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		initFloatingHintControl(context,attrs);
+		initFloatingHintControl(context, attrs);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public FloatingHintControl(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		initFloatingHintControl(context,attrs);
+		initFloatingHintControl(context, attrs);
 	}
 
-	public void initFloatingHintControl(Context context, AttributeSet attrs){
+	public void initFloatingHintControl(Context context, AttributeSet attrs) {
 		final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FloatLabelLayout);
 
 		final int sidePadding = a.getDimensionPixelSize(R.styleable.FloatLabelLayout_floatLabelSidePadding,
@@ -119,13 +115,6 @@ public class FloatingHintControl extends LinearLayout {
 			if (mEditText != null) {
 				throw new IllegalArgumentException("We already have an EditText, can only have one");
 			}
-
-			// Update the layout params so that the EditText is at the bottom, with enough top
-			// margin to show the label
-			//final LayoutParams lp = new LayoutParams(params);
-			//lp.gravity = Gravity.BOTTOM;
-			//lp.topMargin = (int) mLabel.getTextSize();
-			//params = lp;
 
 			setEditText((EditText) child);
 		}
@@ -204,7 +193,7 @@ public class FloatingHintControl extends LinearLayout {
 	/**
 	 * Cancels the current animation for the label
 	 */
-	private void cancelAnimation(){
+	private void cancelAnimation() {
 		Animation animation = mLabel.getAnimation();
 		if (animation != null) {
 			animation.cancel();
@@ -262,11 +251,11 @@ public class FloatingHintControl extends LinearLayout {
 				new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0,
 					Animation.ABSOLUTE,
 					0, Animation.ABSOLUTE, mLabel.getHeight());
-			translateAnimation.setDuration(300);
+			translateAnimation.setDuration(animationDuration);
 			animationSet.addAnimation(translateAnimation);
 
 			AlphaAnimation alphaAnimation = new AlphaAnimation(1f, 0f);
-			alphaAnimation.setDuration(300);
+			alphaAnimation.setDuration(animationDuration);
 			animationSet.addAnimation(alphaAnimation);
 
 

@@ -24,6 +24,7 @@ package com.cmovil.baseandroid.view.util;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
@@ -43,6 +44,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cmovil.baseandroid.R;
@@ -59,7 +61,7 @@ import com.cmovil.baseandroid.util.KeyDictionary;
  * @see <a href="https://gist.github.com/chrisbanes/11247418#file-floatlabellayout-java">Chrisbanes Gist</a>
  * @since 31/07/14
  */
-public class FloatingHintControl extends FrameLayout {
+public class FloatingHintControl extends LinearLayout {
 
 	private static final int DEFAULT_ANIMATION_DURATION = 150;
 	private static final float DEFAULT_PADDING_LEFT_RIGHT_DP = 12f;
@@ -74,12 +76,17 @@ public class FloatingHintControl extends FrameLayout {
 	}
 
 	public FloatingHintControl(Context context, AttributeSet attrs) {
-		this(context, attrs, 0);
+		super(context, attrs);
+		initFloatingHintControl(context,attrs);
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public FloatingHintControl(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		initFloatingHintControl(context,attrs);
+	}
 
+	public void initFloatingHintControl(Context context, AttributeSet attrs){
 		final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FloatLabelLayout);
 
 		final int sidePadding = a.getDimensionPixelSize(R.styleable.FloatLabelLayout_floatLabelSidePadding,
@@ -90,6 +97,7 @@ public class FloatingHintControl extends FrameLayout {
 		mLabel.setPadding(sidePadding, 0, sidePadding, 0);
 		mLabel.setVisibility(INVISIBLE);
 
+
 		//Set label text format
 		mLabel.setTextAppearance(context, a.getResourceId(R.styleable.FloatLabelLayout_floatLabelTextAppearance,
 			android.R.style.TextAppearance_Small));
@@ -97,7 +105,9 @@ public class FloatingHintControl extends FrameLayout {
 		//Get animation duration or set the default one
 		animationDuration = a.getInteger(R.styleable.FloatLabelLayout_animationDuration, DEFAULT_ANIMATION_DURATION);
 
+		setOrientation(LinearLayout.VERTICAL);
 		addView(mLabel, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
 
 		a.recycle();
 	}
@@ -112,10 +122,10 @@ public class FloatingHintControl extends FrameLayout {
 
 			// Update the layout params so that the EditText is at the bottom, with enough top
 			// margin to show the label
-			final LayoutParams lp = new LayoutParams(params);
-			lp.gravity = Gravity.BOTTOM;
-			lp.topMargin = (int) mLabel.getTextSize();
-			params = lp;
+			//final LayoutParams lp = new LayoutParams(params);
+			//lp.gravity = Gravity.BOTTOM;
+			//lp.topMargin = (int) mLabel.getTextSize();
+			//params = lp;
 
 			setEditText((EditText) child);
 		}
@@ -242,8 +252,7 @@ public class FloatingHintControl extends FrameLayout {
 				.setListener(new AnimatorListenerAdapter() {
 					@Override
 					public void onAnimationEnd(Animator animation) {
-						Log.d(KeyDictionary.TAG, "GONE");
-						mLabel.setVisibility(View.GONE);
+						mLabel.setVisibility(INVISIBLE);
 					}
 				}).start();
 		} else {
@@ -269,7 +278,7 @@ public class FloatingHintControl extends FrameLayout {
 
 				@Override
 				public void onAnimationEnd(Animation animation) {
-					mLabel.setVisibility(View.GONE);
+					mLabel.setVisibility(View.INVISIBLE);
 				}
 
 				@Override

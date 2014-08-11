@@ -50,6 +50,15 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	protected abstract ContentValues fillMapValues(T insertObject) throws DBException;
 
 	/**
+	 * Gets the default table join string
+	 *
+	 * @return A string with all the necessary joins for one table
+	 */
+	protected String getDefaultTableJoin(){
+		return tableName;
+	}
+
+	/**
 	 * Close the data base
 	 */
 	public void close() {
@@ -71,8 +80,26 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * 	the key and value are the same.
 	 * @return Cursor over all words that match, or null if none found.
 	 */
+	@Deprecated
 	public Cursor getAll(String tableName, String[] columns, Map<String, String> projectionMap) {
 		return query(tableName, null, null, columns, projectionMap);
+	}
+
+	/**
+	 * Returns a Cursor over all base_dictionary in the URI
+	 *
+	 * @param columns
+	 * 	The columns to include, if null then all are included
+	 * @param projectionMap
+	 * 	The projection map maps from column names that the caller passes into query to database column names. This is
+	 * 	useful for renaming columns as well as disambiguating column names when doing joins. For example you could map
+	 * 	"name" to "people.name". If a projection map is set it must contain all column names the user may request,
+	 * 	even if
+	 * 	the key and value are the same.
+	 * @return Cursor over all words that match, or null if none found.
+	 */
+	public Cursor getAll(String[] columns, Map<String, String> projectionMap) {
+		return query(getDefaultTableJoin(), null, null, columns, projectionMap);
 	}
 
 	/**
@@ -98,7 +125,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 */
 	protected Cursor query(String tableName, String selection, String[] selectionArgs, String[] columns,
 	                       Map<String, String> projectionMap) {
-		return query(tableName, selection, selectionArgs, columns, projectionMap, null,null,null,null);
+		return query(tableName, selection, selectionArgs, columns, projectionMap, null, null, null, null);
 	}
 
 	/**
@@ -266,7 +293,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 		String selection = DatabaseDictionary.DBBaseStructure.FILTER_ID;
 		String[] selectionArgs = new String[]{String.valueOf(id)};
 		try {
-			return query(tableName, selection, selectionArgs, columns, null);
+			return query(getDefaultTableJoin(), selection, selectionArgs, columns, null);
 		} catch (SQLException e) {
 			throw new DBException(e.getMessage(), e);
 		}

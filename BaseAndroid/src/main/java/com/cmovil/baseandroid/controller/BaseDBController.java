@@ -107,7 +107,8 @@ public abstract class BaseDBController<T extends BaseModel> {
 	 * @param cursor
 	 * 	Valid cursor for extract object information
 	 * @return A State object fill up with cursor information
-	 *  @throws DBException
+	 *
+	 * @throws DBException
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	public abstract T fillUpObject(Cursor cursor) throws DBException;
@@ -158,11 +159,34 @@ public abstract class BaseDBController<T extends BaseModel> {
 	 * @throws com.cmovil.baseandroid.dao.db.DBException
 	 * 	if something goes wrong during SQL statements execution
 	 */
+	@Deprecated
 	public List<T> getAll(String tableName) throws DBException {
-		List<T> res = new LinkedList<T>();
-
-
 		Cursor cursor = baseDBDAO.getAll(tableName, getColumns(), null);
+		return processGetAll(cursor);
+	}
+
+	/**
+	 * @return A list of all the objects of the desired table
+	 *
+	 * @throws com.cmovil.baseandroid.dao.db.DBException
+	 * 	if something goes wrong during SQL statements execution
+	 */
+	public List<T> getAll() throws DBException {
+		Cursor cursor = baseDBDAO.getAll(getColumns(), null);
+		return processGetAll(cursor);
+	}
+
+	/**
+	 * Process the cursor returned
+	 *
+	 * @param cursor
+	 * 	the cursor to be used
+	 * @return The resulting list for the cursor
+	 *
+	 * @throws DBException
+	 */
+	private List<T> processGetAll(Cursor cursor) throws DBException {
+		List<T> res = new LinkedList<T>();
 		//If the cursor has at least one element, create the corresponding State object, if not,
 		// return an empty object
 		if (cursor != null && cursor.moveToFirst()) {

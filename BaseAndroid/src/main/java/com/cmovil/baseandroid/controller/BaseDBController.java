@@ -21,6 +21,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class that will be the connection between database and view classes, so it will include generic functions for
@@ -65,7 +66,7 @@ public abstract class BaseDBController<T extends BaseModel> {
 	 * could map "name" to "people.name". If a projection map is set it must contain all column names the user may
 	 * request, even if the key and value are the same.
 	 */
-	protected HashMap<String, String> getProjectionMap() {
+	protected Map<String, String> getProjectionMap() {
 		return null;
 	}
 

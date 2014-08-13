@@ -54,7 +54,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 *
 	 * @return A string with all the necessary joins for one table
 	 */
-	protected String getDefaultTableJoin(){
+	protected String getDefaultTableJoin() {
 		return tableName;
 	}
 
@@ -289,11 +289,45 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * @throws DBException
 	 * 	if something goes wrong during SQL statements execution
 	 */
+	@Deprecated
 	public Cursor getById(Integer id, String[] columns) throws DBException {
 		String selection = DatabaseDictionary.DBBaseStructure.FILTER_ID;
 		String[] selectionArgs = new String[]{String.valueOf(id)};
 		try {
 			return query(getDefaultTableJoin(), selection, selectionArgs, columns, null);
+		} catch (SQLException e) {
+			throw new DBException(e.getMessage(), e);
+		}
+
+		/*
+		 * This builds a query that looks like: SELECT <columns> FROM <table>
+		 * WHERE rowId = <id>
+		 */
+	}
+
+	/**
+	 * Gets all the objects of the selected table with the selected id
+	 *
+	 * @param id
+	 * 	Id that will be searched in the database
+	 * @param columns
+	 * 	The columns to include, if null then all are included
+	 * @param projectionMap
+	 * 	The projection map maps from column names that the caller passes into query to database column names. This is
+	 * 	useful for renaming columns as well as disambiguating column names when doing joins. For example you could map
+	 * 	"name" to "people.name". If a projection map is set it must contain all column names the user may request,
+	 * 	even if
+	 * 	the key and value are the same.
+	 * @return Cursor positioned to matching word, or null if not found.
+	 *
+	 * @throws DBException
+	 * 	if something goes wrong during SQL statements execution
+	 */
+	public Cursor getById(Integer id, String[] columns, Map<String, String> projectionMap) throws DBException {
+		String selection = DatabaseDictionary.DBBaseStructure.FILTER_ID;
+		String[] selectionArgs = new String[]{String.valueOf(id)};
+		try {
+			return query(getDefaultTableJoin(), selection, selectionArgs, columns, projectionMap);
 		} catch (SQLException e) {
 			throw new DBException(e.getMessage(), e);
 		}

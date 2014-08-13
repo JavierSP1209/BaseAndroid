@@ -38,6 +38,7 @@ public class CustomDataBaseOpenHelper extends BaseDatabaseOpenHelper {
 		//TODO: Add each table open helper create function
 		//Call create function for each table
 		create(db, DatabaseDictionary.State.SQL_CREATE);
+		create(db, DatabaseDictionary.StateAux.SQL_CREATE);
 	}
 
 	/**

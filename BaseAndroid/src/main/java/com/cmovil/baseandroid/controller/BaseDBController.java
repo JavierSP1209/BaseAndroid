@@ -18,6 +18,7 @@ import com.cmovil.baseandroid.model.db.BaseModel;
 import com.cmovil.baseandroid.util.KeyDictionary;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,6 +56,18 @@ public abstract class BaseDBController<T extends BaseModel> {
 	 * @return A string array with the columns that will be returned in all sql statements
 	 */
 	protected abstract String[] getColumns();
+
+	/**
+	 * Projection map that will be used by default on the query statement, by default the projection map will be null
+	 *
+	 * @return The projection map maps from column names that the caller passes into query to database column names.
+	 * This is useful for renaming columns as well as disambiguating column names when doing joins. For example you
+	 * could map "name" to "people.name". If a projection map is set it must contain all column names the user may
+	 * request, even if the key and value are the same.
+	 */
+	protected HashMap<String, String> getProjectionMap() {
+		return null;
+	}
 
 	/**
 	 * Insert an object to the data base
@@ -127,7 +140,7 @@ public abstract class BaseDBController<T extends BaseModel> {
 	 */
 	public T getById(Integer id) throws DBException {
 
-		Cursor res = baseDBDAO.getById(id, getColumns());
+		Cursor res = baseDBDAO.getById(id, getColumns(), getProjectionMap());
 		//If the cursor has at least one element, create the corresponding State object, if not,
 		// return an empty object
 		if (res != null && res.moveToFirst()) {

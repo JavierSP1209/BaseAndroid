@@ -21,6 +21,8 @@ import com.cmovil.baseandroidtest.dao.db.helper.DatabaseDictionary;
 import com.cmovil.baseandroidtest.dao.db.helper.SampleOpenHelper;
 import com.cmovil.baseandroidtest.model.db.State;
 
+import java.util.Map;
+
 /**
  * Data Access Object implementation for State table, will contain all the function that access to the data base table
  * in order to modify or retrieve information
@@ -75,6 +77,29 @@ public class SampleDAO extends BaseDBDAO<State> {
 		String[] selectionArgs = new String[]{String.valueOf(idServer)};
 		try {
 			return query(DatabaseDictionary.State.NAME, selection, selectionArgs, columns, null);
+		} catch (SQLException e) {
+			throw new DBException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Gets all the states with the selected server id
+	 *
+	 * @param join
+	 * 	Join string
+	 * @param columns
+	 * 	The columns to include, if null then all are included
+	 * @return Cursor positioned to matching word, or null if not found.
+	 *
+	 * @throws com.cmovil.baseandroid.dao.db.DBException
+	 * 	if something goes wrong during SQL statements execution
+	 */
+	public Cursor testJoin(String join, String[] columns, Map<String, String> projectionMap) throws DBException {
+		//String selection = DatabaseDictionary.StateAux.FILTER_ID_SERVER;
+		//String[] selectionArgs = new String[]{String.valueOf(id)};
+		//String join = "State INNER JOIN StateAux ON State._id=StateAux.idState";
+		try {
+			return query(join, null, null, columns, projectionMap);
 		} catch (SQLException e) {
 			throw new DBException(e.getMessage(), e);
 		}

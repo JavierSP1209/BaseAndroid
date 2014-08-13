@@ -41,7 +41,7 @@ public class DatabaseDictionary {
 	/**
 	 * Database name
 	 */
-	public static final String DATABASE_NAME = "buenfin.com.cmovil.baseandroidtest.dao.db";
+	public static final String DATABASE_NAME = "baseandroidtest.db";
 	/**
 	 * Database version
 	 */
@@ -74,7 +74,9 @@ public class DatabaseDictionary {
 		 * Column names
 		 */
 		public static final String COLUMN_NAME_NAME = "name";
+		public static final String COLUMN_FULL_NAME_NAME = NAME+"."+COLUMN_NAME_NAME;
 		public static final String COLUMN_NAME_ID_SERVER = "idServer";
+		public static final String COLUMN_FULL_NAME_ID_SERVER = NAME+"."+COLUMN_NAME_ID_SERVER;
 		public static final String SQL_CREATE = "CREATE TABLE IF NOT EXISTS " + NAME + " (" +
 			_ID + " INTEGER PRIMARY KEY AUTOINCREMENT" + COMMA_SEP +
 			COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
@@ -91,6 +93,49 @@ public class DatabaseDictionary {
 
 		/** END SEARCH FILTERS DEFINITION **/
 	}
+
+	/**
+	 * Inner class that contains all SQL statements and column names related to State table in DB
+	 *
+	 * @author "M. en C. Javier Silva Perez (JSP)"
+	 * @version 1.0
+	 * @since 29/07/13
+	 */
+	public static final class StateAux implements com.cmovil.baseandroid.dao.db.helper.DatabaseDictionary
+		                                           .DBBaseStructure {
+
+		/**
+		 * Table name
+		 */
+		public static final String NAME = "StateAux";
+		/**
+		 * Column names
+		 */
+		public static final String COLUMN_NAME_NAME = "name";
+		public static final String COLUMN_NAME_ID_SERVER = "idServer";
+		public static final String COLUMN_NAME_ID_STATE = "idState";
+
+		public static final String SQL_CREATE = "CREATE TABLE IF NOT EXISTS " + NAME + " (" +
+			_ID + " INTEGER PRIMARY KEY AUTOINCREMENT" + COMMA_SEP +
+			COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
+			COLUMN_NAME_ID_SERVER + INTEGER_TYPE + COMMA_SEP+
+			COLUMN_NAME_ID_STATE + INTEGER_TYPE + COMMA_SEP+
+			"FOREIGN KEY(" + COLUMN_NAME_ID_STATE + ") REFERENCES " + State.NAME + "(_id) ON DELETE " +
+			"CASCADE" +
+			" ); ";
+		/**
+		 * Backup table statement
+		 */
+		public static final String SQL_BACKUP = "ALTER table " + NAME + " RENAME TO 'temp_" + NAME + "'";
+		/**
+		 * BEGIN SEARCH FILTERS DEFINITION *
+		 */
+
+		public static final String FILTER_ID_SERVER = COLUMN_NAME_ID_SERVER + " = ?";
+
+		/** END SEARCH FILTERS DEFINITION **/
+	}
+
 
 	/**
 	 * Inner class that contains all SQL statements that a table could need, this contract class contains statements

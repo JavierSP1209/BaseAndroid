@@ -11,6 +11,5 @@ buildscript {
 allprojects {
     repositories {
         mavenCentral()
-        maven {   url "${System.env.HOME}/.m2/repository" }
     }
 }

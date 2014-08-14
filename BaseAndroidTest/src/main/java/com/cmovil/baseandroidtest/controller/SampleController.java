@@ -11,16 +11,14 @@ package com.cmovil.baseandroidtest.controller;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 
 import com.cmovil.baseandroid.controller.BaseDBController;
 import com.cmovil.baseandroid.dao.db.DBException;
-import com.cmovil.baseandroidtest.dao.db.helper.DatabaseDictionary;
 import com.cmovil.baseandroidtest.dao.db.SampleDAO;
+import com.cmovil.baseandroidtest.dao.db.helper.DatabaseDictionary;
 import com.cmovil.baseandroidtest.model.db.State;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Class that will be the connection between database and view classes, so it will include generic functions for
@@ -78,15 +76,14 @@ public class SampleController extends BaseDBController<State> {
 	 * @param idServer
 	 * 	Server Id that will be searched in the database
 	 * @return A {@link com.cmovil.baseandroidtest.model.db.State} object with the values from the database or an empty
-	 * object
-	 * if no results where found
+	 * object if no results where found
 	 *
 	 * @throws com.cmovil.baseandroid.dao.db.DBException
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	public State getByServerId(Integer idServer) throws DBException {
 
-		Cursor res = ((SampleDAO)getBaseDBDAO()).getByServerId(idServer, COLUMNS);
+		Cursor res = ((SampleDAO) getBaseDBDAO()).getByServerId(idServer, COLUMNS);
 		//If the cursor has at least one element, create the corresponding State object, if not,
 		// return an empty object
 		if (res != null && res.moveToFirst()) {
@@ -113,15 +110,16 @@ public class SampleController extends BaseDBController<State> {
 		//String selection = DatabaseDictionary.StateAux.FILTER_ID_SERVER;
 		//String[] selectionArgs = new String[]{String.valueOf(id)};
 		String join = "State INNER JOIN StateAux ON State._id=StateAux.idState";
-		String[]columns = new String[]{DatabaseDictionary.State._ID, "stateName",
-			"stateIdServer", "stateAux"};
-		HashMap<String,String> projectionMap = new HashMap<String, String>();
-		projectionMap.put(DatabaseDictionary.State._ID, DatabaseDictionary.State.NAME + "."+DatabaseDictionary.State._ID);
-		projectionMap.put("stateName", DatabaseDictionary.State.COLUMN_FULL_NAME_NAME+" AS stateName");
+		String[] columns = new String[]{DatabaseDictionary.State._ID, "stateName", "stateIdServer", "stateAux"};
+		HashMap<String, String> projectionMap = new HashMap<String, String>();
+		projectionMap
+			.put(DatabaseDictionary.State._ID, DatabaseDictionary.State.NAME + "." + DatabaseDictionary.State._ID);
+		projectionMap.put("stateName", DatabaseDictionary.State.COLUMN_FULL_NAME_NAME + " AS stateName");
 		projectionMap.put("stateIdServer", DatabaseDictionary.State.COLUMN_FULL_NAME_ID_SERVER + " AS stateIdServer");
-		projectionMap.put("stateAux", DatabaseDictionary.StateAux.NAME + "."+DatabaseDictionary.StateAux.COLUMN_NAME_NAME+ " AS stateAux");
+		projectionMap.put("stateAux",
+			DatabaseDictionary.StateAux.NAME + "." + DatabaseDictionary.StateAux.COLUMN_NAME_NAME + " AS stateAux");
 
-		Cursor cursor = ((SampleDAO)getBaseDBDAO()).testJoin(join, columns, projectionMap);
+		Cursor cursor = ((SampleDAO) getBaseDBDAO()).testJoin(join, columns, projectionMap);
 		//If the cursor has at least one element, create the corresponding State object, if not,
 		// return an empty object
 		//If the cursor has at least one element, create the corresponding State object, if not,

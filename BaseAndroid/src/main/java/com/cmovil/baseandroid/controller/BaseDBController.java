@@ -175,7 +175,7 @@ public abstract class BaseDBController<T extends BaseModel> {
 	 */
 	@Deprecated
 	public List<T> getAll(String tableName) throws DBException {
-		Cursor cursor = baseDBDAO.getAll(tableName, getColumns(), null);
+		Cursor cursor = baseDBDAO.getAll(tableName, getColumns(), getProjectionMap());
 		return processGetAll(cursor);
 	}
 
@@ -186,7 +186,7 @@ public abstract class BaseDBController<T extends BaseModel> {
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	public List<T> getAll() throws DBException {
-		Cursor cursor = baseDBDAO.getAll(getColumns(), null);
+		Cursor cursor = baseDBDAO.getAll(getColumns(), getProjectionMap());
 		return processGetAll(cursor);
 	}
 

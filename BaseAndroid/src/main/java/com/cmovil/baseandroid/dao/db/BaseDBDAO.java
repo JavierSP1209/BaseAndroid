@@ -291,18 +291,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 */
 	@Deprecated
 	public Cursor getById(Integer id, String[] columns) throws DBException {
-		String selection = DatabaseDictionary.DBBaseStructure.FILTER_ID;
-		String[] selectionArgs = new String[]{String.valueOf(id)};
-		try {
-			return query(getDefaultTableJoin(), selection, selectionArgs, columns, null);
-		} catch (SQLException e) {
-			throw new DBException(e.getMessage(), e);
-		}
-
-		/*
-		 * This builds a query that looks like: SELECT <columns> FROM <table>
-		 * WHERE rowId = <id>
-		 */
+		return getById(id, columns, null);
 	}
 
 	/**
@@ -324,7 +313,8 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	public Cursor getById(Integer id, String[] columns, Map<String, String> projectionMap) throws DBException {
-		String selection = DatabaseDictionary.DBBaseStructure.FILTER_ID;
+		//Add table name to default filter id string in order to use full table name for join queries
+		String selection = tableName + "." + DatabaseDictionary.DBBaseStructure.FILTER_ID;
 		String[] selectionArgs = new String[]{String.valueOf(id)};
 		try {
 			return query(getDefaultTableJoin(), selection, selectionArgs, columns, projectionMap);

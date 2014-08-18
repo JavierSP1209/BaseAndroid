@@ -9,8 +9,6 @@ package com.cmovil.baseandroid.dao.db;
 
 import android.support.annotation.NonNull;
 
-import java.util.Map;
-
 /**
  * Class with common methods for data base management
  *
@@ -44,5 +42,16 @@ public class DatabaseUtils {
 	 */
 	public static String getAsName(@NonNull final String tableName, @NonNull final String columnName) {
 		return tableName + columnName;
+	}
+
+	/**
+	 * Get the as sentence
+	 *
+	 * @param fullName
+	 * 	String with the full name of the column.
+	 * @return The complete As Sentence.
+	 */
+	public static String getAsSentence(@NonNull final String fullName) {
+		return fullName + " AS " + fullName.replace(".", "");
 	}
 }

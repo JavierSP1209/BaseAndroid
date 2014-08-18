@@ -47,11 +47,14 @@ public class DatabaseUtils {
 	/**
 	 * Get the as sentence
 	 *
-	 * @param fullName
+	 * @param tableName
+	 * 	The original table name
+	 * @param columnName
+	 * 	The column name to use
 	 * 	String with the full name of the column.
 	 * @return The complete As Sentence.
 	 */
-	public static String getAsSentence(@NonNull final String fullName) {
-		return fullName + " AS " + fullName.replace(".", "");
+	public static String getAsSentence(@NonNull final String tableName, @NonNull final String columnName) {
+		return getFullName(tableName, columnName) + " AS " + getAsName(tableName, columnName);
 	}
 }

@@ -11,14 +11,18 @@ package com.cmovil.baseandroidtest.controller;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.cmovil.baseandroid.controller.BaseDBController;
 import com.cmovil.baseandroid.dao.db.DBException;
 import com.cmovil.baseandroidtest.dao.db.SampleDAO;
 import com.cmovil.baseandroidtest.dao.db.helper.DatabaseDictionary;
 import com.cmovil.baseandroidtest.model.db.State;
+import com.cmovil.baseandroidtest.util.KeyDictionary;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Class that will be the connection between database and view classes, so it will include generic functions for
@@ -96,6 +100,53 @@ public class SampleController extends BaseDBController<State> {
 			res.close();
 		}
 		return new State();
+	}
+
+	public void testBatchInsert(int insertNumber){
+
+		List<State> stateList = new ArrayList<State>();
+		for(int i=0;i<insertNumber;i++){
+			State state = new State();
+			state.setName("Test"+i);
+			state.setIdServer(i);
+			stateList.add(state);
+		}
+
+
+		/*try {
+			long begin = System.nanoTime();
+			//Test simple insert
+			for (State state : stateList) {
+				insert(state);
+			}
+			long finish = System.nanoTime();
+			long total = finish-begin;
+			Log.d(KeyDictionary.TAG, "SimpleInsert: "+total+" nS");
+		}catch (DBException ex){
+			Log.e(KeyDictionary.TAG, ex.getMessage(), ex);
+		}*/
+
+		/*try {
+			long begin = System.nanoTime();
+			//Test customBatch insert
+			insertAux(stateList);
+			long finish = System.nanoTime();
+			long total = finish-begin;
+			Log.d(KeyDictionary.TAG, "SimpleBatchInsert: "+total+" nS");
+		}catch (DBException ex){
+			Log.e(KeyDictionary.TAG, ex.getMessage(), ex);
+		}*/
+
+		try {
+			long begin = System.nanoTime();
+			//Test customBatch insert
+			insert(stateList);
+			long finish = System.nanoTime();
+			long total = finish-begin;
+			Log.d(KeyDictionary.TAG, "CustomBatchInsert: "+total+" nS");
+		}catch (DBException ex){
+			Log.e(KeyDictionary.TAG, ex.getMessage(), ex);
+		}
 	}
 
 	/**

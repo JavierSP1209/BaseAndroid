@@ -28,12 +28,18 @@
 		android:layout_centerInParent="true"
 		android:indeterminate="true"
 		style="@android:style/Widget.ProgressBar.Large"/>
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/btnBegin"
+		android:layout_below="@id/progress"
+		android:id="@+id/btnBegin"/>
 
 	<com.cmovil.baseandroid.view.util.FloatingHintControl
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="10dp"
-		android:layout_below="@id/progress"
+		android:layout_below="@id/btnBegin"
 		android:id="@+id/txtTest"
 		app:animationDuration="1000"
 		app:floatLabelTextAppearance="@style/TextAppearance.Test.FloatingHing">
@@ -67,5 +73,7 @@
 			android:imeOptions="actionDone"/>
 
 	</com.cmovil.baseandroid.view.util.FloatingHintControl>
+
+
 
 </RelativeLayout>

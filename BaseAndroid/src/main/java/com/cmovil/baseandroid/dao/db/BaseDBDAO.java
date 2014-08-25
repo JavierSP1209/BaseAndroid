@@ -1,16 +1,22 @@
 package com.cmovil.baseandroid.dao.db;
 
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.os.Build;
 
 import com.cmovil.baseandroid.dao.db.helper.BaseDatabaseOpenHelper;
 import com.cmovil.baseandroid.dao.db.helper.DatabaseDictionary;
 import com.cmovil.baseandroid.model.db.BaseModel;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Base data base helper contains all the base functions for common data base operations like, insert, delete, update
@@ -24,6 +30,10 @@ import java.util.Map;
  */
 public abstract class BaseDBDAO<T extends BaseModel> {
 
+	/**
+	 * Maximum SQLite query params
+	 */
+	public static final int MAX_QUERY_PARAMS = 999;
 	protected final BaseDatabaseOpenHelper mDatabaseOpenHelper;
 	protected String tableName;
 
@@ -214,6 +224,206 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 			newRowId = db.insertOrThrow(tableName, null, fillMapValues(insertObject));
 			db.close();
 			return (int) newRowId;
+		} catch (SQLException e) {
+			throw new DBException(e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Insert a list of object to the data base, this method must be used for performance, in other cases use the base
+	 * insert one
+	 *
+	 * @param insertObject
+	 * 	Object to be get the values to insert
+	 * @throws com.cmovil.baseandroid.dao.db.DBException
+	 * 	if something goes wrong during SQL statements execution
+	 */
+	public void insert(List<T> insertObject) throws DBException {
+
+		// Gets the data repository in write mode
+		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+
+		db.acquireReference();
+		try {
+			Object[] bindArgs;
+			if (insertObject != null && !insertObject.isEmpty()) {
+
+				//Add ? as many insert objects are on the movement list, this can pre-processed because  all the
+				// inserts will have the same  parameters
+
+				//Get a sample object in order to get the content values to insert
+				ContentValues initialValues = fillMapValues(insertObject.get(0));
+				StringBuilder sql = new StringBuilder();
+				String params;
+
+				//Create a simple ? param string in order to reuse it on each insert statement
+				int size = (initialValues != null && initialValues.size() > 0) ? initialValues.size() : 0;
+				for (int i = 0; i < size; i++) {
+					sql.append((i > 0) ? ",?" : "?");
+				}
+				params = sql.toString();
+
+				for (T anInsertObject : insertObject) {
+					sql = new StringBuilder();
+					initialValues = fillMapValues(anInsertObject);
+					//Create base insert statement
+					sql.append(DatabaseDictionary.SQL_INSERT);
+					sql.append(tableName);
+					sql.append(" (");
+
+					bindArgs = new Object[size];
+
+					int i = 0;
+					Set<Map.Entry<String, Object>> valueSet = initialValues.valueSet();
+					for (Map.Entry<String, Object> entry : valueSet) {
+						String colName = entry.getKey();
+						sql.append((i > 0) ? "," : "");
+						sql.append(colName);
+						bindArgs[i++] = entry.getValue();
+					}
+					sql.append(')');
+					sql.append(" VALUES (");
+					sql.append(params);
+
+					sql.append(')');
+
+					db.execSQL(sql.toString(), bindArgs);
+				}
+
+				db.close();
+			}
+		} catch (SQLException e) {
+			throw new DBException(e.getMessage(), e);
+		} finally {
+			db.releaseReference();
+		}
+	}
+
+	/**
+	 * Insert a list of object to the data base, this method must be used for performance, in other cases use the base
+	 * insert one
+	 *
+	 * @param insertObject
+	 * 	Object to be get the values to insert
+	 * @throws com.cmovil.baseandroid.dao.db.DBException
+	 * 	if something goes wrong during SQL statements execution
+	 */
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	public void insertV11(List<T> insertObject) throws DBException {
+
+		// Gets the data repository in write mode
+		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+
+		db.acquireReference();
+		try {
+			Object[] bindArgs;
+			if (insertObject != null && !insertObject.isEmpty()) {
+				//Pre-process insert query because  all the inserts will have the same  parameters
+				//Get a sample object in order to get the content values to insert
+				ContentValues initialValues = fillMapValues(insertObject.get(0));
+				StringBuilder sql = new StringBuilder();
+				String params;
+
+				//Create a simple ? param string in order to reuse it on each insert statement
+				int size = (initialValues != null && initialValues.size() > 0) ? initialValues.size() : 0;
+				//If the map has at least one columns
+				if (size > 0) {
+					//Add ? as many insert objects are on the movement list
+					for (int i = 0; i < size; i++) {
+						sql.append((i > 0) ? ",?" : "?");
+					}
+					params = sql.toString();
+					int maxInsertCount = MAX_QUERY_PARAMS/size;
+					int totalInserts = insertObject.size();
+					Iterator<T> iterator = insertObject.iterator();
+					while(iterator.hasNext()) {
+
+						int insertCount = totalInserts>=maxInsertCount?maxInsertCount:totalInserts;
+
+						sql = new StringBuilder();
+						createBaseInsert(sql, initialValues);
+						bindArgs = new Object[size * insertCount];
+
+
+						int i = 0;
+						for (int j = 0;j<insertCount;j++) {
+							T element = iterator.next();
+							initialValues = fillMapValues(element);
+
+							for (String columnName : initialValues.keySet()) {
+								bindArgs[i++] = initialValues.get(columnName);
+							}
+
+							sql.append(j == 0 ? "(" : ",(");
+							sql.append(params);
+
+							sql.append(')');
+						}
+						db.execSQL(sql.toString(), bindArgs);
+						totalInserts -= maxInsertCount;
+					}
+				}
+
+				db.close();
+			}
+		} catch (SQLException e) {
+			throw new DBException(e.getMessage(), e);
+		} finally {
+			db.releaseReference();
+		}
+	}
+
+	/**
+	 * Initialize SQL Insert statement for a batch insert
+	 *
+	 * @param sql
+	 * 	Builder to initialize
+	 * @param initialValues
+	 * 	ContentValues to be used on the insert statement
+	 */
+	private void createBaseInsert(StringBuilder sql, ContentValues initialValues) {
+		//Create base insert statement
+		sql.append(DatabaseDictionary.SQL_INSERT);
+		sql.append(tableName);
+		sql.append(" (");
+		int j = 0;
+		Set<Map.Entry<String, Object>> valueSet = initialValues.valueSet();
+		for (Map.Entry<String, Object> entry : valueSet) {
+			String colName = entry.getKey();
+			sql.append((j > 0) ? "," : "");
+			sql.append(colName);
+			j++;
+		}
+		sql.append(") VALUES ");
+	}
+
+	/**
+	 * Insert a list of object to the data base, this method must be used for performance, in other cases use the base
+	 * insert one
+	 *
+	 * @param insertObjects
+	 * 	Object to be get the values to insert
+	 * @throws com.cmovil.baseandroid.dao.db.DBException
+	 * 	if something goes wrong during SQL statements execution
+	 */
+	public List<Integer> insertAux(List<T> insertObjects) throws DBException {
+
+		try {
+			// Gets the data repository in write mode
+			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+
+			List<Integer> ids = new ArrayList<Integer>();
+			if (db == null) return ids;
+
+			for (T element : insertObjects) {
+				// Insert the new row, returning the primary key value of the new row
+				long newRowId;
+				newRowId = db.insertOrThrow(tableName, null, fillMapValues(element));
+				ids.add((int) newRowId);
+			}
+			db.close();
+
+			return ids;
 		} catch (SQLException e) {
 			throw new DBException(e.getMessage(), e);
 		}

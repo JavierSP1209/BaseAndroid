@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,7 +20,10 @@ import com.cmovil.baseandroid.view.BaseNavigationDrawerFragment;
 import com.cmovil.baseandroid.view.loader.ImageLoader;
 import com.cmovil.baseandroidtest.R;
 import com.cmovil.baseandroidtest.controller.SampleController;
+import com.cmovil.baseandroidtest.model.db.State;
 import com.cmovil.baseandroidtest.util.KeyDictionary;
+
+import java.util.List;
 
 public class SplashActivity extends BaseDrawerActivity {
 
@@ -92,12 +96,27 @@ public class SplashActivity extends BaseDrawerActivity {
 		//String imageURL = "http://www.digivill.net/~binary/wall-covering/(huge!)14850x8000%2520earth.jpg";
 		ImageLoader<String> imageLoader = new ImageLoader<String>(this);
 		//imageLoader.displayImage("Test", imageURL, imgTest, findViewById(R.id.progress), -1, -1, null);
-		SampleController sampleController= new SampleController(this);
-		try {
-			sampleController.testJoin();
-		} catch (DBException e) {
-			Log.e(KeyDictionary.TAG, e.getMessage());
-		}
+		Button begin = (Button) findViewById(R.id.btnBegin);
+		begin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SampleController sampleController = new SampleController(SplashActivity.this);
+
+				//for(int i=0;i<10;i++) {
+					sampleController.testBatchInsert(1000);
+				try {
+					List<State> states = sampleController.getAll();
+					for(State state:states){
+						Log.d(KeyDictionary.TAG, state.toString());
+					}
+				}catch (DBException db){
+					Log.e(KeyDictionary.TAG, db.getMessage(),db);
+				}
+				//}
+			}
+		});
+
+
 	}
 
 

@@ -28,6 +28,11 @@ public class DatabaseDictionary {
 	}
 
 	/**
+	 * Base SQL Insert statement
+	 */
+	public static final String SQL_INSERT = "INSERT INTO ";
+
+	/**
 	 * Base com.cmovil.baseandroid.dao.db structure which contains filter id value
 	 */
 	public interface DBBaseStructure extends BaseColumns {

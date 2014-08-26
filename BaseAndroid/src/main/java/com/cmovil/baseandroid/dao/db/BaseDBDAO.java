@@ -233,12 +233,29 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * Insert a list of object to the data base, this method must be used for performance, in other cases use the base
 	 * insert one
 	 *
-	 * @param insertObject
-	 * 	Object to be get the values to insert
+	 * @param insertObjects
+	 * 	List of objects to insert
 	 * @throws com.cmovil.baseandroid.dao.db.DBException
 	 * 	if something goes wrong during SQL statements execution
 	 */
-	public void insert(List<T> insertObject) throws DBException {
+	public void insert(List<T> insertObjects) throws DBException {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			insertV16(insertObjects);
+		} else {
+			insertV8(insertObjects);
+		}
+	}
+
+
+	/**
+	 * Insert a list of object to the data base, this method should be used prior API 16, due to SQLite version
+	 *
+	 * @param insertObjects
+	 * 	List of objects to insert
+	 * @throws com.cmovil.baseandroid.dao.db.DBException
+	 * 	if something goes wrong during SQL statements execution
+	 */
+	private void insertV8(List<T> insertObjects) throws DBException {
 
 		// Gets the data repository in write mode
 		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
@@ -246,13 +263,13 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 		db.acquireReference();
 		try {
 			Object[] bindArgs;
-			if (insertObject != null && !insertObject.isEmpty()) {
+			if (insertObjects != null && !insertObjects.isEmpty()) {
 
 				//Add ? as many insert objects are on the movement list, this can pre-processed because  all the
 				// inserts will have the same  parameters
 
 				//Get a sample object in order to get the content values to insert
-				ContentValues initialValues = fillMapValues(insertObject.get(0));
+				ContentValues initialValues = fillMapValues(insertObjects.get(0));
 				StringBuilder sql = new StringBuilder();
 				String params;
 
@@ -263,7 +280,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 				}
 				params = sql.toString();
 
-				for (T anInsertObject : insertObject) {
+				for (T anInsertObject : insertObjects) {
 					sql = new StringBuilder();
 					initialValues = fillMapValues(anInsertObject);
 					//Create base insert statement
@@ -301,15 +318,15 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 
 	/**
 	 * Insert a list of object to the data base, this method must be used for performance, in other cases use the base
-	 * insert one
+	 * insert one, this method should be used post API 16 due to SQLite version
 	 *
-	 * @param insertObject
-	 * 	Object to be get the values to insert
+	 * @param insertObjects
+	 * 	* 	List of objects to insert
 	 * @throws com.cmovil.baseandroid.dao.db.DBException
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	public void insertV11(List<T> insertObject) throws DBException {
+	private void insertV16(List<T> insertObjects) throws DBException {
 
 		// Gets the data repository in write mode
 		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
@@ -317,50 +334,59 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 		db.acquireReference();
 		try {
 			Object[] bindArgs;
-			if (insertObject != null && !insertObject.isEmpty()) {
-				//Pre-process insert query because  all the inserts will have the same  parameters
+			if (insertObjects != null && !insertObjects.isEmpty()) {
+				//Pre-process insert query, in order to optimize query construction
 				//Get a sample object in order to get the content values to insert
-				ContentValues initialValues = fillMapValues(insertObject.get(0));
+				ContentValues initialValues = fillMapValues(insertObjects.get(0));
 				StringBuilder sql = new StringBuilder();
 				String params;
 
-				//Create a simple ? param string in order to reuse it on each insert statement
+				//Create a simple ?-param string in order to reuse it on each insert statement
 				int size = (initialValues != null && initialValues.size() > 0) ? initialValues.size() : 0;
-				//If the map has at least one columns
+				//If the map has at least one column
 				if (size > 0) {
 					//Add ? as many insert objects are on the movement list
 					for (int i = 0; i < size; i++) {
 						sql.append((i > 0) ? ",?" : "?");
 					}
+					//Save params string
 					params = sql.toString();
-					int maxInsertCount = MAX_QUERY_PARAMS/size;
-					int totalInserts = insertObject.size();
-					Iterator<T> iterator = insertObject.iterator();
-					while(iterator.hasNext()) {
+					//Get the maximum number of batch inserts that can be used, since the max number of SQL parameters
+					// are 999
+					int maxInsertCount = MAX_QUERY_PARAMS / size;
+					//Get the remaining number of insert operations
+					int remainingInserts = insertObjects.size();
 
-						int insertCount = totalInserts>=maxInsertCount?maxInsertCount:totalInserts;
+					//Use an iterator to go over the object list
+					Iterator<T> iterator = insertObjects.iterator();
+					while (iterator.hasNext()) {
 
+						//Get the number of inserts for the next batch operation, it could be the max number of
+						// inserts or the remaining one (for the last iteration)
+						int insertCount = remainingInserts >= maxInsertCount ? maxInsertCount : remainingInserts;
+
+						//Initialize insert query
 						sql = new StringBuilder();
 						createBaseInsert(sql, initialValues);
 						bindArgs = new Object[size * insertCount];
 
-
+						//Add the corresponding number of insert parameters and bindArgs
 						int i = 0;
-						for (int j = 0;j<insertCount;j++) {
+						for (int j = 0; j < insertCount; j++) {
 							T element = iterator.next();
 							initialValues = fillMapValues(element);
 
 							for (String columnName : initialValues.keySet()) {
 								bindArgs[i++] = initialValues.get(columnName);
 							}
-
+							//Add the ? to the insert
 							sql.append(j == 0 ? "(" : ",(");
 							sql.append(params);
-
 							sql.append(')');
 						}
+						//Execute batch insert and update remaining insert count
 						db.execSQL(sql.toString(), bindArgs);
-						totalInserts -= maxInsertCount;
+						remainingInserts -= insertCount;
 					}
 				}
 

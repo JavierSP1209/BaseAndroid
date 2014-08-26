@@ -103,15 +103,15 @@ public class SplashActivity extends BaseDrawerActivity {
 				SampleController sampleController = new SampleController(SplashActivity.this);
 
 				//for(int i=0;i<10;i++) {
-					sampleController.testBatchInsert(1000);
-				try {
-					List<State> states = sampleController.getAll();
-					for(State state:states){
-						Log.d(KeyDictionary.TAG, state.toString());
-					}
-				}catch (DBException db){
-					Log.e(KeyDictionary.TAG, db.getMessage(),db);
-				}
+					sampleController.testBatchInsert(1054);
+//				try {
+//					List<State> states = sampleController.getAll();
+//					for(State state:states){
+//						Log.d(KeyDictionary.TAG, state.toString());
+//					}
+//				}catch (DBException db){
+//					Log.e(KeyDictionary.TAG, db.getMessage(),db);
+//				}
 				//}
 			}
 		});

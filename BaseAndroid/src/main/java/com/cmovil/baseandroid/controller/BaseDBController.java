@@ -18,7 +18,6 @@ import com.cmovil.baseandroid.model.db.BaseModel;
 import com.cmovil.baseandroid.util.KeyDictionary;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -88,13 +87,13 @@ public abstract class BaseDBController<T extends BaseModel> {
 	 * Insert a list of object to the data base, this method must be used for performance, in other cases use the base
 	 * insert one
 	 *
-	 * @param insertObject
-	 * 	Object to be get the values to insert
+	 * @param insertObjects
+	 * 	List of objects to insert
 	 * @throws com.cmovil.baseandroid.dao.db.DBException
 	 * 	if something goes wrong during SQL statements execution
 	 */
-	public void insert(List<T> insertObject) throws DBException {
-		baseDBDAO.insertV11(insertObject);
+	public void insert(List<T> insertObjects) throws DBException {
+		baseDBDAO.insert(insertObjects);
 	}
 
 	/**

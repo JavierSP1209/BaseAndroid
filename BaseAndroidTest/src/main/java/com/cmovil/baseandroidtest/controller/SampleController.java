@@ -102,12 +102,18 @@ public class SampleController extends BaseDBController<State> {
 		return new State();
 	}
 
-	public void testBatchInsert(int insertNumber){
+	/**
+	 * Test and timing the batch insert depending on the number of test insertions, this test will create dummy states
+	 * and insert them on the data base
+	 *
+	 * @param insertNumber The number of states to be inserted
+	 */
+	public void testBatchInsert(int insertNumber) {
 
 		List<State> stateList = new ArrayList<State>();
-		for(int i=0;i<insertNumber;i++){
+		for (int i = 0; i < insertNumber; i++) {
 			State state = new State();
-			state.setName("Test"+i);
+			state.setName("Test" + i);
 			state.setIdServer(i);
 			stateList.add(state);
 		}
@@ -142,9 +148,9 @@ public class SampleController extends BaseDBController<State> {
 			//Test customBatch insert
 			insert(stateList);
 			long finish = System.nanoTime();
-			long total = finish-begin;
-			Log.d(KeyDictionary.TAG, "CustomBatchInsert: "+total+" nS");
-		}catch (DBException ex){
+			long total = finish - begin;
+			Log.d(KeyDictionary.TAG, "CustomBatchInsert: " + total + " nS");
+		} catch (DBException ex) {
 			Log.e(KeyDictionary.TAG, ex.getMessage(), ex);
 		}
 	}

@@ -97,19 +97,6 @@ public abstract class BaseDBController<T extends BaseModel> {
 	}
 
 	/**
-	 * Insert a list of object to the data base, this method must be used for performance, in other cases use the base
-	 * insert one
-	 *
-	 * @param insertObject
-	 * 	Object to be get the values to insert
-	 * @throws com.cmovil.baseandroid.dao.db.DBException
-	 * 	if something goes wrong during SQL statements execution
-	 */
-	public List<Integer> insertAux(List<T> insertObject) throws DBException {
-		return baseDBDAO.insertAux(insertObject);
-	}
-
-	/**
 	 * Delete an specific row from the selected table in database
 	 *
 	 * @param id
@@ -122,6 +109,18 @@ public abstract class BaseDBController<T extends BaseModel> {
 	 */
 	public Integer delete(Integer id) throws DBException {
 		return baseDBDAO.delete(id);
+	}
+
+	/**
+	 * Delete all the rows from the selected table in database
+	 *
+	 * @return the number of rows affected, 0 otherwise.
+	 *
+	 * @throws DBException
+	 * 	if something goes wrong during SQL statements execution
+	 */
+	public Integer delete() throws DBException {
+		return baseDBDAO.delete();
 	}
 
 	/**

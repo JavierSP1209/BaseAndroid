@@ -485,6 +485,27 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	}
 
 	/**
+	 * Delete all the rows from the selected table in database
+	 * @return the number of rows affected, 0 otherwise.
+	 *
+	 * @throws DBException
+	 * 	if something goes wrong during SQL statements execution
+	 */
+	public Integer delete() throws DBException {
+		try {
+			// Gets the data repository in write mode
+			SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
+			if (db == null) return 0;
+			// Issue SQL statement.
+			Integer res = db.delete(tableName, null, null);
+			db.close();
+			return res;
+		} catch (SQLException e) {
+			throw new DBException(e.getMessage(), e);
+		}
+	}
+
+	/**
 	 * Updates all the fields of the object, this function will update all the columns of the row,
 	 * so be sure to set the correct values to it
 	 *

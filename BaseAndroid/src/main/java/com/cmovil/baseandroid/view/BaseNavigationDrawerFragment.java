@@ -300,6 +300,9 @@ public class BaseNavigationDrawerFragment extends Fragment {
 			getActionBar().setDisplayHomeAsUpEnabled(false);
 			getActionBar().setHomeButtonEnabled(false);
 			lockDrawer = true;
+		} else if (lockDrawer && !isDrawerOpen()) {
+			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+			if (lastDrawerState) mDrawerLayout.closeDrawer(mFragmentContainerView);
 		} else {
 			mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 			if (lastDrawerState) mDrawerLayout.closeDrawer(mFragmentContainerView);

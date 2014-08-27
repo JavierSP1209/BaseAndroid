@@ -203,6 +203,33 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	}
 
 	/**
+	 * Executes a raw query and stores the results in a cursor, managing its proper closing.
+	 * @param query
+	 * Query to execute in the db
+	 * @param selectionArgs
+	 * Selection arguments for "?" components in the selection
+	 * @return
+	 * A Cursor over all rows matching the query
+	 */
+	protected Cursor rawQuery(String query, String[] selectionArgs){
+		SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
+		if(db == null)
+			return null;
+		Cursor cursor = db.rawQuery(query, selectionArgs);
+		if (cursor == null){
+			db.close();
+			return null;
+		}else if(!cursor.moveToFirst()){
+			cursor.close();
+			db.close();
+			close();
+			return null;
+		}
+		db.close();
+		return cursor;
+	}
+
+	/**
 	 * Insert an object to the data base
 	 *
 	 * @param insertObject

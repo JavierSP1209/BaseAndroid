@@ -239,10 +239,31 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	public void insert(List<T> insertObjects) throws DBException {
+		// Gets the data repository in write mode
+		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+		db.acquireReference();
+		insert(insertObjects, db);
+		db.close();
+		db.releaseReference();
+	}
+
+	/**
+	 * Insert a list of object to the data base, this method must be used for performance, in other cases use the base
+	 * insert one, this method should only be used when the {@link android.database.sqlite.SQLiteDatabase} object is
+	 * managed outside the insert method, in other case use {@link #insert(com.cmovil.baseandroid.model.db.BaseModel)}
+	 *
+	 * @param insertObjects
+	 * 	List of objects to insert
+	 * @param db
+	 * 	SQLite data base object to be used
+	 * @throws com.cmovil.baseandroid.dao.db.DBException
+	 * 	if something goes wrong during SQL statements execution
+	 */
+	public void insert(List<T> insertObjects, SQLiteDatabase db) throws DBException {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-			insertV16(insertObjects);
+			insertV16(insertObjects, db);
 		} else {
-			insertV8(insertObjects);
+			insertV8(insertObjects, db);
 		}
 	}
 
@@ -255,12 +276,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * @throws com.cmovil.baseandroid.dao.db.DBException
 	 * 	if something goes wrong during SQL statements execution
 	 */
-	private void insertV8(List<T> insertObjects) throws DBException {
-
-		// Gets the data repository in write mode
-		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
-
-		db.acquireReference();
+	private void insertV8(List<T> insertObjects, SQLiteDatabase db) throws DBException {
 		try {
 			Object[] bindArgs;
 			if (insertObjects != null && !insertObjects.isEmpty()) {
@@ -306,13 +322,9 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 
 					db.execSQL(sql.toString(), bindArgs);
 				}
-
-				db.close();
 			}
 		} catch (SQLException e) {
 			throw new DBException(e.getMessage(), e);
-		} finally {
-			db.releaseReference();
 		}
 	}
 
@@ -326,12 +338,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	private void insertV16(List<T> insertObjects) throws DBException {
-
-		// Gets the data repository in write mode
-		SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
-
-		db.acquireReference();
+	private void insertV16(List<T> insertObjects, SQLiteDatabase db) throws DBException {
 		try {
 			Object[] bindArgs;
 			if (insertObjects != null && !insertObjects.isEmpty()) {
@@ -389,13 +396,9 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 						remainingInserts -= insertCount;
 					}
 				}
-
-				db.close();
 			}
 		} catch (SQLException e) {
 			throw new DBException(e.getMessage(), e);
-		} finally {
-			db.releaseReference();
 		}
 	}
 
@@ -486,6 +489,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 
 	/**
 	 * Delete all the rows from the selected table in database
+	 *
 	 * @return the number of rows affected, 0 otherwise.
 	 *
 	 * @throws DBException

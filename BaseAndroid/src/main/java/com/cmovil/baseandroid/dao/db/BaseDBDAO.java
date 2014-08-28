@@ -51,6 +51,16 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	}
 
 	/**
+	 * Sets the progress updater to be used on the data base helper, this is used when the data base is initialized
+	 *
+	 * @param progressUpdater
+	 * 	Listener to be called after a table its initialized
+	 */
+	public void setProgressUpdater(BaseDatabaseOpenHelper.ProgressUpdater progressUpdater) {
+		mDatabaseOpenHelper.setProgressUpdater(progressUpdater);
+	}
+
+	/**
 	 * Fill up a map for the values to be inserted or updated into the data base
 	 *
 	 * @param insertObject

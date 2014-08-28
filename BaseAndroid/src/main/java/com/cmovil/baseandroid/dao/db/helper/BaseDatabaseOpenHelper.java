@@ -11,13 +11,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.cmovil.baseandroid.util.KeyDictionary;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,10 +30,21 @@ import java.util.List;
 public abstract class BaseDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	protected final Context dbHelperContext;
+	protected ProgressUpdater progressUpdater;
 
 	public BaseDatabaseOpenHelper(Context context, String name, int version) {
 		super(context, name, null, version);
 		this.dbHelperContext = context;
+	}
+
+	/**
+	 * Sets the progress updater to be used on the data base helper, this is used when the data base is initialized
+	 *
+	 * @param progressUpdater
+	 * 	Listener to be called after a table its initialized
+	 */
+	public void setProgressUpdater(ProgressUpdater progressUpdater) {
+		this.progressUpdater = progressUpdater;
 	}
 
 	/**
@@ -154,5 +165,23 @@ public abstract class BaseDatabaseOpenHelper extends SQLiteOpenHelper {
 		//Close transaction
 		db.setTransactionSuccessful();
 		db.endTransaction();
+	}
+
+	/**
+	 * Interface to be used as progress updater for data base loading process, this allows updating the UI while the
+	 * database is loading
+	 *
+	 * @author "M. en C. Javier Silva Perez (JSP)"
+	 * @version 1.0
+	 * @since 28/08/14
+	 */
+	public interface ProgressUpdater {
+		/**
+		 * Notifies the progress based on the database initialization process
+		 *
+		 * @param updateMessage
+		 * 	String message to shown on the progress update
+		 */
+		public void updateProgress(@StringRes int updateMessage);
 	}
 }

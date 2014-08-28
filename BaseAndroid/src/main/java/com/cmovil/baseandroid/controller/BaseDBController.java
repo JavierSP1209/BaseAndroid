@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.cmovil.baseandroid.dao.db.BaseDBDAO;
 import com.cmovil.baseandroid.dao.db.DBException;
+import com.cmovil.baseandroid.dao.db.helper.BaseDatabaseOpenHelper;
 import com.cmovil.baseandroid.model.db.BaseModel;
 import com.cmovil.baseandroid.util.KeyDictionary;
 
@@ -67,6 +68,16 @@ public abstract class BaseDBController<T extends BaseModel> {
 	 */
 	protected Map<String, String> getProjectionMap() {
 		return null;
+	}
+
+	/**
+	 * Sets the progress updater to be used on the data base helper, this is used when the data base is initialized
+	 *
+	 * @param progressUpdater
+	 * 	Listener to be called after a table its initialized
+	 */
+	public void setProgressUpdater(BaseDatabaseOpenHelper.ProgressUpdater progressUpdater) {
+		getBaseDBDAO().setProgressUpdater(progressUpdater);
 	}
 
 	/**

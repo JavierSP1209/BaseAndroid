@@ -86,6 +86,18 @@ public class BaseModelSpinnerAdapter<T extends BaseModel> extends ArrayAdapter<T
 	}
 
 	/**
+	 * Method to return the DbId of the object in the position.
+	 *
+	 * @param position
+	 * 	Position in the list.
+	 * @return DbId.
+	 */
+	@Override
+	public long getItemId(int position) {
+		return getItem(position).getDbId();
+	}
+
+	/**
 	 * {@inheritDoc}
 	 *
 	 * @param position

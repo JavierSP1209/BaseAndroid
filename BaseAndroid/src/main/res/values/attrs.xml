@@ -21,5 +21,6 @@ limitations under the License.
 		<attr name="floatLabelTextAppearance" format="reference"/>
 		<attr name="animationDuration" format="integer"/>
 		<attr name="floatLabelSidePadding" format="reference|dimension"/>
+		<attr name="spinnerHint" format="string"/>
 	</declare-styleable>
 </resources>

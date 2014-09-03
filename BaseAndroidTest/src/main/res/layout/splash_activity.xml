@@ -28,6 +28,7 @@
 		android:layout_centerInParent="true"
 		android:indeterminate="true"
 		style="@android:style/Widget.ProgressBar.Large"/>
+
 	<Button
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -61,19 +62,15 @@
 		android:layout_marginTop="10dp"
 		android:id="@+id/txtTest2"
 		android:layout_below="@id/txtTest"
-		app:floatLabelTextAppearance="@style/TextAppearance.Test.FloatingHing">
+		app:floatLabelTextAppearance="@style/TextAppearance.Test.FloatingHing"
+		app:spinnerHint ="Spinner hint">
 
-		<EditText
-			android:id="@+id/edit_password"
+		<Spinner
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:hint="Texto de prueba"
-			android:singleLine="true"
-			android:inputType="textNoSuggestions"
-			android:imeOptions="actionDone"/>
+			android:layout_height="match_parent"
+			android:id="@+id/spinnerTest"/>
 
 	</com.cmovil.baseandroid.view.util.FloatingHintControl>
-
 
 
 </RelativeLayout>

@@ -40,11 +40,15 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cmovil.baseandroid.R;
+import com.cmovil.baseandroid.model.db.BaseModel;
 
 /**
  * Layout which uses an {@link android.widget.EditText} to show a floating label when the hint is hidden due to user
@@ -62,6 +66,18 @@ public class FloatingHintControl extends LinearLayout {
 	private static final int DEFAULT_ANIMATION_DURATION = 150;
 	private static final float DEFAULT_PADDING_LEFT_RIGHT_DP = 12f;
 
+	private Spinner mSpinner;
+	private String mSpinnerHint;
+
+	/**
+	 * Sets the custom listener for the spinner if necessary
+	 * @param spinnerItemSelectedListener
+	 */
+	public void setSpinnerItemSelectedListener(AdapterView.OnItemSelectedListener spinnerItemSelectedListener) {
+		this.mSpinnerItemSelectedListener = spinnerItemSelectedListener;
+	}
+
+	private AdapterView.OnItemSelectedListener mSpinnerItemSelectedListener;
 	private EditText mEditText;
 	private TextView mLabel;
 
@@ -100,6 +116,7 @@ public class FloatingHintControl extends LinearLayout {
 
 		//Get animation duration or set the default one
 		animationDuration = a.getInteger(R.styleable.FloatLabelLayout_animationDuration, DEFAULT_ANIMATION_DURATION);
+		mSpinnerHint = a.getString(R.styleable.FloatLabelLayout_spinnerHint);
 
 		setOrientation(LinearLayout.VERTICAL);
 		addView(mLabel, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -112,15 +129,77 @@ public class FloatingHintControl extends LinearLayout {
 	public final void addView(@NonNull View child, int index, ViewGroup.LayoutParams params) {
 		if (child instanceof EditText) {
 			// If we already have an EditText, throw an exception
-			if (mEditText != null) {
-				throw new IllegalArgumentException("We already have an EditText, can only have one");
+			if (mEditText != null || mSpinner!=null) {
+				throw new IllegalArgumentException("We already have an EditText/Spinner, can only have one");
 			}
 
 			setEditText((EditText) child);
+		}else if(child instanceof Spinner){
+			// If we already have an EditText, throw an exception
+			if (mSpinner != null || mEditText!=null) {
+				throw new IllegalArgumentException("We already have an EditText/Spinner, can only have one");
+			}
+
+			setSpinner((Spinner) child);
 		}
 
 		// Carry on adding the View...
 		super.addView(child, index, params);
+	}
+
+	/**
+	 * Sets the Spinner to watch
+	 *
+	 * @param spinner
+	 * 	Spinner to which the floating hint control will be attached
+	 */
+	private void setSpinner(@NonNull Spinner spinner) {
+		mSpinner = spinner;
+
+		// Add a TextWatcher so that we know when the text input has changed
+		mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				if (position == 0) {
+					// The text is empty, so hide the label if it is visible
+					if (mLabel.getVisibility() == View.VISIBLE) {
+						cancelAnimation();
+						hideLabel();
+					}
+				} else {
+					// The text is not empty, so show the label if it is not visible
+					if (mLabel.getVisibility() != View.VISIBLE) {
+						cancelAnimation();
+						showLabel();
+					}
+				}
+				if(mSpinnerItemSelectedListener!=null) {
+					//Call the custom spinner item selected listener
+					mSpinnerItemSelectedListener.onItemSelected(parent, view, position, id);
+				}
+
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				if(mSpinnerItemSelectedListener!=null) {
+					mSpinnerItemSelectedListener.onNothingSelected(parent);
+				}
+			}
+		});
+
+		// Add focus listener to the EditText so that we can notify the label that it is activated.
+		// Allows the use of a ColorStateList for the text color on the label
+		mSpinner.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View view, boolean focused) {
+				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+					mLabel.setActivated(focused); // only available after API 11
+				}
+			}
+		});
+
+		mLabel.setText(mSpinnerHint);
 	}
 
 	/**

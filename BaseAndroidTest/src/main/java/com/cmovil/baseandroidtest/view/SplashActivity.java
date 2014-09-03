@@ -10,19 +10,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cmovil.baseandroid.dao.db.DBException;
+import com.cmovil.baseandroid.util.CMUtils;
 import com.cmovil.baseandroid.view.BaseDrawerActivity;
 import com.cmovil.baseandroid.view.BaseNavigationDrawerFragment;
 import com.cmovil.baseandroid.view.loader.ImageLoader;
+import com.cmovil.baseandroid.view.util.FloatingHintControl;
 import com.cmovil.baseandroidtest.R;
 import com.cmovil.baseandroidtest.controller.SampleController;
 import com.cmovil.baseandroidtest.model.db.State;
 import com.cmovil.baseandroidtest.util.KeyDictionary;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class SplashActivity extends BaseDrawerActivity {
@@ -116,6 +122,28 @@ public class SplashActivity extends BaseDrawerActivity {
 			}
 		});
 
+		Spinner spinnerTest = (Spinner) findViewById(R.id.spinnerTest);
+		List<String> spinnerOptions = new LinkedList<String>();
+		spinnerOptions.add("Default");
+		spinnerOptions.add("Option 1");
+		spinnerOptions.add("Option 2");
+		spinnerOptions.add("Option 3");
+		spinnerOptions.add("Option 4");
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,spinnerOptions);
+		spinnerTest.setAdapter(adapter);
+		FloatingHintControl floatingHintControl = (FloatingHintControl) findViewById(R.id.txtTest2);
+
+		floatingHintControl.setSpinnerItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				Log.d(KeyDictionary.TAG, "ITem Selected - "+position);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+
+			}
+		});
 
 	}
 

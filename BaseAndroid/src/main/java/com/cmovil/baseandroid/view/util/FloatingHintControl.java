@@ -108,7 +108,7 @@ public class FloatingHintControl extends LinearLayout {
 		//Hide label by default
 		mLabel.setPadding(sidePadding, 0, sidePadding, 0);
 		mLabel.setVisibility(INVISIBLE);
-
+		mLabel.setMaxLines(1);
 
 		//Set label text format
 		mLabel.setTextAppearance(context, a.getResourceId(R.styleable.FloatLabelLayout_floatLabelTextAppearance,

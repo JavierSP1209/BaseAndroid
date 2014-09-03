@@ -108,5 +108,10 @@ public class BaseModelSpinnerAdapter<T extends BaseModel> extends ArrayAdapter<T
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		return buildConvertView(position, super.getDropDownView(position, convertView, parent));
 	}
+
+	@Override
+	public T getItem(int position) {
+		return super.getItem(position);
+	}
 }
 

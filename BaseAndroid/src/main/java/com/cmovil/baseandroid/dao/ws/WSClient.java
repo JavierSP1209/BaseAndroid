@@ -52,7 +52,7 @@ import java.util.List;
  */
 public abstract class WSClient<T1, T2> {
 
-	private static final Integer TIME_OUT = 100000;
+	private static final Integer TIME_OUT = 10000;
 	private String service;
 
 	protected Gson gsonBuilder;

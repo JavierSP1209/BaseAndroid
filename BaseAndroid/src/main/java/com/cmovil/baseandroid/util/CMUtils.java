@@ -55,6 +55,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 /**
  * Class that contains common functions across the application as well as static values that will be used by other
@@ -65,6 +66,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 20/03/2013
  */
 public class CMUtils {
+
+	/**
+	 * Regular expression to validate an email address
+	 */
+	private static final String EMAIL_VALID_REGEX =
+		"[a-z0-9!#$%&'*+/=?^_'{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_'{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)" +
+			"+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+	/**
+	 * Pattern that validates an email address
+	 */
+	public static final Pattern PATTERN_EMAIL_ADDRESS = Pattern.compile(EMAIL_VALID_REGEX);
 
 	/**
 	 * Unique ID of the Android device

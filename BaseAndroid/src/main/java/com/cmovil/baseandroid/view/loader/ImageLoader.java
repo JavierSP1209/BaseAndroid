@@ -493,6 +493,13 @@ public class ImageLoader<T> {
 	}
 
 	/**
+	 * Clears the cache stored in app memory
+	 */
+	public void clearMemoryCache() {
+		memoryCache.clear();
+	}
+
+	/**
 	 * Interface that defines what to do after the image gets decoded
 	 *
 	 * @author "M. en C. Javier Silva Perez (JSP)"

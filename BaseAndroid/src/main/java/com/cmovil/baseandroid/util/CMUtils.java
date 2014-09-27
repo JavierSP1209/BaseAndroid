@@ -9,6 +9,7 @@
 package com.cmovil.baseandroid.util;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -569,5 +571,33 @@ public class CMUtils {
 	public static boolean isLargeScreen(Context context) {
 		int screenSize = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 		return screenSize >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+	}
+
+	/**
+	 * Uses the {@link android.view.inputmethod.InputMethodManager} system service to hide the soft keyboard from
+	 * the screen
+	 *
+	 * @param context
+	 * 	The current context
+	 * @param view
+	 * 	The main context view to extract the window token from as of: ({@link android.view.View#getWindowToken()}
+	 */
+	public static void hideKeyboard(Context context, View view) {
+		if (context == null || view == null) return;
+		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+	}
+
+	/**
+	 * Uses the {@link android.view.inputmethod.InputMethodManager} system service to hide the soft keyboard from
+	 * the screen
+	 *
+	 * @param activity
+	 * 	The current activity
+	 */
+	public static void hideKeyboard(Activity activity) {
+		if (activity == null) return;
+		InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
 	}
 }

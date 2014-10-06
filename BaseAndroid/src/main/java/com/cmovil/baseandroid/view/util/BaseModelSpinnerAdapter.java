@@ -113,5 +113,11 @@ public class BaseModelSpinnerAdapter<T extends BaseModel> extends ArrayAdapter<T
 	public T getItem(int position) {
 		return super.getItem(position);
 	}
+
+	@Override
+	public int getPosition(T item) {
+
+		return super.getPosition(item);
+	}
 }
 

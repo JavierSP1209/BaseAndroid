@@ -279,6 +279,7 @@ public class CMUtils {
 				txtView.setError(message, null);
 				txtView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.error_icon, 0);
 			} else {
+				txtView.setError(null);
 				//Clean the compound drawable
 				txtView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 			}

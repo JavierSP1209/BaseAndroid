@@ -18,7 +18,9 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
@@ -612,5 +614,64 @@ public class CMUtils {
 		if (activity == null) return;
 		InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
+	}
+
+	/**
+	 * Calls {@link #getSpecialCharInputFilter(char[])} with an empty character array to indicate that no
+	 * special characters are accepted
+	 *
+	 * @return An array of {@link android.text.InputFilter} objects, to be used with edit texts.
+	 */
+	public static InputFilter[] getSpecialCharInputFilter() {
+		return getSpecialCharInputFilter(new char[]{});
+	}
+
+	/**
+	 * Calls {@link #getSpecialCharInputFilter(char[], Integer)} with null for the length
+	 *
+	 * @param acceptedChars
+	 * 	The accepted special characters, if any
+	 * @return An array of {@link android.text.InputFilter} objects, to be used with edit texts.
+	 */
+	public static InputFilter[] getSpecialCharInputFilter(final char[] acceptedChars) {
+		return getSpecialCharInputFilter(acceptedChars, null);
+	}
+
+	/**
+	 * Calls {@link #getSpecialCharInputFilter(char[], Integer)} with an empty character array and the indicated
+	 * max length
+	 *
+	 * @param maxLength
+	 * 	The maximum length accepted for this filter. If null or 0, a length filter will not be attached
+	 * @return An array of {@link android.text.InputFilter} objects, to be used with edit texts.
+	 */
+	public static InputFilter[] getSpecialCharInputFilter(Integer maxLength) {
+		return getSpecialCharInputFilter(new char[]{}, maxLength);
+	}
+
+	/**
+	 * Builds an InputFilter array to be used with edit texts
+	 *
+	 * @param acceptedChars
+	 * 	The accepted special characters, if any
+	 * @param maxLength
+	 * 	The maximum length accepted for this filter. If null or 0, a length filter will not be attached
+	 * @return An array of {@link android.text.InputFilter} objects, to be used with edit texts.
+	 */
+	public static InputFilter[] getSpecialCharInputFilter(final char[] acceptedChars, Integer maxLength) {
+		final String isLetterOrDigitRegex = "[A-Za-z0-9]";
+		InputFilter filter = new InputFilter() {
+			public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+				for (int i = start; i < end; i++) {
+					boolean isLetterOrDigit = (source.charAt(i) + "").matches(isLetterOrDigitRegex);
+					if (!isLetterOrDigit && !new String(acceptedChars).contains(String.valueOf(source.charAt(i)))) {
+						return "";
+					}
+				}
+				return null;
+			}
+		};
+		if (maxLength == null || maxLength == 0) return new InputFilter[]{filter};
+		return new InputFilter[]{filter, new InputFilter.LengthFilter(maxLength)};
 	}
 }

@@ -12,7 +12,7 @@ import com.cmovil.baseandroid.R;
 
 /**
  * Main class to handle Support Library ActionBar and navigation drawer in all application views
- *
+ * This class has methods to listen the navigation drawer events (open, close, slide, state change)
  * @author "Ing. Arturo Ayala"
  * @version 1.0
  * @since 19/09/13

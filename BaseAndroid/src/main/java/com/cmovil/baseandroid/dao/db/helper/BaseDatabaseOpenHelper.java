@@ -32,6 +32,8 @@ public abstract class BaseDatabaseOpenHelper extends SQLiteOpenHelper {
 	protected final Context dbHelperContext;
 	protected ProgressUpdater progressUpdater;
 
+	private static final String DATABASE_ENABLE_FOREIGN_KEYS = "PRAGMA foreign_keys=ON";
+
 	public BaseDatabaseOpenHelper(Context context, String name, int version) {
 		super(context, name, null, version);
 		this.dbHelperContext = context;
@@ -183,5 +185,13 @@ public abstract class BaseDatabaseOpenHelper extends SQLiteOpenHelper {
 		 * 	String message to shown on the progress update
 		 */
 		public void updateProgress(@StringRes int updateMessage);
+	}
+
+	@Override
+	public void onOpen(SQLiteDatabase db) {
+		super.onOpen(db);
+		if (!db.isReadOnly()) {
+			db.execSQL(DATABASE_ENABLE_FOREIGN_KEYS);
+		}
 	}
 }

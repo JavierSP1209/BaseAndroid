@@ -17,6 +17,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
@@ -31,6 +32,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.cmovil.baseandroid.R;
+import com.cmovil.baseandroid.model.db.BaseModel;
+import com.cmovil.baseandroid.model.db.Copyable;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -48,7 +51,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
 import java.text.Normalizer;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -673,5 +678,125 @@ public class CMUtils {
 		};
 		if (maxLength == null || maxLength == 0) return new InputFilter[]{filter};
 		return new InputFilter[]{filter, new InputFilter.LengthFilter(maxLength)};
+	}
+
+	/**
+	 * Method that creates a filter for not allowing the user to input numbers nor symbol characters outside
+	 * single quote (') and
+	 * whitespace.
+	 *
+	 * @param textMaxLength
+	 * 	The max length for the names. If 0 or null, then no length is specified
+	 * @return An {@link android.text.InputFilter} array ready to be set to a TextView
+	 */
+	public static InputFilter[] getLetterFilter(Integer textMaxLength) {
+		final char[] acceptedChar = new char[]{'\'', ' ', 'ñ', '-'};
+		InputFilter filter = new InputFilter() {
+			public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+				for (int i = start; i < end; i++) {
+					if (!Character.isLetter(source.charAt(i)) &&
+						!new String(acceptedChar).contains(String.valueOf(source.charAt(i)))) {
+						return "";
+					}
+				}
+				return null;
+			}
+		};
+		if (textMaxLength == null || textMaxLength == 0) return new InputFilter[]{filter};
+		return new InputFilter[]{filter, new InputFilter.LengthFilter(textMaxLength)};
+	}
+
+	/**
+	 * Method that creates a filter for not allowing the user to input characters outside letters and numbers
+	 *
+	 * @param textMaxLength
+	 * 	The max length for the names. If 0 or null, then no length is specified
+	 * @return An {@link android.text.InputFilter} array ready to be set to a TextView
+	 */
+	public static InputFilter[] getAlphanumericFilter(Integer textMaxLength) {
+		final char[] acceptedChar = new char[]{' ', 'ñ'};
+		InputFilter filter = new InputFilter() {
+			public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+				for (int i = start; i < end; i++) {
+					if (!Character.isLetter(source.charAt(i)) && !Character.isDigit(source.charAt(i)) &&
+						!new String(acceptedChar).contains(String.valueOf(source.charAt(i)))) {
+						return "";
+					}
+				}
+				return null;
+			}
+		};
+		if (textMaxLength == null || textMaxLength == 0) return new InputFilter[]{filter};
+		return new InputFilter[]{filter, new InputFilter.LengthFilter(textMaxLength)};
+	}
+
+
+	/**
+	 * Copies the elements from the source list to the destination list. At the
+	 * end both lists will have the same objects at the same index. If the
+	 * destination array is larger than the source list, the elements in the
+	 * destination list with {@code index >= source.size()} will be unchanged.
+	 *
+	 * @param source
+	 * 	the list with the elements to be copied into the destination.
+	 */
+	public static <T extends BaseModel & Copyable> List<T> cloneList(List<T> source) {
+		List<T> destination = new LinkedList<>();
+		for (T aSource : source) {
+			destination.add((T) aSource.copy());
+		}
+		return destination;
+	}
+
+	/**
+	 * Check if an object is empty, depending on its id
+	 *
+	 * @param object
+	 * 	Object to check,
+	 * @param <T>
+	 * 	Must extend from {@link com.cmovil.baseandroid.model.db.BaseModel}
+	 * @return TRUE if the object is empty
+	 * (its id is {@link com.cmovil.baseandroid.util.KeyDictionary#EMPTY_OBJECT_ID}) or NULL,
+	 * FALSE if the object has a valid id and is not null
+	 */
+	public static <T extends BaseModel> Boolean isEmpty(@Nullable T object) {
+		if (object == null) {
+			return Boolean.TRUE;
+		}
+		return object.getDbId() <= KeyDictionary.EMPTY_OBJECT_ID ? Boolean.TRUE : Boolean.FALSE;
+	}
+
+	/**
+	 * Utility method to easily handle {@link java.text.ParseException} when parsing a Date
+	 *
+	 * @param toParse
+	 * 	The String to convert to a Date
+	 * @param formatter
+	 * 	The Formatter to carry on the conversion
+	 * @param defaultDate
+	 * 	A default Date returned when the parsing fails
+	 * @return The parsed Date, or a default Date
+	 */
+	public static Date parseDateOrDefault(String toParse, DateFormat formatter, Date defaultDate) {
+		try {
+			if (toParse == null) return defaultDate;
+			return formatter.parse(toParse);
+		} catch (ParseException e) {
+			return defaultDate;
+		}
+	}
+
+	/**
+	 * Similar to {@link android.text.TextUtils#isEmpty(CharSequence)} but this one trims the input in order to remove
+	 * initial spaces from the string before comparing
+	 *
+	 * @param str
+	 * 	the string to be examined
+	 * @return true if str is null or zero length (after trim)
+	 */
+	public static boolean isEmptyText(CharSequence str) {
+		if (str == null || str.toString().trim().length() == 0) return true;
+		else return false;
+
 	}
 }

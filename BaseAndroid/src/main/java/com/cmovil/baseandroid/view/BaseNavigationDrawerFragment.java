@@ -6,11 +6,12 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -40,36 +41,28 @@ public class BaseNavigationDrawerFragment extends Fragment {
 	 * expands it. This shared preference tracks this.
 	 */
 	private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
-
+	protected int mCurrentSelectedPosition = 0;
 	/**
 	 * A pointer to the current callbacks instance (the Activity).
 	 */
 	private NavigationDrawerCallbacks mCallbacks;
-
 	/**
 	 * If the screen is at least large in order to modify drawer layout
 	 */
 	private boolean isLargeScreen;
-
 	/**
 	 * If the screen orientation is landscape
 	 */
 	private boolean isLandscape;
-
 	private boolean lockDrawer;
 	private boolean lastDrawerState;
 	private int drawerPosition;
-
 	/**
 	 * Helper component that ties the action bar to the navigation drawer.
 	 */
 	private ActionBarDrawerToggle mDrawerToggle;
-
 	private DrawerLayout mDrawerLayout;
-
 	private View mFragmentContainerView;
-
-	protected int mCurrentSelectedPosition = 0;
 	private boolean mFromSavedInstanceState;
 	private boolean mUserLearnedDrawer;
 
@@ -77,10 +70,6 @@ public class BaseNavigationDrawerFragment extends Fragment {
 	 * String resource id that will be shown when the drawer its open
 	 */
 	private int appName;
-
-	public void setLockDrawer(boolean lockDrawer) {
-		this.lockDrawer = lockDrawer;
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -132,6 +121,10 @@ public class BaseNavigationDrawerFragment extends Fragment {
 		return lockDrawer;
 	}
 
+	public void setLockDrawer(boolean lockDrawer) {
+		this.lockDrawer = lockDrawer;
+	}
+
 	/**
 	 * Users of this fragment must call this method to set up the navigation drawer interactions.
 	 *
@@ -142,12 +135,12 @@ public class BaseNavigationDrawerFragment extends Fragment {
 	 * @param drawerPosition
 	 * 	Position of the drawer, {@link android.support.v4.view.GravityCompat#START},
 	 * 	{@link android.support.v4.view.GravityCompat#END}
-	 * @param drawerIcon
-	 * 	Id of the resource to use as drawer icon on the action bar
+	 * @param toolbar
+	 * 	Toolbar where to be attached the navigation toggle.
 	 * @param appName
 	 * 	Resource id of the string to be shown when the drawer its open
 	 */
-	public void setUp(int fragmentId, DrawerLayout drawerLayout, int drawerPosition, int drawerIcon, int appName) {
+	public void setUp(int fragmentId, DrawerLayout drawerLayout, int drawerPosition, Toolbar toolbar, int appName) {
 		mFragmentContainerView = getActivity().findViewById(fragmentId);
 		mDrawerLayout = drawerLayout;
 		this.drawerPosition = drawerPosition;
@@ -163,11 +156,12 @@ public class BaseNavigationDrawerFragment extends Fragment {
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the navigation drawer and the action bar app icon.
-		mDrawerToggle = new ActionBarDrawerToggle(getActivity(),                    /* host Activity */
-			mDrawerLayout,                    /* DrawerLayout object */
-			drawerIcon,             /* nav drawer image to replace 'Up' caret */
-			R.string.drawer_open,  /* "open drawer" description for accessibility */
-			R.string.drawer_close  /* "close drawer" description for accessibility */) {
+		mDrawerToggle = new ActionBarDrawerToggle(getActivity(), //Host Activity
+			mDrawerLayout, //DrawerLayout object
+			toolbar, //Toolbar to be attached the navigationToggle
+			R.string.drawer_open, //"open drawer" description for accessibility
+			R.string.drawer_close //"close drawer" description for accessibility
+		) {
 			@Override
 			public void onDrawerClosed(View drawerView) {
 				super.onDrawerClosed(drawerView);
@@ -235,14 +229,16 @@ public class BaseNavigationDrawerFragment extends Fragment {
 	 * 	The android:id of this fragment in its activity's layout.
 	 * @param drawerLayout
 	 * 	The DrawerLayout containing this fragment's UI.
+	 * @param toolbar
+	 * 	Toolbar where to be attached the navigation toggle.
 	 * @param drawerPosition
 	 * 	Position of the drawer, {@link android.support.v4.view.GravityCompat#START},
 	 * 	{@link android.support.v4.view.GravityCompat#END}
 	 * @param appName
 	 * 	Resource id of the string to be shown when the drawer its open
 	 */
-	public void setUp(int fragmentId, DrawerLayout drawerLayout, int drawerPosition, int appName) {
-		setUp(fragmentId, drawerLayout, drawerPosition, R.drawable.ic_drawer, appName);
+	public void setUp(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar, int drawerPosition, int appName) {
+		setUp(fragmentId, drawerLayout, drawerPosition, toolbar, appName);
 	}
 
 	protected void selectItem(int position) {
@@ -334,6 +330,23 @@ public class BaseNavigationDrawerFragment extends Fragment {
 	}
 
 	/**
+	 * Close the current drawer
+	 */
+	protected void closeDrawer() {
+		if (!lockDrawer) mDrawerLayout.closeDrawer(drawerPosition);
+	}
+
+	/**
+	 * Disable or enables toggle menu indicator
+	 *
+	 * @param enabled
+	 * 	TRUE if the menu indicator should be shown, FALSE if default up caret must be shown
+	 */
+	public void setDrawerIndicatorEnabled(boolean enabled) {
+		if (mDrawerToggle != null) mDrawerToggle.setDrawerIndicatorEnabled(enabled);
+	}
+
+	/**
 	 * Callbacks interface that all activities using this fragment must implement.
 	 */
 	public static interface NavigationDrawerCallbacks {
@@ -349,23 +362,6 @@ public class BaseNavigationDrawerFragment extends Fragment {
 		void onDrawerSlide(View drawerView, float slideOffset);
 
 		void onDrawerStateChanged(int newState);
-	}
-
-	/**
-	 * Close the current drawer
-	 */
-	protected void closeDrawer() {
-		if (!lockDrawer) mDrawerLayout.closeDrawer(drawerPosition);
-	}
-
-	/**
-	 * Disable or enables toggle menu indicator
-	 *
-	 * @param enabled
-	 * 	TRUE if the menu indicator should be shown, FALSE if default up caret must be shown
-	 */
-	public void setDrawerIndicatorEnabled(boolean enabled) {
-		if (mDrawerToggle != null) mDrawerToggle.setDrawerIndicatorEnabled(enabled);
 	}
 
 }

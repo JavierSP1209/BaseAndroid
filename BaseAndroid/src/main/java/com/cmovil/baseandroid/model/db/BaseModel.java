@@ -18,8 +18,7 @@ import java.io.Serializable;
  * @version 1.0
  * @since 19/08/13
  */
-public abstract class BaseModel implements Serializable{
-
+public abstract class BaseModel implements Serializable {
 	protected Integer dbId;
 
 	/**
@@ -32,7 +31,8 @@ public abstract class BaseModel implements Serializable{
 	/**
 	 * Base constructor with id
 	 *
-	 * @param dbId Model row id
+	 * @param dbId
+	 * 	Model row id
 	 */
 	protected BaseModel(Integer dbId) {
 		this.dbId = dbId;

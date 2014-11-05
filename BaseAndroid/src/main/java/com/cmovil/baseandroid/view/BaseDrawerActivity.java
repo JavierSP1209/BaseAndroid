@@ -13,6 +13,7 @@ import com.cmovil.baseandroid.R;
 /**
  * Main class to handle Support Library ActionBar and navigation drawer in all application views
  * This class has methods to listen the navigation drawer events (open, close, slide, state change)
+ *
  * @author "Ing. Arturo Ayala"
  * @version 1.0
  * @since 19/09/13
@@ -31,22 +32,50 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	protected CharSequence mTitle;
 
 	/**
-	 * Resource id to be used as drawer icon
-	 */
-	protected int drawerIcon;
-
-	/**
 	 * String resource id that will be shown when the drawer its open
 	 */
 	private int appName;
 
 	@Override
 	public void setContentView(int layoutResID) {
-		super.setContentView(R.layout.base_activity);
+		super.setContentView(layoutResID);
+		checkDrawerLayout();
+		checkDrawerContents();
+	}
 
-		FrameLayout mainFrame = (FrameLayout) findViewById(R.id.main_frame);
-		View v = getLayoutInflater().inflate(layoutResID, null);
-		mainFrame.addView(v);
+	/**
+	 * Method to verify if the DrawerLayout its correctly implemented.
+	 */
+	private void checkDrawerLayout() {
+		try {
+			DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+			if (drawerLayout == null) {
+				throw new IllegalStateException("The layout needs have a DrawerLayout with the \"drawer_layout\" id.");
+			}
+		} catch (ClassCastException e) {
+			throw new IllegalStateException("The layout needs have a DrawerLayout with the \"drawer_layout\" id.");
+		}
+	}
+
+	/**
+	 * Method to verify if the DrawerLayout contents its correctly implemented.
+	 */
+	private void checkDrawerContents() {
+		try {
+			//Try to get by id the main frame an left drawer and cast it to FrameLayout
+			FrameLayout mainFrame = (FrameLayout) findViewById(R.id.main_frame);
+			FrameLayout leftDrawerFrame = (FrameLayout) findViewById(R.id.left_drawer);
+
+			//If some of frames is null
+			if (mainFrame == null || leftDrawerFrame == null) {
+				throw new IllegalStateException(
+					"The layout needs have a two FrameLayouts with \"main_frame\" and \"left_drawer\" id's.");
+			}
+		} catch (ClassCastException e) {
+			//If the cast fails
+			throw new IllegalStateException(
+				"The layout needs have a two FrameLayouts with \"main_frame\" and \"left_drawer\" id's.");
+		}
 	}
 
 	/**
@@ -58,8 +87,6 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	 * 	Resource id of the drawer icon to be used
 	 */
 	public void setDrawerContent(int appName, int drawerIcon) {
-
-		this.drawerIcon = drawerIcon;
 		this.appName = appName;
 		FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -88,7 +115,8 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 		super.onStart();
 		// Set up the drawer.
 		mNavigationDrawerFragment
-			.setUp(R.id.left_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), GravityCompat.START, drawerIcon,
+			.setUp(R.id.left_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), GravityCompat.START,
+				getToolbar(),
 				appName);
 	}
 
@@ -178,5 +206,5 @@ public abstract class BaseDrawerActivity extends BaseActionBarActivity
 	public void onDrawerStateChanged(int newState) {
 
 	}
-
 }
+

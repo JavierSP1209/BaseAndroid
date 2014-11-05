@@ -1,76 +1,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
                 tools:context=".Splash">
 
-	<TextView
-		android:id="@+id/txtSectionNumber"
-		android:layout_width="wrap_content"
+	<android.support.v7.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/hello_world"/>
+		android:minHeight="?attr/actionBarSize"
+		android:background="?attr/colorPrimary"/>
 
-	<ImageView
-		android:id="@+id/imgTest"
+	<include
+		layout="@layout/base_navigation_drawer"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_below="@id/txtSectionNumber"/>
-
-	<ProgressBar
-		android:id="@+id/progress"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerInParent="true"
-		android:indeterminate="true"
-		style="@android:style/Widget.ProgressBar.Large"/>
-
-	<Button
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/btnBegin"
-		android:layout_below="@id/progress"
-		android:id="@+id/btnBegin"/>
-
-	<com.cmovil.baseandroid.view.util.FloatingHintControl
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="10dp"
-		android:layout_below="@id/btnBegin"
-		android:id="@+id/txtTest"
-		app:animationDuration="1000"
-		app:floatLabelTextAppearance="@style/TextAppearance.Test.FloatingHing">
-
-		<EditText
-			android:id="@+id/edit_password"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:hint="Texto de prueba"
-			android:singleLine="true"
-			android:inputType="textNoSuggestions"
-			android:imeOptions="actionDone"/>
-
-	</com.cmovil.baseandroid.view.util.FloatingHintControl>
-
-	<com.cmovil.baseandroid.view.util.FloatingHintControl
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginTop="10dp"
-		android:id="@+id/txtTest2"
-		android:layout_below="@id/txtTest"
-		app:floatLabelTextAppearance="@style/TextAppearance.Test.FloatingHing"
-		app:spinnerHint ="Spinner hint">
-
-		<Spinner
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:id="@+id/spinnerTest"/>
-
-	</com.cmovil.baseandroid.view.util.FloatingHintControl>
-
-
+		android:layout_below="@id/toolbar"/>
 </RelativeLayout>

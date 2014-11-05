@@ -1,7 +1,8 @@
 package com.cmovil.baseandroidtest.view;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -59,7 +60,13 @@ public class SplashActivity extends BaseDrawerActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_no_toolbar) {
+			Intent intent = new Intent(this, ActivityWithOutToolbar.class);
+			startActivity(intent);
+			return true;
+		} else if (id == R.id.action_toolbar) {
+			Intent intent = new Intent(this, ActivityWithActionBar.class);
+			startActivity(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -79,7 +86,7 @@ public class SplashActivity extends BaseDrawerActivity {
 		drawerLayout.setScrimColor(getResources().getColor(R.color.primaryColorDark));
 	}
 
-	@Nullable
+	@NonNull
 	@Override
 	public Toolbar getToolbar() {
 		return (Toolbar) findViewById(R.id.toolbar);

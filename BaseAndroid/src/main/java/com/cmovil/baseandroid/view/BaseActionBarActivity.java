@@ -3,6 +3,7 @@ package com.cmovil.baseandroid.view;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -14,7 +15,7 @@ import android.widget.LinearLayout;
 
 /**
  * Main class to handle Support Library ActionBar in all application views
- *
+ * <p/>
  * Added the support for the Toolbar for API 21
  *
  * @author "Ing. Arturo Ayala"
@@ -25,11 +26,11 @@ import android.widget.LinearLayout;
 public abstract class BaseActionBarActivity extends ActionBarActivity {
 	private ActionBar baseActionBar;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-	    supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+	}
 
 	@Override
 	public void setContentView(int layoutResID) {
@@ -54,29 +55,29 @@ public abstract class BaseActionBarActivity extends ActionBarActivity {
 	/**
 	 * Removes padding from home button
 	 */
-    private void removePaddingFromBar(){
-        // Remove home icon padding and margins
-        ImageView view = (ImageView) findViewById(android.R.id.home);
-        view.setPadding(0, 0, 0, 0);
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(0, 0, 0, 0);
-        view.setLayoutParams(lp);
-    }
+	private void removePaddingFromBar() {
+		// Remove home icon padding and margins
+		ImageView view = (ImageView) findViewById(android.R.id.home);
+		view.setPadding(0, 0, 0, 0);
+		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+			LinearLayout.LayoutParams.WRAP_CONTENT);
+		lp.setMargins(0, 0, 0, 0);
+		view.setLayoutParams(lp);
+	}
 
-    @Override
-    public void setTitle(@Nullable CharSequence title) {
-	    if (baseActionBar != null) {
-		    super.setTitle(title);
-		    baseActionBar.setTitle(title);
-	    }
-    }
+	@Override
+	public void setTitle(@Nullable CharSequence title) {
+		if (baseActionBar != null) {
+			super.setTitle(title);
+			baseActionBar.setTitle(title);
+		}
+	}
 
 	public
 	@Nullable
 	ActionBar getBaseActionBar() {
 		return baseActionBar;
-    }
+	}
 
 	/**
 	 * Method to indicate the generation of the Toolbar for the Activity.
@@ -85,10 +86,12 @@ public abstract class BaseActionBarActivity extends ActionBarActivity {
 	 * <p/>
 	 * BE CAREFUL WITH THE IMPLEMENTATION OF THIS METHOD
 	 *
-	 * @return A instance to Toolbar, if its null indicate the activity doesn't has a ActionBar and the call to {@link
-	 * #getBaseActionBar()} always return null.
+	 * @return A instance to Toolbar, return a new Toolbar to indicate the activity doesn't has a ActionBar and the
+	 * call
+	 * to {@link
+	 * #getBaseActionBar()} always return a no valid Toolbar.
 	 */
 	public abstract
-	@Nullable
+	@NonNull
 	Toolbar getToolbar();
 }

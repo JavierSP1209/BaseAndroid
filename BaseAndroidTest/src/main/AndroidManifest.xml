@@ -19,7 +19,16 @@
 			</intent-filter>
 		</activity>
 
+		<activity
+			android:name=".view.ActivityWithOutToolbar"
+			android:label="@string/app_name">
+		</activity>
 
+		<activity
+			android:name=".view.ActivityWithActionBar"
+			android:label="@string/app_name"
+			android:parentActivityName=".view.SplashActivity">
+		</activity>
 	</application>
 
 </manifest>

@@ -4,4 +4,11 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 	<dimen name="menuWidth">240dp</dimen>
 	<dimen name="menuWidthPadding">0dp</dimen>
+
+	<!--Material design dimens-->
+	<dimen name="extra_small_margin">8dp</dimen>
+	<dimen name="small_margin">16dp</dimen>
+	<dimen name="medium_margin">32dp</dimen>
+	<dimen name="big_margin">40dp</dimen>
+	<dimen name="extra_big_margin">48dp</dimen>
 </resources>

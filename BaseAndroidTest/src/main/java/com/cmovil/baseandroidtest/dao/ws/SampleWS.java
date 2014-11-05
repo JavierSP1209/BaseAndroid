@@ -45,32 +45,6 @@ public abstract class SampleWS<T1, T2> extends WSClient<T1, T2> {
 	}
 
 	/**
-	 * Base constructor initialize necessary controllers or class attributes
-	 *
-	 * @param context
-	 * 	Application context
-	 * @param service
-	 * 	URL of the service that will be used
-	 */
-	public SampleWS(Context context, String service) {
-		super(context, service);
-	}
-
-	/**
-	 * Constructor that contains an specific field naming strategy
-	 *
-	 * @param context
-	 * 	Application context
-	 * @param fieldNamingStrategy
-	 * 	the actual naming strategy to apply to the fields
-	 * @param service
-	 * 	URL of the service that will be used
-	 */
-	public SampleWS(Context context, FieldNamingStrategy fieldNamingStrategy, String service) {
-		super(context, fieldNamingStrategy, service);
-	}
-
-	/**
 	 * Tries to parse the response as a error, if an exception is thrown means that the response does not correspond to
 	 * a error and try to parse it correctly
 	 *

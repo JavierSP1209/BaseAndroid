@@ -55,11 +55,6 @@ public abstract class WSClient<T1, T2> {
 	private static final Integer TIME_OUT = 10000;
 	private String service;
 
-	protected Gson gsonBuilder;
-	private FieldNamingStrategy fieldNamingStrategy;
-	private Context context;
-
-
 	/**
 	 * Default constructor for ws client
 	 *
@@ -68,40 +63,6 @@ public abstract class WSClient<T1, T2> {
 	 */
 	public WSClient(String serviceURL) {
 		service = serviceURL;
-	}
-
-	/**
-	 * Base constructor initialize necessary controllers or class attributes
-	 *
-	 * @param context
-	 * 	Application context
-	 * @param service
-	 * 	URL of the service that will be used
-	 */
-	public WSClient(Context context, String service) {
-		this.context = context;
-		fieldNamingStrategy = null;
-		this.service = service;
-	}
-
-	/**
-	 * Constructor that contains an specific field naming strategy
-	 *
-	 * @param context
-	 * 	Application context
-	 * @param fieldNamingStrategy
-	 * 	the actual naming strategy to apply to the fields
-	 * @param service
-	 * 	URL of the service that will be used
-	 */
-	public WSClient(Context context, FieldNamingStrategy fieldNamingStrategy, String service) {
-		this.service = service;
-		this.context = context;
-		this.fieldNamingStrategy = fieldNamingStrategy;
-	}
-
-	public Context getContext() {
-		return context;
 	}
 
 	/**
@@ -142,8 +103,7 @@ public abstract class WSClient<T1, T2> {
 	 * Creates the corresponding request for the selected method and process the response from the server
 	 *
 	 * @param methodName
-	 * 	Name of the method that will be invoked, the available methods are at:
-	 * 	{@link com.cmovil.baseandroid.util.KeyDictionary.WSParameters.RequestWebServiceMethods}
+	 * 	Name of the method that will be invoked
 	 * @param requestData
 	 * 	Object to be used for fill oout request parameters
 	 * @throws InvalidResponseException
@@ -155,13 +115,6 @@ public abstract class WSClient<T1, T2> {
 	 */
 	public List<T2> invokePOST(String methodName, T1 requestData)
 		throws InvalidResponseException, IOException, ResponseErrorException {
-
-		if (fieldNamingStrategy != null) {
-			gsonBuilder = new GsonBuilder().setFieldNamingStrategy(fieldNamingStrategy).create();
-		} else {
-			gsonBuilder = new GsonBuilder().create();
-		}
-
 		String jsonServerResponse = makeWSPostRequest(methodName, buildRequestContent(methodName, requestData));
 
 		//Receiving and parsing the response
@@ -185,7 +138,6 @@ public abstract class WSClient<T1, T2> {
 	 *
 	 * @param methodName
 	 * 	Name of the method that will be invoked, the available methods are at:
-	 * 	{@link com.cmovil.baseandroid.util.KeyDictionary.WSParameters.RequestWebServiceMethods}
 	 * @param jsonRequest
 	 * 	Service request parameters in json format
 	 * @throws InvalidResponseException
@@ -232,8 +184,7 @@ public abstract class WSClient<T1, T2> {
 	 * Creates the corresponding request for the selected method and process the response from the server
 	 *
 	 * @param methodName
-	 * 	Name of the method that will be invoked, the available methods are at:
-	 * 	{@link com.cmovil.baseandroid.util.KeyDictionary.WSParameters.RequestWebServiceMethods}
+	 * 	Name of the method that will be invoked
 	 * @param data
 	 * 	Data to be sent to the server, must be on GET parameters format
 	 * @throws InvalidResponseException

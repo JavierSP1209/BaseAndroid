@@ -11,4 +11,6 @@
 	<dimen name="medium_margin">32dp</dimen>
 	<dimen name="big_margin">40dp</dimen>
 	<dimen name="extra_big_margin">48dp</dimen>
+
+	<dimen name="date_picker_default_height">60dp</dimen>
 </resources>

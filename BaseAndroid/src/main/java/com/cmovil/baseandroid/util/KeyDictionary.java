@@ -7,6 +7,7 @@
  */
 package com.cmovil.baseandroid.util;
 
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -62,18 +63,23 @@ public class KeyDictionary {
     /**
      * Static alpha value for disabled elements
      */
+    @Deprecated
     public static final float DISABLE_ALPHA = 0.95f;
+
     /**
      * Static alpha value for disabled text elements
      */
+    @Deprecated
     public static final float DISABLE_ALPHA_TEXT = 0.99f;
     /**
      * Static alpha value for disabled images
      */
+    @Deprecated
     public static final float DISABLE_ALPHA_IMG = 0.5f;
     /**
      * Static alpha value for enabled values
      */
+    @Deprecated
     public static final float ENABLED_ALPHA = 1.0f;
     /*
      * Define a request code to send to Google Play services
@@ -88,24 +94,9 @@ public class KeyDictionary {
     protected KeyDictionary() {
     }
 
-    /**
-     * Inner class for saving the request codes used along this application
-     */
-    public static class RequestCodes {
-
-    }
-
-    /**
-     * Class that defines the parameters used when consuming PDA Web Services
-     */
-    public static class WSParameters {
-
-
-	    /**
-	     * Web service method names
-	     */
-        public static class RequestWebServiceMethods {
-        }
-    }
+	/**
+	 * Empty date value used as the default
+	 */
+	public static final Date ZERO_DATE = CMUtils.removeTime(new java.util.Date(-2208926549925L));
 }
 

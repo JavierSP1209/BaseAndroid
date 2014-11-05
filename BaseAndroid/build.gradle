@@ -9,7 +9,7 @@ android {
         minSdkVersion 8
         targetSdkVersion 21
         versionCode 1
-        versionName "1.5.2"
+        versionName "1.5.3"
         project.archivesBaseName = "BaseAndroid"
         project.version = android.defaultConfig.versionName
     }

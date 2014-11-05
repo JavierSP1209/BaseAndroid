@@ -2,7 +2,7 @@
 	<!-- Application theme. -->
 	<style name="BaseTheme" parent="AppTheme.Base"/>
 
-	<style name="AppTheme.Base" parent="Theme.AppCompat">
+	<style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
 		<item name="android:windowNoTitle">true</item>
 		<item name="windowActionBar">false</item>
 	</style>

@@ -30,7 +30,9 @@
 		android:layout_height="wrap_content"
 		android:text="@string/btnBegin"
 		android:layout_below="@id/progress"
-		android:id="@+id/btnBegin"/>
+		android:background="?attr/selectableItemBackground"
+		android:id="@+id/btnBegin"
+		/>
 
 	<com.cmovil.baseandroid.view.util.FloatingHintControl
 		android:layout_width="match_parent"

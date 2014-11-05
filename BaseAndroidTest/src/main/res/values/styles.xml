@@ -16,7 +16,7 @@
 	</style>
 
 	<style name="TextAppearance.Test.FloatingHing" parent="android:TextAppearance.Small">
-		<item name="android:textColor">#ff42a623</item>
+		<item name="android:textColor">?attr/colorAccent</item>
 		<item name="android:textSize">11sp</item>
 		<item name="android:textStyle">bold</item>
 	</style>

@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 	<dimen name="menuWidth">240dp</dimen>
 	<dimen name="menuWidthPadding">0dp</dimen>
+	<dimen name="date_picker_default_height">60dp</dimen>
 </resources>

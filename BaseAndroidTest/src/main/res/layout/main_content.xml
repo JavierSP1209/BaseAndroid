@@ -34,11 +34,38 @@
 		android:id="@+id/btnBegin"
 		/>
 
+	<ImageView android:layout_height="wrap_content"
+	           android:layout_width="wrap_content"
+	           android:src="@drawable/ic_camera_alt_black_48dp"
+	           android:layout_below="@id/btnBegin"
+		android:contentDescription="@null"
+		android:id="@+id/imgBlack"
+		android:tint="?attr/colorAccent"/>
+
+	<ImageView android:layout_height="wrap_content"
+	           android:layout_width="wrap_content"
+	           android:src="@drawable/ic_camera_alt_grey600_48dp"
+	           android:layout_alignBottom="@id/imgBlack"
+	           android:layout_toRightOf="@id/imgBlack"
+	           android:layout_toEndOf="@id/imgBlack"
+	           android:contentDescription="@null"
+		android:id="@+id/imgGrey"
+		android:tint="?attr/colorAccent"/>
+
+	<ImageView android:layout_height="wrap_content"
+	           android:layout_width="wrap_content"
+	           android:src="@drawable/ic_camera_alt_white_48dp"
+	           android:contentDescription="@null"
+	           android:layout_alignBottom="@id/imgBlack"
+	           android:layout_toRightOf="@id/imgGrey"
+	           android:layout_toEndOf="@id/imgBlack"
+	           android:tint="?attr/colorAccent"/>
+
 	<com.cmovil.baseandroid.view.util.FloatingHintControl
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="10dp"
-		android:layout_below="@id/btnBegin"
+		android:layout_below="@id/imgBlack"
 		android:id="@+id/txtTest"
 		app:animationDuration="1000"
 		app:floatLabelTextAppearance="@style/TextAppearance.Test.FloatingHing">

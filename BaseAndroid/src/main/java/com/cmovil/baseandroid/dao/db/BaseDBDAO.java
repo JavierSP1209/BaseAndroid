@@ -79,6 +79,17 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	}
 
 	/**
+	 * Define the table primary key filter to be used on {@link #delete()},
+	 * {@link #update(com.cmovil.baseandroid.model.db.BaseModel)}
+	 * and {@link #getById(Integer, String[], java.util.Map)} methods of this class
+	 *
+	 * @return The SQL filter statement
+	 */
+	protected String getPrimaryKeyFilter() {
+		return tableName + "." + DatabaseDictionary.DBBaseStructure.FILTER_ID;
+	}
+
+	/**
 	 * Close the data base
 	 */
 	public void close() {
@@ -214,22 +225,21 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 
 	/**
 	 * Executes a raw query and stores the results in a cursor, managing its proper closing.
+	 *
 	 * @param query
-	 * Query to execute in the db
+	 * 	Query to execute in the db
 	 * @param selectionArgs
-	 * Selection arguments for "?" components in the selection
-	 * @return
-	 * A Cursor over all rows matching the query
+	 * 	Selection arguments for "?" components in the selection
+	 * @return A Cursor over all rows matching the query
 	 */
-	protected Cursor rawQuery(String query, String[] selectionArgs){
+	protected Cursor rawQuery(String query, String[] selectionArgs) {
 		SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
-		if(db == null)
-			return null;
+		if (db == null) return null;
 		Cursor cursor = db.rawQuery(query, selectionArgs);
-		if (cursor == null){
+		if (cursor == null) {
 			db.close();
 			return null;
-		}else if(!cursor.moveToFirst()){
+		} else if (!cursor.moveToFirst()) {
 			cursor.close();
 			db.close();
 			close();
@@ -511,12 +521,10 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 			// Gets the data repository in write mode
 			SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
 			if (db == null) return 0;
-			// Define 'where' part of query.
-			String selection = DatabaseDictionary.DBBaseStructure.FILTER_ID;
 			// Specify arguments in placeholder order.
 			String[] selectionArgs = {String.valueOf(id)};
 			// Issue SQL statement.
-			Integer res = db.delete(tableName, selection, selectionArgs);
+			Integer res = db.delete(tableName, getPrimaryKeyFilter(), selectionArgs);
 			db.close();
 			return res;
 		} catch (SQLException e) {
@@ -563,11 +571,9 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 			SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
 
 			if (db == null) return 0;
-			// Which row to update, based on the ID
-			String selection = DatabaseDictionary.DBBaseStructure.FILTER_ID;
 			String[] selectionArgs = {String.valueOf(objectToUpdate.getDbId())};
 
-			Integer res = db.update(tableName, fillMapValues(objectToUpdate), selection, selectionArgs);
+			Integer res = db.update(tableName, fillMapValues(objectToUpdate), getPrimaryKeyFilter(), selectionArgs);
 			db.close();
 			return res;
 		} catch (SQLException e) {
@@ -612,10 +618,9 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 */
 	public Cursor getById(Integer id, String[] columns, Map<String, String> projectionMap) throws DBException {
 		//Add table name to default filter id string in order to use full table name for join queries
-		String selection = tableName + "." + DatabaseDictionary.DBBaseStructure.FILTER_ID;
 		String[] selectionArgs = new String[]{String.valueOf(id)};
 		try {
-			return query(getDefaultTableJoin(), selection, selectionArgs, columns, projectionMap);
+			return query(getDefaultTableJoin(), getPrimaryKeyFilter(), selectionArgs, columns, projectionMap);
 		} catch (SQLException e) {
 			throw new DBException(e.getMessage(), e);
 		}

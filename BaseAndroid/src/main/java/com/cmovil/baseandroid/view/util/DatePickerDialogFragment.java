@@ -63,6 +63,9 @@ public class DatePickerDialogFragment extends DialogFragment {
 			if (mAttributes.getMaxDate() != null) {
 				datePickerDialog.getDatePicker().setMaxDate(mAttributes.getMaxDate().getTime());
 			}
+			if (mAttributes.getMinDate() != null) {
+				datePickerDialog.getDatePicker().setMinDate(mAttributes.getMinDate().getTime());
+			}
 			setCustomPicker(datePickerDialog);
 		}
 
@@ -72,6 +75,20 @@ public class DatePickerDialogFragment extends DialogFragment {
 				mAttributes.getOnCleanDateListener());
 		}
 		return datePickerDialog;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (mAttributes.getButtonBackground() > 0) {
+			((DatePickerDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE)
+				.setBackgroundResource(mAttributes.getButtonBackground());
+			if (mAttributes.getOnCleanDateListener() != null) {
+				((DatePickerDialog) getDialog()).getButton(DialogInterface.BUTTON_NEGATIVE)
+					.setBackgroundResource(mAttributes.getButtonBackground());
+			}
+		}
+
 	}
 
 	/**

@@ -28,9 +28,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cmovil.baseandroid.view.loader.ImageLoader;
+import com.cmovil.baseandroid.view.util.DatePickerBuilder;
+import com.cmovil.baseandroid.view.util.DatePickerDialogFragment;
 import com.cmovil.baseandroid.view.util.FloatingHintControl;
+import com.cmovil.baseandroid.view.util.SimpleDialogBuilder;
+import com.cmovil.baseandroid.view.util.SimpleDialogFragment;
 import com.cmovil.baseandroidtest.R;
-import com.cmovil.baseandroidtest.controller.SampleController;
 import com.cmovil.baseandroidtest.util.KeyDictionary;
 
 import java.util.LinkedList;
@@ -78,10 +81,12 @@ public class PlaceHolderFragment extends Fragment {
 		begin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				SampleController sampleController = new SampleController(getActivity());
+				DatePickerDialogFragment dialog = new DatePickerBuilder().create();
+				dialog.show(getFragmentManager(), "dialog");
+//				SampleController sampleController = new SampleController(getActivity());
 
 				//for(int i=0;i<10;i++) {
-				sampleController.testBatchInsert(INSERT_NUMBER);
+//				sampleController.testBatchInsert(INSERT_NUMBER);
 //				try {
 //					List<State> states = sampleController.getAll();
 //					for(State state:states){

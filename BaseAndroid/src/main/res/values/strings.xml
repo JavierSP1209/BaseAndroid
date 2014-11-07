@@ -10,4 +10,5 @@
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
 	<string name="select_date">Select a date</string>
+	<string name="empty_string">--</string>
 </resources>

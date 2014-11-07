@@ -30,8 +30,6 @@ import com.cmovil.baseandroid.R;
  */
 public class SimpleDialogFragment extends DialogFragment {
 
-	public static final String BUNDLE_TAG_BUILDER = "BUNDLE_TAG_BUILDER";
-
 	private SimpleDialogBuilder dialogBuilder;
 
 	private View getDefaultDialogView() {
@@ -44,12 +42,19 @@ public class SimpleDialogFragment extends DialogFragment {
 		return v;
 	}
 
+	public static SimpleDialogFragment newInstance(SimpleDialogBuilder dialogBuilder) {
+		SimpleDialogFragment dialogFragment = new SimpleDialogFragment();
+		dialogFragment.setDialogBuilder(dialogBuilder);
+		return dialogFragment;
+	}
+
+	public void setDialogBuilder(SimpleDialogBuilder dialogBuilder) {
+		this.dialogBuilder = dialogBuilder;
+	}
 
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		Bundle args = getArguments();
-		dialogBuilder = ((SimpleDialogBuilder) args.getSerializable(BUNDLE_TAG_BUILDER));
 		if (dialogBuilder == null) dialogBuilder = new SimpleDialogBuilder();
 		final DialogInterface.OnClickListener positiveClickListener = dialogBuilder.getPositiveClickListener();
 		final DialogInterface.OnClickListener negativeClickListener = dialogBuilder.getNegativeClickListener();
@@ -57,7 +62,7 @@ public class SimpleDialogFragment extends DialogFragment {
 		//Set the default if no custom view is defined
 		if (dialogBuilder.getView() == null) builder.setView(getDefaultDialogView());
 		else builder.setView(dialogBuilder.getView());
-		builder.setInverseBackgroundForced(true);
+		builder.setInverseBackgroundForced(dialogBuilder.isInverseBackground());
 		if (positiveClickListener != null) {
 			builder.setPositiveButton(dialogBuilder.getPositiveText(), positiveClickListener);
 		}

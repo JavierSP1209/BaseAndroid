@@ -41,14 +41,21 @@ import java.util.Calendar;
 public class DatePickerDialogFragment extends DialogFragment {
 	private static final String TAG_SELECTION_DIVIDER = "mSelectionDivider";
 	private static final int TAG_ZERO = 0;
-	public static final String BUNDLE_TAG_ATTRIBUTES = "attributes";
 	private DatePickerBuilder mAttributes;
+
+	public void setDatePickerBuilder(DatePickerBuilder builder) {
+		this.mAttributes = builder;
+	}
+
+	public static DatePickerDialogFragment newInstance(DatePickerBuilder builder) {
+		DatePickerDialogFragment fragment = new DatePickerDialogFragment();
+		fragment.setDatePickerBuilder(builder);
+		return fragment;
+	}
 
 	@Override
 	@NonNull
 	public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
-		Bundle args = getArguments();
-		mAttributes = ((DatePickerBuilder) args.getSerializable(BUNDLE_TAG_ATTRIBUTES));
 		if (mAttributes == null) mAttributes = new DatePickerBuilder();
 		Calendar initial = Calendar.getInstance();
 		initial.setTime(mAttributes.getInitialDate());
@@ -88,6 +95,18 @@ public class DatePickerDialogFragment extends DialogFragment {
 					.setBackgroundResource(mAttributes.getButtonBackground());
 			}
 		}
+
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
 	}
 

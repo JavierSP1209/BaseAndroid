@@ -8,14 +8,11 @@
 package com.cmovil.baseandroid.view.util;
 
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.view.View;
 
 import com.cmovil.baseandroid.R;
-
-import java.io.Serializable;
 
 /**
  * Builder class to set the configuration for creating a
@@ -26,7 +23,7 @@ import java.io.Serializable;
  * @version 1.0
  * @since 06/11/14
  */
-public class SimpleDialogBuilder implements Serializable {
+public class SimpleDialogBuilder {
 
 	private View mView;
 
@@ -54,6 +51,8 @@ public class SimpleDialogBuilder implements Serializable {
 	@DrawableRes
 	private int mNegativeBackground;
 
+	private boolean mInverseBackground;
+
 	public SimpleDialogBuilder() {
 		mTitle = R.string.empty_string;
 		mContent = R.string.empty_string;
@@ -61,6 +60,7 @@ public class SimpleDialogBuilder implements Serializable {
 		mNegativeText = R.string.empty_string;
 		mPositiveBackground = R.drawable.dialog_default_button_background;
 		mNegativeBackground = R.drawable.dialog_default_button_background;
+		mInverseBackground = false;
 	}
 
 	public View getView() {
@@ -211,11 +211,21 @@ public class SimpleDialogBuilder implements Serializable {
 		return this;
 	}
 
+	public boolean isInverseBackground() {
+		return mInverseBackground;
+	}
+
+	/**
+	 * Sets whether the dialog background should be inverse to the app theme
+	 * @param inverseBackground
+	 * True if the dialog background should be inverse
+	 */
+	public SimpleDialogBuilder setInverseBackground(boolean inverseBackground) {
+		this.mInverseBackground = inverseBackground;
+		return this;
+	}
+
 	public SimpleDialogFragment create() {
-		SimpleDialogFragment fragment = new SimpleDialogFragment();
-		Bundle args = new Bundle();
-		args.putSerializable(SimpleDialogFragment.BUNDLE_TAG_BUILDER, this);
-		fragment.setArguments(args);
-		return fragment;
+		return SimpleDialogFragment.newInstance(this);
 	}
 }

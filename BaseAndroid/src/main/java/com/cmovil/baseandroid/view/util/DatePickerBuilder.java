@@ -9,7 +9,6 @@ package com.cmovil.baseandroid.view.util;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
@@ -269,10 +268,6 @@ public class DatePickerBuilder implements Serializable {
 	}
 
 	public DatePickerDialogFragment create() {
-		DatePickerDialogFragment fragment = new DatePickerDialogFragment();
-		Bundle args = new Bundle();
-		args.putSerializable(DatePickerDialogFragment.BUNDLE_TAG_ATTRIBUTES, this);
-		fragment.setArguments(args);
-		return fragment;
+		return DatePickerDialogFragment.newInstance(this);
 	}
 }

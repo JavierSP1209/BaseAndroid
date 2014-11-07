@@ -14,6 +14,7 @@ package com.cmovil.baseandroidtest.view;
  */
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -28,8 +29,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cmovil.baseandroid.view.loader.ImageLoader;
-import com.cmovil.baseandroid.view.util.DatePickerBuilder;
-import com.cmovil.baseandroid.view.util.DatePickerDialogFragment;
 import com.cmovil.baseandroid.view.util.FloatingHintControl;
 import com.cmovil.baseandroid.view.util.SimpleDialogBuilder;
 import com.cmovil.baseandroid.view.util.SimpleDialogFragment;
@@ -81,8 +80,21 @@ public class PlaceHolderFragment extends Fragment {
 		begin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				DatePickerDialogFragment dialog = new DatePickerBuilder().create();
-				dialog.show(getFragmentManager(), "dialog");
+				SimpleDialogFragment dialogFragment =
+					new SimpleDialogBuilder().setPositiveClickListener(new DialogInterface.OnClickListener() {
+
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Log.d(com.cmovil.baseandroid.util.KeyDictionary.TAG, "POSITIVE");
+						}
+					}).setNegativeClickListener(new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Log.d(com.cmovil.baseandroid.util.KeyDictionary.TAG, "NEGATIVE");
+						}
+					}).create();
+				dialogFragment.show(getFragmentManager(), "dialog");
 //				SampleController sampleController = new SampleController(getActivity());
 
 				//for(int i=0;i<10;i++) {

@@ -533,6 +533,34 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	}
 
 	/**
+	 * Delete an specific row from the selected table in database
+	 *
+	 * @param objectToDelete
+	 * 	Object with the fields to search the row to delete, this object could have only the attributes defined on
+	 * 	{@link com.cmovil.baseandroid.model.db.BaseModel#getPrimaryKeySelectionArgs()}
+	 * @return the number of rows affected, 0 otherwise. To remove all rows and get a
+	 * count pass "1" as the whereClause.
+	 *
+	 * @throws DBException
+	 * 	if something goes wrong during SQL statements execution
+	 */
+	public Integer delete(T objectToDelete) throws DBException {
+		try {
+			// Gets the data repository in write mode
+			SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
+			if (db == null) return 0;
+			// Specify arguments in placeholder order.
+			String[] selectionArgs = objectToDelete.getPrimaryKeySelectionArgs();
+			// Issue SQL statement.
+			Integer res = db.delete(tableName, getPrimaryKeyFilter(), selectionArgs);
+			db.close();
+			return res;
+		} catch (SQLException e) {
+			throw new DBException(e.getMessage(), e);
+		}
+	}
+
+	/**
 	 * Delete all the rows from the selected table in database
 	 *
 	 * @return the number of rows affected, 0 otherwise.
@@ -619,6 +647,40 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	public Cursor getById(Integer id, String[] columns, Map<String, String> projectionMap) throws DBException {
 		//Add table name to default filter id string in order to use full table name for join queries
 		String[] selectionArgs = new String[]{String.valueOf(id)};
+		try {
+			return query(getDefaultTableJoin(), getPrimaryKeyFilter(), selectionArgs, columns, projectionMap);
+		} catch (SQLException e) {
+			throw new DBException(e.getMessage(), e);
+		}
+
+		/*
+		 * This builds a query that looks like: SELECT <columns> FROM <table>
+		 * WHERE rowId = <id>
+		 */
+	}
+
+	/**
+	 * Gets all the objects of the selected table with the selected id
+	 *
+	 * @param objectToSearch
+	 * 	Object with the fields to search the row to delete, this object could have only the attributes defined on
+	 * 	{@link com.cmovil.baseandroid.model.db.BaseModel#getPrimaryKeySelectionArgs()}
+	 * @param columns
+	 * 	The columns to include, if null then all are included
+	 * @param projectionMap
+	 * 	The projection map maps from column names that the caller passes into query to database column names. This is
+	 * 	useful for renaming columns as well as disambiguating column names when doing joins. For example you could map
+	 * 	"name" to "people.name". If a projection map is set it must contain all column names the user may request,
+	 * 	even if
+	 * 	the key and value are the same.
+	 * @return Cursor positioned to matching word, or null if not found.
+	 *
+	 * @throws DBException
+	 * 	if something goes wrong during SQL statements execution
+	 */
+	public Cursor getById(T objectToSearch, String[] columns, Map<String, String> projectionMap) throws DBException {
+		//Add table name to default filter id string in order to use full table name for join queries
+		String[] selectionArgs = objectToSearch.getPrimaryKeySelectionArgs();
 		try {
 			return query(getDefaultTableJoin(), getPrimaryKeyFilter(), selectionArgs, columns, projectionMap);
 		} catch (SQLException e) {

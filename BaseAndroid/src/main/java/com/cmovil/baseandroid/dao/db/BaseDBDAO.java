@@ -599,7 +599,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 			SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
 
 			if (db == null) return 0;
-			String[] selectionArgs = {String.valueOf(objectToUpdate.getDbId())};
+			String[] selectionArgs = objectToUpdate.getPrimaryKeySelectionArgs();
 
 			Integer res = db.update(tableName, fillMapValues(objectToUpdate), getPrimaryKeyFilter(), selectionArgs);
 			db.close();

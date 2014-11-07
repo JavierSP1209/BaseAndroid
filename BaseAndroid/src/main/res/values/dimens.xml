@@ -13,4 +13,7 @@
 	<dimen name="extra_big_margin">48dp</dimen>
 
 	<dimen name="date_picker_default_height">60dp</dimen>
+	<dimen name="dialog_header_padding">14dp</dimen>
+	<dimen name="simple_dialog_header_text">22sp</dimen>
+	<dimen name="simple_dialog_content_text">16sp</dimen>
 </resources>

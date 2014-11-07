@@ -49,6 +49,10 @@ public class DatePickerBuilder implements Serializable {
 	 */
 	private Date mInitialDate;
 	/**
+	 * The minimum selectable date for the picker. If null, no min date is specified
+	 */
+	private Date mMinDate;
+	/**
 	 * The maximum date that the picker will display. If null, no max date is specified
 	 */
 	private Date mMaxDate;
@@ -78,6 +82,9 @@ public class DatePickerBuilder implements Serializable {
 	@DimenRes
 	private int mHeaderHeight;
 
+	@DrawableRes
+	private int mButtonBackground;
+
 	/**
 	 * Constructor that initializes all the needed values with default values
 	 */
@@ -88,6 +95,7 @@ public class DatePickerBuilder implements Serializable {
 		mDivider = R.drawable.date_picker_default_divider;
 		mHeaderLayout = R.layout.date_picker_default_header;
 		mHeaderHeight = R.dimen.date_picker_default_height;
+		mButtonBackground = R.drawable.dialog_default_button_background;
 	}
 
 	public DatePickerDialog.OnDateSetListener getOnDateSetListener() {
@@ -127,12 +135,30 @@ public class DatePickerBuilder implements Serializable {
 	}
 
 	@Nullable
+	public Date getMinDate() {
+		return mMinDate;
+	}
+
+	/**
+	 * The minimum date selectable for the picker.
+	 *
+	 * @param minDate
+	 * 	A {@link java.util.Date} object for the maximum date to display. The picker won't display any date
+	 * 	before this one.
+	 * @return This object to chain the set call
+	 */
+	public DatePickerBuilder setMinDate(@Nullable Date minDate) {
+		this.mMinDate = minDate;
+		return this;
+	}
+
+	@Nullable
 	public Date getMaxDate() {
 		return mMaxDate;
 	}
 
 	/**
-	 * The maximum date that the picker will display.
+	 * The maximum date selectable for the picker.
 	 *
 	 * @param maxDate
 	 * 	A {@link java.util.Date} object for the maximum date to display. The picker won't display any date
@@ -223,6 +249,22 @@ public class DatePickerBuilder implements Serializable {
 	 */
 	public DatePickerBuilder setHeaderHeight(@DimenRes int headerHeight) {
 		this.mHeaderHeight = headerHeight;
+		return this;
+	}
+
+	@DrawableRes
+	public int getButtonBackground() {
+		return mButtonBackground;
+	}
+
+	/**
+	 * Set a background drawable for the dialog buttons. This is recommended to be a selector.
+	 * @param buttonBackground
+	 * The button background drawable resource
+	 * @return This object to chain the set call
+	 */
+	public DatePickerBuilder setButtonBackground(@DrawableRes int buttonBackground) {
+		this.mButtonBackground = buttonBackground;
 		return this;
 	}
 

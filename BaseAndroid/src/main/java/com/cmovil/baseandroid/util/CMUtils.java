@@ -795,8 +795,18 @@ public class CMUtils {
 	 * @return true if str is null or zero length (after trim)
 	 */
 	public static boolean isEmptyText(CharSequence str) {
-		if (str == null || str.toString().trim().length() == 0) return true;
-		else return false;
+		return str == null || str.toString().trim().length() == 0;
 
+	}
+
+	/**
+	 * Method to know if a Date its a default empty Data.
+	 *
+	 * @param date
+	 * 	Date to be compared.
+	 * @return Is Zero Date.
+	 */
+	public static boolean isEmptyDate(Date date) {
+		return date == null || date.compareTo(KeyDictionary.ZERO_DATE) == 0;
 	}
 }

@@ -17,7 +17,6 @@
 		android:paddingLeft="@dimen/extra_small_margin"
 		android:paddingRight="@dimen/extra_small_margin"
 		android:paddingBottom="@dimen/small_margin"
-		android:textColor="?attr/colorPrimary"
 		android:textSize="@dimen/simple_dialog_content_text"/>
 
 </RelativeLayout>

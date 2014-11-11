@@ -16,7 +16,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.cmovil.baseandroid.R;
-import com.cmovil.baseandroid.util.KeyDictionary;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -135,11 +134,11 @@ public class DatePickerBuilder implements Serializable {
 	 * @return This object to chain the set call
 	 */
 	public DatePickerBuilder setInitialDate(@Nullable Date initialDate) {
-		if (initialDate == null) initialDate = KeyDictionary.ZERO_DATE;
+		if (initialDate == null) initialDate = new Date();
 		if (mMinDate != null && initialDate.before(mMinDate))
-			throw new IllegalArgumentException("initialDate may not be before the current minDate");
+			initialDate = mMinDate;
 		else if (mMaxDate != null && initialDate.after(mMaxDate))
-			throw new IllegalArgumentException("initialDate may not be after the current maxDate");
+			initialDate = mMaxDate;
 		this.mInitialDate = initialDate;
 		return this;
 	}

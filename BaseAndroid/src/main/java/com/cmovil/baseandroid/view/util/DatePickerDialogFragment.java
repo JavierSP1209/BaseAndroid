@@ -23,7 +23,9 @@ import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
+import com.cmovil.baseandroid.R;
 import com.cmovil.baseandroid.util.KeyDictionary;
 
 import java.lang.reflect.Field;
@@ -146,6 +148,12 @@ public class DatePickerDialogFragment extends DialogFragment {
 				if (mAttributes.getHeaderLayout() <= 0) return;
 				LayoutInflater inflater = getActivity().getLayoutInflater();
 				View v = inflater.inflate(mAttributes.getHeaderLayout(), dpView, false);
+				if (mAttributes.getHeaderTitle() > 0) {
+					TextView txtTitle = (TextView) v.findViewById(R.id.txtTitle);
+					if (txtTitle != null) {
+						txtTitle.setText(mAttributes.getHeaderTitle());
+					}
+				}
 				// Default header height
 				dpView.addView(v);
 				if (mAttributes.getHeaderHeight() <= 0) return;

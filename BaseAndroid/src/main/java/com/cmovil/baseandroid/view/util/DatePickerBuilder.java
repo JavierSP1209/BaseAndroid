@@ -81,6 +81,9 @@ public class DatePickerBuilder implements Serializable {
 	@DimenRes
 	private int mHeaderHeight;
 
+	@StringRes
+	private int mHeaderTitle;
+
 	@DrawableRes
 	private int mButtonBackground;
 
@@ -94,6 +97,7 @@ public class DatePickerBuilder implements Serializable {
 		mDivider = R.drawable.date_picker_default_divider;
 		mHeaderLayout = R.layout.date_picker_default_header;
 		mHeaderHeight = R.dimen.date_picker_default_height;
+		mHeaderTitle = R.string.select_date;
 		mButtonBackground = R.drawable.dialog_default_button_background;
 	}
 
@@ -239,6 +243,24 @@ public class DatePickerBuilder implements Serializable {
 		return mHeaderHeight;
 	}
 
+	@StringRes
+	public int getHeaderTitle() {
+		return mHeaderTitle;
+	}
+
+	/**
+	 * Sets the title for the header. If a custom header layout is set using {@link #setHeaderLayout(int)},
+	 * this attribute is ignored
+	 *
+	 * @param headerTitle
+	 * 	A string resource for the date picker title
+	 * @return This object to chain the set call
+	 */
+	public DatePickerBuilder setHeaderTitle(@StringRes int headerTitle) {
+		this.mHeaderTitle = headerTitle;
+		return this;
+	}
+
 	/**
 	 * Sets the height for the header set by {@link #setHeaderLayout(int)}
 	 *
@@ -258,8 +280,9 @@ public class DatePickerBuilder implements Serializable {
 
 	/**
 	 * Set a background drawable for the dialog buttons. This is recommended to be a selector.
+	 *
 	 * @param buttonBackground
-	 * The button background drawable resource
+	 * 	The button background drawable resource
 	 * @return This object to chain the set call
 	 */
 	public DatePickerBuilder setButtonBackground(@DrawableRes int buttonBackground) {

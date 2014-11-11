@@ -160,8 +160,8 @@ public class DatePickerBuilder implements Serializable {
 	public DatePickerBuilder setMinDate(@Nullable Date minDate) {
 		if (minDate != null && mMaxDate != null && minDate.after(mMaxDate))
 			throw new IllegalArgumentException("minDate may not be after the current maxDate");
-		this.mMinDate = minDate;
 		if (minDate != null && minDate.after(mInitialDate)) mInitialDate = minDate;
+		this.mMinDate = minDate;
 		return this;
 	}
 
@@ -179,10 +179,9 @@ public class DatePickerBuilder implements Serializable {
 	 * @return This object to chain the set call
 	 */
 	public DatePickerBuilder setMaxDate(@Nullable Date maxDate) {
-		if (maxDate != null && maxDate.before(mInitialDate))
-			throw new IllegalArgumentException("maxDate may not be before the current initialDate");
 		if (maxDate != null && mMinDate != null && maxDate.before(mMinDate))
 			throw new IllegalArgumentException("maxDate may not be before the current minDate");
+		if (maxDate != null && maxDate.before(mInitialDate)) mInitialDate = maxDate;
 		this.mMaxDate = maxDate;
 		return this;
 	}

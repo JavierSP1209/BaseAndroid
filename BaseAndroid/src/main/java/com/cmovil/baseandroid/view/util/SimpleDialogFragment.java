@@ -39,8 +39,9 @@ public class SimpleDialogFragment extends DialogFragment {
 		TextView txtContent = (TextView) v.findViewById(R.id.txtContent);
 		txtTitle.setText(dialogBuilder.getTitle());
 		txtContent.setText(dialogBuilder.getContent());
-		if (dialogBuilder.getContentTextColor() > 0) {
-			txtContent.setTextColor(getResources().getColor(dialogBuilder.getContentTextColor()));
+		if (dialogBuilder.getContentTextColor() != 0) {
+			//The context text color represents the resolved color, so it may be < 0 even if set
+			txtContent.setTextColor(dialogBuilder.getContentTextColor());
 		}
 		return v;
 	}

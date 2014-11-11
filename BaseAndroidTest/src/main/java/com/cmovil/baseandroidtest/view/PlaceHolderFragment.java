@@ -80,10 +80,10 @@ public class PlaceHolderFragment extends Fragment {
 		begin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				SimpleDialogFragment dialogFragment =
-					new SimpleDialogBuilder().setPositiveClickListener(new DialogInterface.OnClickListener() {
-
-
+				SimpleDialogFragment dialogFragment = new SimpleDialogBuilder()
+					.setContent(R.string.title_section3)
+					.setContentTextColor(getResources().getColor(R.color.colorAccent))
+					.setPositiveClickListener(new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							Log.d(com.cmovil.baseandroid.util.KeyDictionary.TAG, "POSITIVE");

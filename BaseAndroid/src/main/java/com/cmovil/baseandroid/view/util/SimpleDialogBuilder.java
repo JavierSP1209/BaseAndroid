@@ -8,6 +8,7 @@
 package com.cmovil.baseandroid.view.util;
 
 import android.content.DialogInterface;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.view.View;
@@ -39,6 +40,9 @@ public class SimpleDialogBuilder {
 	@StringRes
 	private int mContent;
 
+	@ColorRes
+	private int mContentTextColor;
+
 	@StringRes
 	private int mPositiveText;
 
@@ -58,6 +62,7 @@ public class SimpleDialogBuilder {
 		mContent = R.string.empty_string;
 		mPositiveText = R.string.empty_string;
 		mNegativeText = R.string.empty_string;
+		mContentTextColor = 0;
 		mPositiveBackground = R.drawable.dialog_default_button_background;
 		mNegativeBackground = R.drawable.dialog_default_button_background;
 		mInverseBackground = false;
@@ -108,8 +113,9 @@ public class SimpleDialogBuilder {
 	 * Sets the text for the dialog header.
 	 * Note: This title only appears if and only if a custom view is not defined using
 	 * {@link #setView(android.view.View)}. In case of having a custom view, this attribute is ignored.
+	 *
 	 * @param title
-	 * The string resource of the text that appears as the dialog header
+	 * 	The string resource of the text that appears as the dialog header
 	 * @return This object to chain the set call
 	 */
 	public SimpleDialogBuilder setTitle(@StringRes int title) {
@@ -126,8 +132,9 @@ public class SimpleDialogBuilder {
 	 * Sets the text for the dialog content.
 	 * Note: This content only appears if and only if a custom view is not defined using
 	 * {@link #setView(android.view.View)}. In case of having a custom view, this attribute is ignored.
+	 *
 	 * @param content
-	 * The string resource of the text that appears as the dialog content
+	 * 	The string resource of the text that appears as the dialog content
 	 * @return This object to chain the set call
 	 */
 	public SimpleDialogBuilder setContent(@StringRes int content) {
@@ -145,8 +152,9 @@ public class SimpleDialogBuilder {
 	 * Note: This text and the button only appears if and only if a click listener is set for this matter using
 	 * {@link #setPositiveClickListener(android.content.DialogInterface.OnClickListener)}. In case of not having
 	 * a listener defined, this attribute is ignored
+	 *
 	 * @param positiveText
-	 * The string resource of the text that appears in the positive button
+	 * 	The string resource of the text that appears in the positive button
 	 * @return This object to chain the set call
 	 */
 	public SimpleDialogBuilder setPositiveText(@StringRes int positiveText) {
@@ -164,8 +172,9 @@ public class SimpleDialogBuilder {
 	 * Note: This text and the button only appears if and only if a click listener is set for this matter using
 	 * {@link #setNegativeClickListener(android.content.DialogInterface.OnClickListener)}. In case of not having
 	 * a listener defined, this attribute is ignored
+	 *
 	 * @param negativeText
-	 * The string resource of the text that appears in the negative button
+	 * 	The string resource of the text that appears in the negative button
 	 * @return This object to chain the set call
 	 */
 	public SimpleDialogBuilder setNegativeText(@StringRes int negativeText) {
@@ -183,8 +192,9 @@ public class SimpleDialogBuilder {
 	 * Note: This background only appears if and only if a click listener is set for this matter using
 	 * {@link #setNegativeClickListener(android.content.DialogInterface.OnClickListener)}. In case of not having
 	 * a listener defined, this attribute is ignored
+	 *
 	 * @param positiveBackground
-	 * The drawable for the button background
+	 * 	The drawable for the button background
 	 * @return This object to chain the set call
 	 */
 	public SimpleDialogBuilder setPositiveBackground(@DrawableRes int positiveBackground) {
@@ -202,8 +212,9 @@ public class SimpleDialogBuilder {
 	 * Note: This background only appears if and only if a click listener is set for this matter using
 	 * {@link #setNegativeClickListener(android.content.DialogInterface.OnClickListener)}. In case of not having
 	 * a listener defined, this attribute is ignored
+	 *
 	 * @param negativeBackground
-	 * The drawable for the button background
+	 * 	The drawable for the button background
 	 * @return This object to chain the set call
 	 */
 	public SimpleDialogBuilder setNegativeBackground(@DrawableRes int negativeBackground) {
@@ -217,11 +228,31 @@ public class SimpleDialogBuilder {
 
 	/**
 	 * Sets whether the dialog background should be inverse to the app theme
+	 *
 	 * @param inverseBackground
-	 * True if the dialog background should be inverse
+	 * 	True if the dialog background should be inverse
 	 */
 	public SimpleDialogBuilder setInverseBackground(boolean inverseBackground) {
 		this.mInverseBackground = inverseBackground;
+		return this;
+	}
+
+	@ColorRes
+	public int getContentTextColor() {
+		return mContentTextColor;
+	}
+
+	/**
+	 * Sets the color for the text of the content. If a custom view is set by using {@link
+	 * #setView(android.view.View)},
+	 * this attribute is ignored
+	 *
+	 * @param contentTextColor
+	 * 	The color for the text of the content
+	 * @return This object to chain the set call
+	 */
+	public SimpleDialogBuilder setContentTextColor(@ColorRes int contentTextColor) {
+		this.mContentTextColor = contentTextColor;
 		return this;
 	}
 

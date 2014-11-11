@@ -84,6 +84,8 @@ public class DatePickerBuilder implements Serializable {
 	@StringRes
 	private int mHeaderTitle;
 
+	private String mHeaderTitleStr;
+
 	@DrawableRes
 	private int mButtonBackground;
 
@@ -98,6 +100,7 @@ public class DatePickerBuilder implements Serializable {
 		mHeaderLayout = R.layout.date_picker_default_header;
 		mHeaderHeight = R.dimen.date_picker_default_height;
 		mHeaderTitle = R.string.select_date;
+		mHeaderTitleStr = "";
 		mButtonBackground = R.drawable.dialog_default_button_background;
 	}
 
@@ -249,7 +252,7 @@ public class DatePickerBuilder implements Serializable {
 	}
 
 	/**
-	 * Sets the title for the header. If a custom header layout is set using {@link #setHeaderLayout(int)},
+	 * Sets the title for the header. If a custom header layout is set by using {@link #setHeaderLayout(int)},
 	 * this attribute is ignored
 	 *
 	 * @param headerTitle
@@ -259,6 +262,26 @@ public class DatePickerBuilder implements Serializable {
 	public DatePickerBuilder setHeaderTitle(@StringRes int headerTitle) {
 		this.mHeaderTitle = headerTitle;
 		return this;
+	}
+
+	/**
+	 * Method to give the option to the user to give a String as the title for the header. If a custom header layout
+	 * is set by using {@link #setHeaderLayout(int)}, this attribute is ignored.
+	 * Note that calling this method will make that if a header was set previously with {@link #setHeaderTitle(int)},
+	 * this previous call will be overwritten by this method.
+	 *
+	 * @param headerTitleStr
+	 * 	The String to put as title for the date picker
+	 * @return This object to chain the set call
+	 */
+	public DatePickerBuilder setHeaderTitleStr(String headerTitleStr) {
+		this.mHeaderTitleStr = headerTitleStr;
+		this.mHeaderTitle = 0;
+		return this;
+	}
+
+	public String getHeaderTitleStr() {
+		return mHeaderTitleStr;
 	}
 
 	/**

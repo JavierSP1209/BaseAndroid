@@ -93,7 +93,7 @@ public class DatePickerBuilder implements Serializable {
 	 * Constructor that initializes all the needed values with default values
 	 */
 	public DatePickerBuilder() {
-		mInitialDate = KeyDictionary.ZERO_DATE;
+		mInitialDate = new Date();
 		mPositiveButtonText = R.string.ok;
 		mClearButtonText = R.string.cancel;
 		mDivider = R.drawable.date_picker_default_divider;
@@ -136,6 +136,10 @@ public class DatePickerBuilder implements Serializable {
 	 */
 	public DatePickerBuilder setInitialDate(@Nullable Date initialDate) {
 		if (initialDate == null) initialDate = KeyDictionary.ZERO_DATE;
+		if (mMinDate != null && initialDate.before(mMinDate))
+			throw new IllegalArgumentException("initialDate may not be before the current minDate");
+		else if (mMaxDate != null && initialDate.after(mMaxDate))
+			throw new IllegalArgumentException("initialDate may not be after the current maxDate");
 		this.mInitialDate = initialDate;
 		return this;
 	}
@@ -154,7 +158,10 @@ public class DatePickerBuilder implements Serializable {
 	 * @return This object to chain the set call
 	 */
 	public DatePickerBuilder setMinDate(@Nullable Date minDate) {
+		if (minDate != null && minDate.after(mMaxDate))
+			throw new IllegalArgumentException("minDate may not be after the current maxDate");
 		this.mMinDate = minDate;
+		if (minDate != null && minDate.after(mInitialDate)) mInitialDate = minDate;
 		return this;
 	}
 
@@ -172,6 +179,8 @@ public class DatePickerBuilder implements Serializable {
 	 * @return This object to chain the set call
 	 */
 	public DatePickerBuilder setMaxDate(@Nullable Date maxDate) {
+		if (maxDate != null && maxDate.before(mMinDate))
+			throw new IllegalArgumentException("maxDate may not be before the current minDate");
 		this.mMaxDate = maxDate;
 		return this;
 	}

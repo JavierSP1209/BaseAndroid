@@ -11,6 +11,9 @@ package com.cmovil.baseandroid.util;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -808,5 +811,22 @@ public class CMUtils {
 	 */
 	public static boolean isEmptyDate(Date date) {
 		return date == null || date.compareTo(KeyDictionary.ZERO_DATE) == 0;
+	}
+
+	/**
+	 * Utility method to know if an intent is safe, i. e. the current device is able to manage the intent with an
+	 * installed application
+	 *
+	 * @param context
+	 * 	The current context
+	 * @param intent
+	 * 	The intent to check
+	 * @return Whether the device can manage the intent with an application or not
+	 */
+	public static boolean isIntentSafe(Context context, Intent intent) {
+		PackageManager packageManager = context.getPackageManager();
+		if (packageManager == null) return false;
+		List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+		return activities.size() > 0;
 	}
 }

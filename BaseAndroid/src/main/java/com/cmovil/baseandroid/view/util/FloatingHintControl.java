@@ -40,7 +40,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -48,7 +47,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cmovil.baseandroid.R;
-import com.cmovil.baseandroid.model.db.BaseModel;
 
 /**
  * Layout which uses an {@link android.widget.EditText} to show a floating label when the hint is hidden due to user
@@ -286,7 +284,7 @@ public class FloatingHintControl extends LinearLayout {
 	private void showLabel() {
 		mLabel.setVisibility(View.VISIBLE);
 		//For backward compatibility
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			mLabel.setAlpha(0f);
 			mLabel.setTranslationY(mLabel.getHeight());
 			mLabel.animate().alpha(1f).translationY(0f).setDuration(animationDuration).setListener(null).start();
@@ -313,7 +311,7 @@ public class FloatingHintControl extends LinearLayout {
 	 */
 	private void hideLabel() {
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			mLabel.setAlpha(1f);
 			mLabel.setTranslationY(0f);
 			mLabel.animate().alpha(0f).translationY(mLabel.getHeight()).setDuration(animationDuration)

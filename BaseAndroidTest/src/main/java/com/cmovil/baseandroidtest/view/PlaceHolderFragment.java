@@ -81,6 +81,7 @@ public class PlaceHolderFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				SimpleDialogFragment dialogFragment = new SimpleDialogBuilder()
+					.setInverseBackground(true)
 					.setContent(R.string.title_section3)
 					.setContentTextColor(getResources().getColor(R.color.colorAccent))
 					.setPositiveClickListener(new DialogInterface.OnClickListener() {

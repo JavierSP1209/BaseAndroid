@@ -63,8 +63,8 @@ public class SimpleDialogBuilder {
 		mPositiveText = R.string.empty_string;
 		mNegativeText = R.string.empty_string;
 		mContentTextColor = 0;
-		mPositiveBackground = R.drawable.dialog_default_button_background;
-		mNegativeBackground = R.drawable.dialog_default_button_background;
+		mPositiveBackground = 0;
+		mNegativeBackground = 0;
 		mInverseBackground = false;
 	}
 

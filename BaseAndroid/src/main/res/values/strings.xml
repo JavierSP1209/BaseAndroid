@@ -1,7 +1,4 @@
 <resources>
-	<string name="app_name">BaseAndroid</string>
-	<string name="hello_world">The Base CM Android Project!</string>
-
 	<string name="action_toolbar">Without Toolbar</string>
 	<string name="action_no_toolbar">With Toolbar</string>
 	<string name="drawer_open">Open</string>

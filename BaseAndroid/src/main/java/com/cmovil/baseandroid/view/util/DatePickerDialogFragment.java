@@ -76,7 +76,10 @@ public class DatePickerDialogFragment extends DialogFragment {
 			if (mAttributes.getMinDate() != null) {
 				datePickerDialog.getDatePicker().setMinDate(mAttributes.getMinDate().getTime());
 			}
-			setCustomPicker(datePickerDialog);
+			//For version under lollipop custom date picker elements
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+				setCustomPicker(datePickerDialog);
+			}
 		}
 
 		//If clean date listener is set, add the button

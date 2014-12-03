@@ -10,6 +10,7 @@ package com.cmovil.baseandroid.view.util;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -64,8 +65,16 @@ public class SimpleDialogFragment extends DialogFragment {
 		final DialogInterface.OnClickListener negativeClickListener = dialogBuilder.getNegativeClickListener();
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		//Set the default if no custom view is defined
-		if (dialogBuilder.getView() == null) builder.setView(getDefaultDialogView());
-		else builder.setView(dialogBuilder.getView());
+		if (dialogBuilder.getView() == null) {
+			if(Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP) {
+				builder.setView(getDefaultDialogView());
+			}else{
+				builder.setTitle(dialogBuilder.getTitle());
+				builder.setMessage(dialogBuilder.getContent());
+			}
+		}else {
+			builder.setView(dialogBuilder.getView());
+		}
 		builder.setInverseBackgroundForced(dialogBuilder.isInverseBackground());
 		if (positiveClickListener != null) {
 			builder.setPositiveButton(dialogBuilder.getPositiveText(), positiveClickListener);

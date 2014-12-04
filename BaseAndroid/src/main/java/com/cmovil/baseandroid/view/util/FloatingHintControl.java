@@ -29,6 +29,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -69,6 +70,7 @@ public class FloatingHintControl extends LinearLayout {
 
 	/**
 	 * Sets the custom listener for the spinner if necessary
+	 *
 	 * @param spinnerItemSelectedListener
 	 */
 	public void setSpinnerItemSelectedListener(AdapterView.OnItemSelectedListener spinnerItemSelectedListener) {
@@ -119,7 +121,6 @@ public class FloatingHintControl extends LinearLayout {
 		setOrientation(LinearLayout.VERTICAL);
 		addView(mLabel, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
-
 		a.recycle();
 	}
 
@@ -127,14 +128,14 @@ public class FloatingHintControl extends LinearLayout {
 	public final void addView(@NonNull View child, int index, ViewGroup.LayoutParams params) {
 		if (child instanceof EditText) {
 			// If we already have an EditText, throw an exception
-			if (mEditText != null || mSpinner!=null) {
+			if (mEditText != null || mSpinner != null) {
 				throw new IllegalArgumentException("We already have an EditText/Spinner, can only have one");
 			}
 
 			setEditText((EditText) child);
-		}else if(child instanceof Spinner){
+		} else if (child instanceof Spinner) {
 			// If we already have an EditText, throw an exception
-			if (mSpinner != null || mEditText!=null) {
+			if (mSpinner != null || mEditText != null) {
 				throw new IllegalArgumentException("We already have an EditText/Spinner, can only have one");
 			}
 
@@ -171,7 +172,7 @@ public class FloatingHintControl extends LinearLayout {
 						showLabel();
 					}
 				}
-				if(mSpinnerItemSelectedListener!=null) {
+				if (mSpinnerItemSelectedListener != null) {
 					//Call the custom spinner item selected listener
 					mSpinnerItemSelectedListener.onItemSelected(parent, view, position, id);
 				}
@@ -180,7 +181,7 @@ public class FloatingHintControl extends LinearLayout {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
-				if(mSpinnerItemSelectedListener!=null) {
+				if (mSpinnerItemSelectedListener != null) {
 					mSpinnerItemSelectedListener.onNothingSelected(parent);
 				}
 			}
@@ -198,6 +199,30 @@ public class FloatingHintControl extends LinearLayout {
 		});
 
 		mLabel.setText(mSpinnerHint);
+	}
+
+	/**
+	 * Updates floating hint label text
+	 *
+	 * @param labelText
+	 * 	Text to show on the floating hint
+	 */
+	public void updateLabel(CharSequence labelText) {
+		if (mLabel != null) {
+			mLabel.setText(labelText);
+		}
+	}
+
+	/**
+	 * Updates floating hint label text
+	 *
+	 * @param labelText
+	 * 	Text to show on the floating hint
+	 */
+	public void updateLabel(@StringRes int labelText) {
+		if (mLabel != null) {
+			mLabel.setText(labelText);
+		}
 	}
 
 	/**

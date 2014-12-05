@@ -520,7 +520,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	public Integer delete(Integer id) throws DBException {
 		try {
 			// Gets the data repository in write mode
-			SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
+			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 			if (db == null) return 0;
 			// Specify arguments in placeholder order.
 			String[] selectionArgs = {String.valueOf(id)};
@@ -548,7 +548,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	public Integer delete(T objectToDelete) throws DBException {
 		try {
 			// Gets the data repository in write mode
-			SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
+			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 			if (db == null) return 0;
 			// Specify arguments in placeholder order.
 			String[] selectionArgs = objectToDelete.getPrimaryKeySelectionArgs();
@@ -572,7 +572,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	public Integer delete() throws DBException {
 		try {
 			// Gets the data repository in write mode
-			SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
+			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 			if (db == null) return 0;
 			// Issue SQL statement.
 			Integer res = db.delete(tableName, null, null);
@@ -597,7 +597,7 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 */
 	public Integer update(T objectToUpdate) throws DBException {
 		try {
-			SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
+			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
 
 			if (db == null) return 0;
 			String[] selectionArgs = objectToUpdate.getPrimaryKeySelectionArgs();

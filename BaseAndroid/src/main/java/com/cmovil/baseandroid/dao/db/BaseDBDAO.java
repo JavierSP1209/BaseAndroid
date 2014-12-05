@@ -484,11 +484,10 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	public List<Integer> insertAux(List<T> insertObjects) throws DBException {
-
+		SQLiteDatabase db = null;
 		try {
 			// Gets the data repository in write mode
-			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
-
+			db = mDatabaseOpenHelper.getWritableDatabase();
 			List<Integer> ids = new ArrayList<Integer>();
 			if (db == null) return ids;
 
@@ -498,11 +497,11 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 				newRowId = db.insertOrThrow(tableName, null, fillMapValues(element));
 				ids.add((int) newRowId);
 			}
-			db.close();
-
 			return ids;
 		} catch (SQLException e) {
 			throw new DBException(e.getMessage(), e);
+		} finally {
+			if (db != null) db.close();
 		}
 	}
 
@@ -518,18 +517,19 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	public Integer delete(Integer id) throws DBException {
+		SQLiteDatabase db = null;
 		try {
 			// Gets the data repository in write mode
-			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+			db = mDatabaseOpenHelper.getWritableDatabase();
 			if (db == null) return 0;
 			// Specify arguments in placeholder order.
 			String[] selectionArgs = {String.valueOf(id)};
 			// Issue SQL statement.
-			Integer res = db.delete(tableName, getPrimaryKeyFilter(), selectionArgs);
-			db.close();
-			return res;
+			return db.delete(tableName, getPrimaryKeyFilter(), selectionArgs);
 		} catch (SQLException e) {
 			throw new DBException(e.getMessage(), e);
+		} finally {
+			if (db != null) db.close();
 		}
 	}
 
@@ -546,18 +546,19 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	public Integer delete(T objectToDelete) throws DBException {
+		SQLiteDatabase db = null;
 		try {
 			// Gets the data repository in write mode
-			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+			db = mDatabaseOpenHelper.getWritableDatabase();
 			if (db == null) return 0;
 			// Specify arguments in placeholder order.
 			String[] selectionArgs = objectToDelete.getPrimaryKeySelectionArgs();
 			// Issue SQL statement.
-			Integer res = db.delete(tableName, getPrimaryKeyFilter(), selectionArgs);
-			db.close();
-			return res;
+			return db.delete(tableName, getPrimaryKeyFilter(), selectionArgs);
 		} catch (SQLException e) {
 			throw new DBException(e.getMessage(), e);
+		} finally {
+			if (db != null) db.close();
 		}
 	}
 
@@ -570,16 +571,17 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	public Integer delete() throws DBException {
+		SQLiteDatabase db = null;
 		try {
 			// Gets the data repository in write mode
-			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+			db = mDatabaseOpenHelper.getWritableDatabase();
 			if (db == null) return 0;
 			// Issue SQL statement.
-			Integer res = db.delete(tableName, null, null);
-			db.close();
-			return res;
+			return db.delete(tableName, null, null);
 		} catch (SQLException e) {
 			throw new DBException(e.getMessage(), e);
+		} finally {
+			if (db != null) db.close();
 		}
 	}
 
@@ -596,17 +598,16 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	public Integer update(T objectToUpdate) throws DBException {
+		SQLiteDatabase db = null;
 		try {
-			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
-
+			db = mDatabaseOpenHelper.getWritableDatabase();
 			if (db == null) return 0;
 			String[] selectionArgs = objectToUpdate.getPrimaryKeySelectionArgs();
-
-			Integer res = db.update(tableName, fillMapValues(objectToUpdate), getPrimaryKeyFilter(), selectionArgs);
-			db.close();
-			return res;
+			return db.update(tableName, fillMapValues(objectToUpdate), getPrimaryKeyFilter(), selectionArgs);
 		} catch (SQLException e) {
 			throw new DBException(e.getMessage(), e);
+		} finally {
+			if (db != null) db.close();
 		}
 	}
 

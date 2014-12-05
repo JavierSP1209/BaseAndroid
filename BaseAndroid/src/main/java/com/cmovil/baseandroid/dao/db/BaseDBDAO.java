@@ -260,19 +260,20 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 	 * 	if something goes wrong during SQL statements execution
 	 */
 	public Integer insert(T insertObject) throws DBException {
-
+		SQLiteDatabase db = null;
 		try {
 			// Gets the data repository in write mode
-			SQLiteDatabase db = mDatabaseOpenHelper.getWritableDatabase();
+			db = mDatabaseOpenHelper.getWritableDatabase();
 
 			if (db == null) return -1;
 			// Insert the new row, returning the primary key value of the new row
 			long newRowId;
 			newRowId = db.insertOrThrow(tableName, null, fillMapValues(insertObject));
-			db.close();
 			return (int) newRowId;
 		} catch (SQLException e) {
 			throw new DBException(e.getMessage(), e);
+		} finally {
+			if (db != null) db.close();
 		}
 	}
 

@@ -20,7 +20,7 @@ public class SplashActivity extends BaseDrawerActivity {
 	public void onNavigationDrawerItemSelected(int position) {
 		// update the main content by replacing fragments
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.main_frame, new PlaceHolderFragment(position)).commit();
+		fragmentManager.beginTransaction().replace(R.id.main_frame, new AppListFragment()).commit();
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class SplashActivity extends BaseDrawerActivity {
 		setDrawerContent(R.string.app_name);
 
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-		fragmentTransaction.replace(R.id.main_frame, new PlaceHolderFragment(0));
+		fragmentTransaction.replace(R.id.main_frame, new AppListFragment());
 		fragmentTransaction.commit();
 
 		DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

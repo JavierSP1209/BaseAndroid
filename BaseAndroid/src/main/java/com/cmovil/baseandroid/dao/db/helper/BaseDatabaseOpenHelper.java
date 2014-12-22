@@ -142,7 +142,7 @@ public abstract class BaseDatabaseOpenHelper extends SQLiteOpenHelper {
 	 * 	TRUE if the table is FTS, FALSE otherwise
 	 */
 	public void upgrade(String tableName, String sqlCreate, String sqlBackUp, SQLiteDatabase db, Boolean isFTS) {
-		Log.i(KeyDictionary.TAG, "Upgrading");
+		Log.i(KeyDictionary.TAG, "Upgrading "+tableName);
 
 		//Update State table
 		db.beginTransaction();

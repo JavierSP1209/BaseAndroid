@@ -14,11 +14,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import com.cmovil.baseandroid.R;
+import com.cmovil.baseandroid.util.CMUtils;
 
 /**
  * Dialog Fragment with simple characteristics. This dialog is fully customizable, see
@@ -68,9 +70,20 @@ public class SimpleDialogFragment extends DialogFragment {
 		if (dialogBuilder.getView() == null) {
 			if(Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP) {
 				builder.setView(getDefaultDialogView());
-			}else{
-				builder.setTitle(dialogBuilder.getTitle());
-				builder.setMessage(dialogBuilder.getContent());
+			}else {
+				int title = dialogBuilder.getTitle();
+				if (title > 0) {
+					builder.setTitle(title);
+				} else if (!CMUtils.isEmptyText(dialogBuilder.getTitleStr())) {
+					builder.setTitle(dialogBuilder.getTitleStr());
+				}
+				int content = dialogBuilder.getContent();
+				if(content > 0) {
+					builder.setMessage(content);
+				}else if(!CMUtils.isEmptyText(dialogBuilder.getContentStr())){
+					builder.setTitle(dialogBuilder.getContentStr());
+
+				}
 			}
 		}else {
 			builder.setView(dialogBuilder.getView());

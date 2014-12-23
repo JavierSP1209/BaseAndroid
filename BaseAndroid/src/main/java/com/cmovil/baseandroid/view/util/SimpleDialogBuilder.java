@@ -37,8 +37,12 @@ public class SimpleDialogBuilder {
 	@StringRes
 	private int mTitle;
 
+	private String mTitleStr;
+
 	@StringRes
 	private int mContent;
+
+	private String mContentStr;
 
 	@ColorRes
 	private int mContentTextColor;
@@ -109,6 +113,10 @@ public class SimpleDialogBuilder {
 		return mTitle;
 	}
 
+	public String getTitleStr() {
+		return mTitleStr;
+	}
+
 	/**
 	 * Sets the text for the dialog header.
 	 * Note: This title only appears if and only if a custom view is not defined using
@@ -123,9 +131,28 @@ public class SimpleDialogBuilder {
 		return this;
 	}
 
+
+	/**
+	 * Sets the text for the dialog header.
+	 * Note: This title only appears if and only if a custom view is not defined using
+	 * {@link #setView(android.view.View)}. In case of having a custom view, this attribute is ignored.
+	 *
+	 * @param title
+	 * 	The string resource of the text that appears as the dialog header
+	 * @return This object to chain the set call
+	 */
+	public SimpleDialogBuilder setTitle(String title) {
+		this.mTitleStr = title;
+		return this;
+	}
+
 	@StringRes
 	public int getContent() {
 		return mContent;
+	}
+
+	public String getContentStr() {
+		return mContentStr;
 	}
 
 	/**
@@ -139,6 +166,20 @@ public class SimpleDialogBuilder {
 	 */
 	public SimpleDialogBuilder setContent(@StringRes int content) {
 		this.mContent = content;
+		return this;
+	}
+
+	/**
+	 * Sets the text for the dialog content.
+	 * Note: This content only appears if and only if a custom view is not defined using
+	 * {@link #setView(android.view.View)}. In case of having a custom view, this attribute is ignored.
+	 *
+	 * @param content
+	 * 	The string resource of the text that appears as the dialog content
+	 * @return This object to chain the set call
+	 */
+	public SimpleDialogBuilder setContent(String content) {
+		this.mContentStr = content;
 		return this;
 	}
 

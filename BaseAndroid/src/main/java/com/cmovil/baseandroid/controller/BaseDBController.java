@@ -250,4 +250,14 @@ public abstract class BaseDBController<T extends BaseModel> {
 		}
 		return res;
 	}
+
+	/**
+	 * Gets the number of rows registered for the table
+	 * @return
+	 * An Integer representing the number of rows in the table
+	 * @throws DBException If something goes wrong with the SQL execution
+	 */
+	public Integer getCount() throws DBException {
+		return getBaseDBDAO().getCount();
+	}
 }

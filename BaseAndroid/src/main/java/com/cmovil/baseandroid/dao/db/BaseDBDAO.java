@@ -694,4 +694,26 @@ public abstract class BaseDBDAO<T extends BaseModel> {
 		 * WHERE rowId = <id>
 		 */
 	}
+
+	/**
+	 * get count of all registered users
+	 *
+	 * @return Integer containing the number of users registered
+	 *
+	 * @throws DBException
+	 * 	if something goes wrong during SQL statements execution
+	 */
+	public Integer getCount() throws DBException {
+		try {
+			SQLiteDatabase db = mDatabaseOpenHelper.getReadableDatabase();
+			if (db == null) return 0;
+			final String SQL_COUNT = "select count(*) from " + tableName;
+			Cursor res = db.rawQuery(SQL_COUNT, null);
+			res.moveToFirst();
+			db.close();
+			return res.getInt(0);
+		} catch (SQLException e) {
+			throw new DBException(e.getMessage(), e);
+		}
+	}
 }

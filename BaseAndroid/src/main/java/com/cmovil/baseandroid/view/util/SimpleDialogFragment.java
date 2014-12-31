@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -40,8 +39,21 @@ public class SimpleDialogFragment extends DialogFragment {
 		View v = inflater.inflate(R.layout.fragment_simple_dialog, null);
 		TextView txtTitle = (TextView) v.findViewById(R.id.txtTitle);
 		TextView txtContent = (TextView) v.findViewById(R.id.txtContent);
-		txtTitle.setText(dialogBuilder.getTitle());
-		txtContent.setText(dialogBuilder.getContent());
+
+		//Check if title is null or empty, if not use the string
+		if (!CMUtils.isEmptyText(dialogBuilder.getTitleStr())) {
+			txtTitle.setText(dialogBuilder.getTitleStr());
+		} else {
+			txtTitle.setText(dialogBuilder.getTitle());
+		}
+
+		//Check if title is null or empty, if not use the string
+		if (!CMUtils.isEmptyText(dialogBuilder.getContentStr())) {
+			txtContent.setText(dialogBuilder.getContentStr());
+		} else {
+			txtContent.setText(dialogBuilder.getContent());
+		}
+
 		if (dialogBuilder.getContentTextColor() != 0) {
 			//The context text color represents the resolved color, so it may be < 0 even if set
 			txtContent.setTextColor(dialogBuilder.getContentTextColor());
@@ -68,24 +80,24 @@ public class SimpleDialogFragment extends DialogFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		//Set the default if no custom view is defined
 		if (dialogBuilder.getView() == null) {
-			if(Build.VERSION.SDK_INT<Build.VERSION_CODES.LOLLIPOP) {
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 				builder.setView(getDefaultDialogView());
-			}else {
-				int title = dialogBuilder.getTitle();
-				if (title > 0) {
-					builder.setTitle(title);
-				} else if (!CMUtils.isEmptyText(dialogBuilder.getTitleStr())) {
+			} else {
+				//Check if title is null or empty, if not use the string
+				if (!CMUtils.isEmptyText(dialogBuilder.getTitleStr())) {
 					builder.setTitle(dialogBuilder.getTitleStr());
+				} else {
+					builder.setTitle(dialogBuilder.getTitle());
 				}
-				int content = dialogBuilder.getContent();
-				if(content > 0) {
-					builder.setMessage(content);
-				}else if(!CMUtils.isEmptyText(dialogBuilder.getContentStr())){
-					builder.setTitle(dialogBuilder.getContentStr());
 
+				//Check if title is null or empty, if not use the string
+				if (!CMUtils.isEmptyText(dialogBuilder.getContentStr())) {
+					builder.setTitle(dialogBuilder.getContentStr());
+				} else {
+					builder.setMessage(dialogBuilder.getContent());
 				}
 			}
-		}else {
+		} else {
 			builder.setView(dialogBuilder.getView());
 		}
 		builder.setInverseBackgroundForced(dialogBuilder.isInverseBackground());

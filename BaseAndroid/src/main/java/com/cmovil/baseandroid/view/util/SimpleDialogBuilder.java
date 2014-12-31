@@ -70,6 +70,8 @@ public class SimpleDialogBuilder {
 		mPositiveBackground = 0;
 		mNegativeBackground = 0;
 		mInverseBackground = false;
+		mTitleStr=null;
+		mContentStr=null;
 	}
 
 	public View getView() {

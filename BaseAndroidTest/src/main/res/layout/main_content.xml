@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+	<TextView
+		android:id="@+id/txtSectionNumber"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/hello_world"/>
+
+	<ImageView
+		android:id="@+id/imgTest"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/txtSectionNumber"/>
+
+	<ProgressBar
+		android:id="@+id/progress"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+		android:indeterminate="true"
+		style="@android:style/Widget.ProgressBar.Large"/>
+
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/btnBegin"
+		android:layout_below="@id/progress"
+		android:background="?attr/selectableItemBackground"
+		android:id="@+id/btnBegin"
+		/>
+
+	<ImageView android:layout_height="wrap_content"
+	           android:layout_width="wrap_content"
+	           android:src="@drawable/ic_camera_alt_black_48dp"
+	           android:layout_below="@id/btnBegin"
+		android:contentDescription="@null"
+		android:id="@+id/imgBlack"
+		android:tint="?attr/colorAccent"
+		android:elevation="2dp"/>
+
+	<ImageView android:layout_height="wrap_content"
+	           android:layout_width="wrap_content"
+	           android:src="@drawable/ic_camera_alt_grey600_48dp"
+	           android:layout_alignBottom="@id/imgBlack"
+	           android:layout_toRightOf="@id/imgBlack"
+	           android:layout_toEndOf="@id/imgBlack"
+	           android:contentDescription="@null"
+		android:id="@+id/imgGrey"
+		android:tint="?attr/colorAccent"
+		android:elevation="5dp"
+		android:translationZ="5dp"/>
+
+	<ImageView android:layout_height="wrap_content"
+	           android:layout_width="wrap_content"
+	           android:src="@drawable/ic_camera_alt_white_48dp"
+	           android:contentDescription="@null"
+	           android:layout_alignBottom="@id/imgBlack"
+	           android:layout_toRightOf="@id/imgGrey"
+	           android:layout_toEndOf="@id/imgBlack"
+	           android:tint="?attr/colorAccent"
+	           android:elevation="8dp"/>
+
+	<com.cmovil.baseandroid.view.util.FloatingHintControl
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:layout_below="@id/imgBlack"
+		android:id="@+id/txtTest"
+		app:animationDuration="1000"
+		app:floatLabelTextAppearance="@style/TextAppearance.Test.FloatingHing">
+
+		<EditText
+			android:id="@+id/edit_password"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="Texto de prueba"
+			android:singleLine="true"
+			android:inputType="textNoSuggestions"
+			android:imeOptions="actionDone"/>
+
+	</com.cmovil.baseandroid.view.util.FloatingHintControl>
+
+	<com.cmovil.baseandroid.view.util.FloatingHintControl
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:id="@+id/txtTest2"
+		android:layout_below="@id/txtTest"
+		app:floatLabelTextAppearance="@style/TextAppearance.Test.FloatingHing"
+		app:spinnerHint="Spinner hint">
+
+		<Spinner
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:id="@+id/spinnerTest"/>
+
+	</com.cmovil.baseandroid.view.util.FloatingHintControl>
+
+</RelativeLayout>

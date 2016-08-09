@@ -5,18 +5,20 @@
                 android:id="@+id/dialogHeader">
 
 	<TextView
+		android:id="@+id/txtTitle"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textSize="22sp"
-		android:textColor="@android:color/black"
+		android:textColor="?attr/colorPrimary"
 		android:text="@string/select_date"
 		android:padding="12dp"
-		android:id="@+id/txtTitle"/>
+		android:maxLines="1"
+		android:ellipsize="end"/>
 
 	<View
 		android:layout_width="wrap_content"
 		android:layout_height="2dp"
-		android:background="@android:color/black"
+		android:background="?attr/colorPrimary"
 		android:layout_below="@id/txtTitle"
 		android:id="@+id/divider"
 		/>

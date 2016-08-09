@@ -4,5 +4,16 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 	<dimen name="menuWidth">240dp</dimen>
 	<dimen name="menuWidthPadding">0dp</dimen>
+
+	<!--Material design dimens-->
+	<dimen name="extra_small_margin">8dp</dimen>
+	<dimen name="small_margin">16dp</dimen>
+	<dimen name="medium_margin">32dp</dimen>
+	<dimen name="big_margin">40dp</dimen>
+	<dimen name="extra_big_margin">48dp</dimen>
+
 	<dimen name="date_picker_default_height">60dp</dimen>
+	<dimen name="dialog_header_padding">14dp</dimen>
+	<dimen name="simple_dialog_header_text">22sp</dimen>
+	<dimen name="simple_dialog_content_text">16sp</dimen>
 </resources>

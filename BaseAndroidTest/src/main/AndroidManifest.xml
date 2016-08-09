@@ -1,24 +1,34 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cmovil.baseandroidtest">
+		  package="com.keysd.baseandroidtest">
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 
-	<application android:allowBackup="true"
-        android:label="@string/app_name"
-        android:icon="@drawable/ic_launcher"
-        android:theme="@style/AppTheme">
+	<application
+		android:allowBackup="true"
+		android:label="@string/app_name"
+		android:icon="@drawable/ic_launcher"
+		android:theme="@style/AppBaseTheme">
 
 		<activity
 			android:name=".view.SplashActivity"
-			android:label="@string/title_section1" >
+			android:label="@string/title_section1">
 			<intent-filter android:label="@string/app_name">
-				<action android:name="android.intent.action.MAIN" />
+				<action android:name="android.intent.action.MAIN"/>
 
-				<category android:name="android.intent.category.LAUNCHER" />
+				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
 
+		<activity
+			android:name=".view.ActivityWithOutToolbar"
+			android:label="@string/app_name">
+		</activity>
 
+		<activity
+			android:name=".view.ActivityWithActionBar"
+			android:label="@string/app_name"
+			android:parentActivityName=".view.SplashActivity">
+		</activity>
 	</application>
 
 </manifest>

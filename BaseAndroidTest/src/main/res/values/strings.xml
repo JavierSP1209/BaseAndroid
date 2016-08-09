@@ -1,9 +1,11 @@
 <resources>
-    <string name="app_name">BaseAndroidTest</string>
+	<string name="app_name">BaseAndroidTest</string>
 	<string name="hello_world">The Base CM Android Project!</string>
-	<string name="action_settings">Options</string>
-    <string name="title_section1">Section 1</string>
+	<string name="action_settings">No Toolbar</string>
+	<string name="title_section1">Section 1</string>
 	<string name="title_section2">Section 2</string>
 	<string name="title_section3">Section 3</string>
 	<string name="btnBegin">Begin</string>
+	<string name="text_no_toolbar">Activity without Toolbar</string>
+	<string name="text_with_toolbar">Activity with Toolbar</string>
 </resources>

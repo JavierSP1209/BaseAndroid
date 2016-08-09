@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.cmovil.baseandroidtest">
+		  package="com.keysd.baseandroidtest">
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 
